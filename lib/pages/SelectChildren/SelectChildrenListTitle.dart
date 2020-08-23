@@ -4,8 +4,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:employee_children_sqflite/classes.dart';
 
 class SelectChildrenListTitle extends StatefulWidget {
-  final ChildrenData theChild;
-  final EmployeesData theEmployee;
+  final Children theChild;
+  final Employees theEmployee;
 
   SelectChildrenListTitle({this.theChild, this.theEmployee});
 

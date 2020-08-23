@@ -3,7 +3,7 @@ import 'package:employee_children_sqflite/classes.dart';
 import 'package:employee_children_sqflite/pages/DeleteConfirmation.dart';
 
 class ActionButtonsChild extends StatelessWidget {
-  final ChildrenData child;
+  final Children child;
   ActionButtonsChild({this.child});
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ import 'package:employee_children_sqflite/GlobalStore.dart';
 class ShowEmployee extends StatelessWidget {
   final store = gStore.get<GlobalStore>();
 
-  List<Widget> _showChildrenList(BuildContext context, List<ChildrenData> _childrenList) {
+  List<Widget> _showChildrenList(BuildContext context, List<Children> _childrenList) {
     List<Widget> _childrenWidgets = [];
     _childrenWidgets.add(Text('Children:'));
     if (_childrenList == null || _childrenList.length == 0) {
@@ -23,15 +23,15 @@ class ShowEmployee extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EmployeesData employee = store.theEmployee;
+    final Employees employee = store.theEmployee;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: Text('${employee.name} ${employee.surName}'),
       ),
       body: ValueListenableBuilder(
-          valueListenable: Hive.box<EmployeesData>(Boxes.employeesBox).listenable(),
-          builder: (context, Box<EmployeesData> box, _) {
+          valueListenable: Hive.box<Employees>(Boxes.employeesBox).listenable(),
+          builder: (context, Box<Employees> box, _) {
             return ListView(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               children: <Widget>[

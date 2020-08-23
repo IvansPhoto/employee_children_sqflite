@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:employee_children_sqflite/classes.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/Support.dart';
@@ -8,17 +7,12 @@ class EmployeesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    gStore<GlobalStore>().boxStreamEmployee$.listen((event) {
-      gStore<GlobalStore>().setEmployeeList(Hive.box<EmployeesData>(Boxes.employeesBox).values.toList());
-      print('${event.key} - ${event.value} - ${event.deleted}');
-    });
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: const Text('The list of employees'),
         actions: [
-          ButtonAddChildrenEmployee(snackBarText: 'An employee has been added.', genChild: false),
+          ButtonAddChildrenEmployee(snackBarText: 'An employee has been added.', genChild: false)
         ],
       ),
       body: Column(
@@ -31,7 +25,7 @@ class EmployeesList extends StatelessWidget {
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
-                      EmployeesData theEmployee = snapshot.data.elementAt(index);
+                      Employees theEmployee = snapshot.data.elementAt(index);
                       return Card(
                         elevation: 0,
                         child: ListTile(
@@ -57,11 +51,11 @@ class EmployeesList extends StatelessWidget {
           )
         ],
       ),
-      floatingActionButton: IconButton(
-        icon: const Icon(Icons.add_circle),
-        onPressed: () => Navigator.pushNamed(context, RouteNames.newEmployee, arguments: true),
-        iconSize: 35,
-      ),
+//      floatingActionButton: IconButton(
+//        icon: const Icon(Icons.add_circle),
+//        onPressed: () => Navigator.pushNamed(context, RouteNames.newEmployee, arguments: true),
+//        iconSize: 35,
+//      ),
     );
   }
 }

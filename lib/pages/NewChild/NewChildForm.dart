@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:employee_children_sqflite/Support.dart';
 
 class NewChildForm extends StatefulWidget {
-  final Box<ChildrenData> childrenBox = Hive.box<ChildrenData>(Boxes.childrenBox);
-  final ChildrenData child;
+  final Box<Children> childrenBox = Hive.box<Children>(Boxes.childrenBox);
+  final Children child;
 
   NewChildForm({this.child});
 
@@ -48,7 +48,7 @@ class _NewChildFormState extends State<NewChildForm> {
   }
 
   void _addChild() {
-    widget.childrenBox.add(ChildrenData(
+    widget.childrenBox.add(Children(
       name: _nameTEC.text,
       surName: _surnameTEC.text,
       patronymic: _patronymicTEC.text,

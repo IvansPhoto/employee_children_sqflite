@@ -6,7 +6,7 @@ class NewChild extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		final ChildrenData child = ModalRoute.of(context).settings.arguments;
+		final Children child = ModalRoute.of(context).settings.arguments;
 		return Scaffold(
 			appBar: AppBar(
 				elevation: 0,

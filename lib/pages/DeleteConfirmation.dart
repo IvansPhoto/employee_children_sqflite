@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:employee_children_sqflite/classes.dart';
 
 class DeleteConfirmation extends StatelessWidget {
-  final EmployeesData employee;
-  final ChildrenData child;
+  final Employees employee;
+  final Children child;
 
   DeleteConfirmation({this.employee, this.child});
 

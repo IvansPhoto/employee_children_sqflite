@@ -8,7 +8,7 @@ class NewEmployee extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EmployeesData employee = store.theEmployee;
+    final Employees employee = store.theEmployee;
     final isNew = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(

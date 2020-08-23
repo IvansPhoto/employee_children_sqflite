@@ -11,11 +11,11 @@ class SelectChildren extends StatefulWidget {
 }
 
 class _SelectChildrenState extends State<SelectChildren> {
-  final childrenBox = Hive.box<ChildrenData>(Boxes.childrenBox);
+  final childrenBox = Hive.box<Children>(Boxes.childrenBox);
   final store = gStore.get<GlobalStore>();
   List<SelectedChildren> selectedChildren;
 
-  List<SelectedChildren> makeChildrenList({List<ChildrenData> employeeChildren, List<ChildrenData> allChildren}) {
+  List<SelectedChildren> makeChildrenList({List<Children> employeeChildren, List<Children> allChildren}) {
     List<SelectedChildren> finalList = [];
     allChildren.forEach((theChild) {
       finalList.add(SelectedChildren(
@@ -26,7 +26,7 @@ class _SelectChildrenState extends State<SelectChildren> {
     return finalList;
   }
 
-  void updateChildren({EmployeesData employee, List<SelectedChildren> selectedChildren}) async {
+  void updateChildren({Employees employee, List<SelectedChildren> selectedChildren}) async {
     employee.children.clear();
     selectedChildren.forEach((selectedChild) {
       if (selectedChild.selected) employee.children.add(selectedChild.child);
@@ -49,7 +49,7 @@ class _SelectChildrenState extends State<SelectChildren> {
       ),
       body: ValueListenableBuilder(
         valueListenable: childrenBox.listenable(),
-        builder: (context, Box<ChildrenData> childrenBox, _) {
+        builder: (context, Box<Children> childrenBox, _) {
           if (childrenBox.values.length == 0)
             return Center(child: const Text('No children in the list'));
           else

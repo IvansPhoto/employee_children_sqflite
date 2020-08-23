@@ -7,7 +7,7 @@ import 'package:employee_children_sqflite/Support.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 
 class EmployeeForm extends StatefulWidget {
-  final EmployeesData employee;
+  final Employees employee;
   final bool isNew; //Change form to add a new employee
   EmployeeForm({this.employee, this.isNew});
 
@@ -25,10 +25,10 @@ class _EmployeeFormState extends State<EmployeeForm> {
 
   DateTime _birthday;
   String _birthdayText;
-  HiveList<ChildrenData> _childrenList;
+  HiveList<Children> _childrenList;
 
-  Box<EmployeesData> employeesBox = Hive.box<EmployeesData>(Boxes.employeesBox);
-  Box<ChildrenData> childrenBox = Hive.box<ChildrenData>(Boxes.childrenBox);
+  Box<Employees> employeesBox = Hive.box<Employees>(Boxes.employeesBox);
+  Box<Children> childrenBox = Hive.box<Children>(Boxes.childrenBox);
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
   }
 
   void _addEmployee() {
-    employeesBox.add(EmployeesData(
+    employeesBox.add(Employees(
       name: _nameTEC.text,
       surName: _surnameTEC.text,
       birthday: _birthday,
@@ -173,14 +173,14 @@ class _EmployeeFormState extends State<EmployeeForm> {
 }
 
 class _EmployeeChildrenList extends StatelessWidget {
-  final HiveList<ChildrenData> childrenList;
-  final EmployeesData employee;
+  final HiveList<Children> childrenList;
+  final Employees employee;
 
   _EmployeeChildrenList({this.childrenList, this.employee});
 
-  final Box<EmployeesData> employeesBox = Hive.box<EmployeesData>(Boxes.employeesBox);
+  final Box<Employees> employeesBox = Hive.box<Employees>(Boxes.employeesBox);
 
-  List<InlineSpan> _childrenListTextSpan(List<ChildrenData> _childrenList) {
+  List<InlineSpan> _childrenListTextSpan(List<Children> _childrenList) {
     List<InlineSpan> _childrenWidgets = [];
     for (int i = 0; i < _childrenList.length; i++) {
       _childrenWidgets.add(TextSpan(text: '${i + 1}: ${_childrenList[i].surName} ${_childrenList[i].name} ${_childrenList[i].patronymic} \n'));

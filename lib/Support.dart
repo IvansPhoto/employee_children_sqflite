@@ -1,24 +1,8 @@
 import 'dart:math';
+import 'package:employee_children_sqflite/database.dart';
 import 'package:flutter/material.dart';
 import 'package:employee_children_sqflite/classes.dart';
-import 'package:hive/hive.dart';
-import 'package:rxdart/rxdart.dart';
-
-class SL {
-  List<EmployeesData> get allEmployee => Hive.box<EmployeesData>(Boxes.employeesBox).values.toList();
-
-  final _employee = BehaviorSubject<EmployeesData>();
-  Stream get streamEmployee$ => _employee.stream;
-  EmployeesData get currentEmployee => _employee.value;
-  set setEmployee(EmployeesData employee) => _employee.add(employee);
-
-  final _allEmployee = BehaviorSubject<List<EmployeesData>>.seeded(Hive.box<EmployeesData>(Boxes.employeesBox).values.toList());
-  Stream get streamAllEmployee$ => _allEmployee.stream;
-  List<EmployeesData> get currentListOfEmployee => _allEmployee.value;
-  set setListEmployee(List<EmployeesData> newListOfEmployee) => _allEmployee.add(newListOfEmployee);
-  set addEmployee(EmployeesData newEmployee) => Hive.box<EmployeesData>(Boxes.employeesBox).add(newEmployee);
-
-}
+import 'package:sqflite/sqflite.dart';
 
 String monthFromNumber(DateTime dateTime) {
   String month;
@@ -68,37 +52,47 @@ abstract class GeneratePersons {
   static final surnames = <String>['Muller', 'Schmidt', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Schulz', 'Hoffman'];
   static final position = <String>['Engineer', 'Chemist', 'Marketing', 'Developer', 'Sales', 'Logistic'];
 
-  static void generateEmployees() async {
+  static void generateEmployees(Database db) async {
     int _randomName = Random().nextInt(names.length);
     int _randomSurname = Random().nextInt(surnames.length);
     int _randomPosition = Random().nextInt(position.length);
     int _randomBirthdayYear = Random().nextInt(45) + 1955;
-    int _randomBirthdayMonth= Random().nextInt(12);
-    int _randomBirthdayDay= Random().nextInt(_randomBirthdayMonth == 2 ? 28 : 30);
-    await Hive.box<EmployeesData>(Boxes.employeesBox).add(EmployeesData(
+    int _randomBirthdayMonth = Random().nextInt(12);
+    int _randomBirthdayDay = Random().nextInt(_randomBirthdayMonth == 2 ? 28 : 30);
+
+    Employees employee = Employees(
       name: names[_randomName],
       surName: surnames[_randomSurname],
       position: position[_randomPosition],
-      patronymic: 'Hive',
+      patronymic: 'SQFlite',
       birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
-      children: HiveList(Hive.box<ChildrenData>(Boxes.childrenBox))
-    ));
+    );
+    await db.insert(
+      DBColumns.employeeTable,
+      employee.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
-  static void generateChildren() async {
+
+  static void generateChildren(Database db) async {
     int _randomName = Random().nextInt(names.length);
     int _randomSurname = Random().nextInt(surnames.length);
     int _randomBirthdayYear = Random().nextInt(45) + 1985;
-    int _randomBirthdayMonth= Random().nextInt(12);
-    int _randomBirthdayDay= Random().nextInt(_randomBirthdayMonth == 2 ? 28 : 30);
-    await Hive.box<ChildrenData>(Boxes.childrenBox).add(ChildrenData(
+    int _randomBirthdayMonth = Random().nextInt(12);
+    int _randomBirthdayDay = Random().nextInt(_randomBirthdayMonth == 2 ? 28 : 30);
+    Children child = Children(
       name: names[_randomName],
       surName: surnames[_randomSurname],
-      patronymic: 'Hive',
-      birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay)
-    ));
+      patronymic: 'SQFlite',
+      birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
+    );
+    child.id = await db.insert(
+      DBColumns.employeeTable,
+      child.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 }
-
 
 class ButtonAddChildrenEmployee extends StatelessWidget {
   final String snackBarText;

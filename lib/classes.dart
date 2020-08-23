@@ -12,7 +12,7 @@ abstract class RouteNames {
 }
 
 class SelectedChildren {
-  ChildrenData child;
+  Children child;
   bool selected;
 
   SelectedChildren({this.child, this.selected});
@@ -20,7 +20,7 @@ class SelectedChildren {
   void unSelect() => selected = !selected;
 }
 
-class EmployeesData {
+class Employees {
   int id;
 
   String name;
@@ -33,33 +33,33 @@ class EmployeesData {
 
   String position;
 
-  List<ChildrenData> children;
+  List<Children> children;
 
-  EmployeesData({this.id, this.name, this.surName, this.patronymic, this.birthday, this.position, this.children});
+  Employees({this.id, this.name, this.surName, this.patronymic, this.birthday, this.position, this.children});
 
-  EmployeesData.fromMap(Map<String, dynamic> employeeMap) {
-    id = employeeMap[ColumnDataBase.id];
-    name = employeeMap[ColumnDataBase.name];
-    surName = employeeMap[ColumnDataBase.surname];
-    patronymic = employeeMap[ColumnDataBase.patronymic];
-    birthday = DateTime(employeeMap[ColumnDataBase.birthday]);
-    position = employeeMap[ColumnDataBase.position];
+  Employees.fromMap(Map<String, dynamic> employeeMap) {
+    id = employeeMap[DBColumns.id];
+    name = employeeMap[DBColumns.name];
+    surName = employeeMap[DBColumns.surname];
+    patronymic = employeeMap[DBColumns.patronymic];
+    birthday = DateTime(employeeMap[DBColumns.birthday]);
+    position = employeeMap[DBColumns.position];
   }
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      ColumnDataBase.name: name,
-      ColumnDataBase.surname: surName,
-      ColumnDataBase.patronymic: patronymic,
-      ColumnDataBase.birthday: birthday.toString(),
-      ColumnDataBase.position: position,
+      DBColumns.name: name,
+      DBColumns.surname: surName,
+      DBColumns.patronymic: patronymic,
+      DBColumns.birthday: birthday.toString(),
+      DBColumns.position: position,
     };
-    if (id != null) map[ColumnDataBase.id] = id;
+    if (id != null) map[DBColumns.id] = id;
     return map;
   }
 }
 
-class ChildrenData {
+class Children {
   int id;
 
   String name;
@@ -72,26 +72,26 @@ class ChildrenData {
 
   int parentId;
 
-  ChildrenData({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId});
+  Children({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId});
 
-  ChildrenData.fromMap(Map<String, dynamic> childrenMap) {
-    id = childrenMap[ColumnDataBase.id];
-    name = childrenMap[ColumnDataBase.name];
-    surName = childrenMap[ColumnDataBase.surname];
-    patronymic = childrenMap[ColumnDataBase.patronymic];
-    birthday = DateTime(childrenMap[ColumnDataBase.birthday]);
-    parentId = childrenMap[ColumnDataBase.parentId];
+  Children.fromMap(Map<String, dynamic> childrenMap) {
+    id = childrenMap[DBColumns.id];
+    name = childrenMap[DBColumns.name];
+    surName = childrenMap[DBColumns.surname];
+    patronymic = childrenMap[DBColumns.patronymic];
+    birthday = DateTime(childrenMap[DBColumns.birthday]);
+    parentId = childrenMap[DBColumns.parentId];
   }
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      ColumnDataBase.name: name,
-      ColumnDataBase.surname: surName,
-      ColumnDataBase.patronymic: patronymic,
-      ColumnDataBase.birthday: birthday.toString(),
-      ColumnDataBase.parentId: parentId
+      DBColumns.name: name,
+      DBColumns.surname: surName,
+      DBColumns.patronymic: patronymic,
+      DBColumns.birthday: birthday.toString(),
+      DBColumns.parentId: parentId
     };
-    if (id != null) map[ColumnDataBase.id] = id;
+    if (id != null) map[DBColumns.id] = id;
     return map;
   }
 }

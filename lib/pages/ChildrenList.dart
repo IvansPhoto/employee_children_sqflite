@@ -1,24 +1,17 @@
-import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:flutter/material.dart';
+import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/classes.dart';
-import 'package:hive/hive.dart';
 import 'package:employee_children_sqflite/Support.dart';
 
 class ChildrenList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-    gStore<GlobalStore>().boxStreamChildren$.listen((event) {
-      gStore<GlobalStore>().setChildrenList(Hive.box<ChildrenData>(Boxes.childrenBox).values.toList());
-      print('${event.key} - ${event.value} - ${event.deleted}');
-    });
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: const Text('The list of children'),
         actions: [
-          ButtonAddChildrenEmployee(snackBarText: 'A child has been added.', genChild: true),
+          ButtonAddChildrenEmployee(snackBarText: 'A child has been added.', genChild: true)
         ],
       ),
       body: Column(
@@ -31,7 +24,7 @@ class ChildrenList extends StatelessWidget {
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
-                      ChildrenData theChild = snapshot.data.elementAt(index);
+                      Children theChild = snapshot.data.elementAt(index);
                       return Card(
                         elevation: 0,
                         child: ListTile(

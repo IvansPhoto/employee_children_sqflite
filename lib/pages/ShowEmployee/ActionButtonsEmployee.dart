@@ -4,7 +4,7 @@ import 'package:employee_children_sqflite/classes.dart';
 import 'package:employee_children_sqflite/pages/DeleteConfirmation.dart';
 
 class ActionButtons extends StatelessWidget {
-  final EmployeesData employee;
+  final Employees employee;
 
   ActionButtons({this.employee});
 
