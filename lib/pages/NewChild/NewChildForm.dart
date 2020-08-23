@@ -33,8 +33,8 @@ class _NewChildFormState extends State<NewChildForm> {
       _nameTEC = TextEditingController(text: widget.child.name);
       _surnameTEC = TextEditingController(text: widget.child.surName);
       _patronymicTEC = TextEditingController(text: widget.child.patronymic);
-      _birthday = widget.child.birthdate;
-      _birthdayText = monthFromNumber(widget.child.birthdate);
+      _birthday = widget.child.birthday;
+      _birthdayText = monthFromNumber(widget.child.birthday);
     }
     super.initState();
   }
@@ -52,7 +52,7 @@ class _NewChildFormState extends State<NewChildForm> {
       name: _nameTEC.text,
       surName: _surnameTEC.text,
       patronymic: _patronymicTEC.text,
-      birthdate: _birthday,
+      birthday: _birthday,
     ));
     Navigator.of(context).pop();
     Scaffold.of(context).showSnackBar(SnackBar(
@@ -66,7 +66,7 @@ class _NewChildFormState extends State<NewChildForm> {
     widget.child.name = _nameTEC.text;
     widget.child.surName = _surnameTEC.text;
     widget.child.patronymic = _patronymicTEC.text;
-    widget.child.birthdate = _birthday;
+    widget.child.birthday = _birthday;
     await widget.child.save();
     Navigator.of(context).pop();
     Scaffold.of(context).showSnackBar(SnackBar(
@@ -112,7 +112,7 @@ class _NewChildFormState extends State<NewChildForm> {
               controller: TextEditingController(text: _birthdayText),
               onTap: () => showDatePicker(
                 context: context,
-                initialDate: widget.child == null ? DateTime.now() : widget.child.birthdate,
+                initialDate: widget.child == null ? DateTime.now() : widget.child.birthday,
                 firstDate: DateTime(1960),
                 lastDate: DateTime(2021),
               ).then((dateTime) => setState(() {

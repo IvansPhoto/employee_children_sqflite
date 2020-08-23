@@ -36,7 +36,7 @@ class ChildrenList extends StatelessWidget {
                         elevation: 0,
                         child: ListTile(
                           title: Text('${theChild.surName} ${theChild.name}'),
-                          subtitle: Text(monthFromNumber(theChild.birthdate)),
+                          subtitle: Text(monthFromNumber(theChild.birthday)),
                           onTap: () => Navigator.of(context).pushNamed(RouteNames.showChild, arguments: theChild),
                         ),
                       );

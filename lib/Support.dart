@@ -80,7 +80,7 @@ abstract class GeneratePersons {
       surName: surnames[_randomSurname],
       position: position[_randomPosition],
       patronymic: 'Hive',
-      birthdate: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
+      birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
       children: HiveList(Hive.box<ChildrenData>(Boxes.childrenBox))
     ));
   }
@@ -94,7 +94,7 @@ abstract class GeneratePersons {
       name: names[_randomName],
       surName: surnames[_randomSurname],
       patronymic: 'Hive',
-      birthdate: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay)
+      birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay)
     ));
   }
 }

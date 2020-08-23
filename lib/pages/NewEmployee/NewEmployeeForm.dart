@@ -43,8 +43,8 @@ class _EmployeeFormState extends State<EmployeeForm> {
       _nameTEC = TextEditingController(text: widget.employee.name);
       _surnameTEC = TextEditingController(text: widget.employee.surName);
       _positionTEC = TextEditingController(text: widget.employee.position);
-      _birthday = widget.employee.birthdate;
-      _birthdayText = monthFromNumber(widget.employee.birthdate);
+      _birthday = widget.employee.birthday;
+      _birthdayText = monthFromNumber(widget.employee.birthday);
       _childrenList = widget.employee.children;
     }
     super.initState();
@@ -62,7 +62,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
     employeesBox.add(EmployeesData(
       name: _nameTEC.text,
       surName: _surnameTEC.text,
-      birthdate: _birthday,
+      birthday: _birthday,
       position: _positionTEC.text,
       children: HiveList(childrenBox), //Check output from ChildrenList
     ));
@@ -80,7 +80,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
     widget.employee.name = _nameTEC.text;
     widget.employee.surName = _surnameTEC.text;
     widget.employee.position = _positionTEC.text;
-    widget.employee.birthdate = _birthday;
+    widget.employee.birthday = _birthday;
 //    widget.employee.children = HiveList(childrenBox);
     await widget.employee.save();
     Navigator.of(context).pop();
@@ -143,7 +143,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                 controller: TextEditingController(text: _birthdayText),
                 onTap: () => showDatePicker(
                   context: context,
-                  initialDate: widget.employee == null ? DateTime.now() : widget.employee.birthdate,
+                  initialDate: widget.employee == null ? DateTime.now() : widget.employee.birthday,
                   firstDate: DateTime(1950),
                   lastDate: DateTime(2021),
                 ).then((dateTime) => setState(() {

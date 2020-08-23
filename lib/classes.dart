@@ -1,6 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-
+import 'package:employee_children_sqflite/database.dart';
 
 abstract class RouteNames {
   static final index = '/';
@@ -13,61 +11,87 @@ abstract class RouteNames {
   static final selectChildren = '/SelectChildren/SelectChildren';
 }
 
-abstract class Boxes {
-  static final String employeesBox = 'employees';
-  static final String childrenBox = 'children';
-}
-
-
 class SelectedChildren {
   ChildrenData child;
   bool selected;
+
   SelectedChildren({this.child, this.selected});
+
   void unSelect() => selected = !selected;
 }
 
+class EmployeesData {
+  int id;
 
-@HiveType(typeId: 0)
-class EmployeesData extends HiveObject {
-  @HiveField(0)
   String name;
 
-  @HiveField(1)
   String surName;
 
-  @HiveField(2)
   String patronymic;
 
-  @HiveField(3)
-  DateTime birthdate;
+  DateTime birthday;
 
-  @HiveField(4)
   String position;
 
-  @HiveField(5)
-  HiveList<ChildrenData> children;
+  List<ChildrenData> children;
 
-  EmployeesData({this.name, this.surName, this.patronymic, this.birthdate, this.position, this.children});
+  EmployeesData({this.id, this.name, this.surName, this.patronymic, this.birthday, this.position, this.children});
+
+  EmployeesData.fromMap(Map<String, dynamic> employeeMap) {
+    id = employeeMap[ColumnDataBase.id];
+    name = employeeMap[ColumnDataBase.name];
+    surName = employeeMap[ColumnDataBase.surname];
+    patronymic = employeeMap[ColumnDataBase.patronymic];
+    birthday = DateTime(employeeMap[ColumnDataBase.birthday]);
+    position = employeeMap[ColumnDataBase.position];
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      ColumnDataBase.name: name,
+      ColumnDataBase.surname: surName,
+      ColumnDataBase.patronymic: patronymic,
+      ColumnDataBase.birthday: birthday.toString(),
+      ColumnDataBase.position: position,
+    };
+    if (id != null) map[ColumnDataBase.id] = id;
+    return map;
+  }
 }
 
-@HiveType(typeId: 1)
-class ChildrenData extends HiveObject {
-  @HiveField(0)
+class ChildrenData {
+  int id;
+
   String name;
 
-  @HiveField(1)
   String surName;
 
-  @HiveField(2)
   String patronymic;
 
-  @HiveField(3)
-  DateTime birthdate;
+  DateTime birthday;
 
-  @HiveField(4)
-  EmployeesData parent;
+  int parentId;
 
-  set setParent(EmployeesData newParent) => parent = newParent;
+  ChildrenData({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId});
 
-  ChildrenData({this.name, this.surName, this.patronymic, this.birthdate});
+  ChildrenData.fromMap(Map<String, dynamic> childrenMap) {
+    id = childrenMap[ColumnDataBase.id];
+    name = childrenMap[ColumnDataBase.name];
+    surName = childrenMap[ColumnDataBase.surname];
+    patronymic = childrenMap[ColumnDataBase.patronymic];
+    birthday = DateTime(childrenMap[ColumnDataBase.birthday]);
+    parentId = childrenMap[ColumnDataBase.parentId];
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      ColumnDataBase.name: name,
+      ColumnDataBase.surname: surName,
+      ColumnDataBase.patronymic: patronymic,
+      ColumnDataBase.birthday: birthday.toString(),
+      ColumnDataBase.parentId: parentId
+    };
+    if (id != null) map[ColumnDataBase.id] = id;
+    return map;
+  }
 }

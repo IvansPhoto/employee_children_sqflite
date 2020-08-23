@@ -62,7 +62,7 @@ class ShowEmployee extends StatelessWidget {
                   children: <TextSpan>[
                     const TextSpan(text: 'Birthday:\n'),
                     TextSpan(
-                      text: employee.birthdate == null ? 'Not specified' : monthFromNumber(employee.birthdate),
+                      text: employee.birthday == null ? 'Not specified' : monthFromNumber(employee.birthday),
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ],

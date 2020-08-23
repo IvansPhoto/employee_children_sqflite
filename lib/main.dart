@@ -1,9 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:employee_children_sqflite/classes.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/pages/SelectChildren/SelectChildren.dart';
-import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:employee_children_sqflite/classes.dart';
 import 'package:employee_children_sqflite/pages/ChildrenList.dart';
 import 'package:employee_children_sqflite/pages/EmployeesList.dart';
 import 'package:employee_children_sqflite/pages/NewChild/NewChild.dart';
@@ -13,14 +12,10 @@ import 'package:employee_children_sqflite/pages/ShowEmployee/ShowEmployee.dart';
 import 'package:employee_children_sqflite/pages/index.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter<EmployeesData>(EmployeesDataAdapter());
-  Hive.registerAdapter<ChildrenData>(ChildrenDataAdapter());
-  await Hive.openBox<EmployeesData>(Boxes.employeesBox);
-  await Hive.openBox<ChildrenData>(Boxes.childrenBox);
+  WidgetsFlutterBinding.ensureInitialized();
 
   gStore.registerLazySingleton<GlobalStore>(
-    () => GlobalStore(childrenBox: Hive.box<ChildrenData>(Boxes.childrenBox), employeeBox: Hive.box<EmployeesData>(Boxes.employeesBox)),
+    () => GlobalStore(),
   );
 
   runApp(MaterialApp(
