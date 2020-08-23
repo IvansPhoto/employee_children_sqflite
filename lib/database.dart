@@ -78,21 +78,13 @@ class DBProvider {
     }
   }
 
-  Future<int> deleteEmployee(Employees employee) async {
-    return await db.delete(DBColumns.employeeTable, where: "${DBColumns.id} = ?", whereArgs: [employee.id]);
-  }
+  Future<int> deleteEmployee(Employees employee) async => await db.delete(DBColumns.employeeTable, where: "${DBColumns.id} = ?", whereArgs: [employee.id]);
 
-  Future<int> deleteChildren(Children child) async {
-    return await db.delete(DBColumns.childrenTable, where: "${DBColumns.id} = ?", whereArgs: [child.id]);
-  }
+  Future<int> deleteChildren(Children child) async => await db.delete(DBColumns.childrenTable, where: "${DBColumns.id} = ?", whereArgs: [child.id]);
 
-  Future<int> updateEmployee(Employees employee) async {
-    return await db.update(DBColumns.employeeTable, employee.toMap(), where: "${DBColumns.id} = ?", whereArgs: [employee.id]);
-  }
+  Future<int> updateEmployee(Employees employee) async => await db.update(DBColumns.employeeTable, employee.toMap(), where: "${DBColumns.id} = ?", whereArgs: [employee.id]);
 
-  Future<int> updateChild(Children child) async {
-    return await db.update(DBColumns.childrenTable, child.toMap(), where: "${DBColumns.id} = ?", whereArgs: [child.id]);
-  }
+  Future<int> updateChild(Children child) async => await db.update(DBColumns.childrenTable, child.toMap(), where: "${DBColumns.id} = ?", whereArgs: [child.id]);
 
   Future<List<Employees>> getAllEmployees() async {
     List<Employees> employeeList = [];

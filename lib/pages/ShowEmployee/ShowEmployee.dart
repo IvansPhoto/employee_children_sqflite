@@ -23,69 +23,72 @@ class ShowEmployee extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Employees employee = store.theEmployee;
+    final Employees employee = gStore.get<GlobalStore>().theEmployee;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: Text('${employee.name} ${employee.surName}'),
       ),
-      body: ValueListenableBuilder(
-          valueListenable: Hive.box<Employees>(Boxes.employeesBox).listenable(),
-          builder: (context, Box<Employees> box, _) {
-            return ListView(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              children: <Widget>[
-                //Name
-                RichText(
-                    text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: <TextSpan>[
-                    const TextSpan(text: 'Name:\n'),
-                    TextSpan(text: employee.name ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
-                  ],
-                )),
-                Divider(),
-                //Surname
-                RichText(
-                    text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: <TextSpan>[
-                    const TextSpan(text: 'Surname:\n'),
-                    TextSpan(text: employee.surName ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
-                  ],
-                )),
-                Divider(),
-                //Birthday
-                RichText(
-                    text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: <TextSpan>[
-                    const TextSpan(text: 'Birthday:\n'),
-                    TextSpan(
-                      text: employee.birthday == null ? 'Not specified' : monthFromNumber(employee.birthday),
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                  ],
-                )),
-                Divider(),
-                //Position
-                RichText(
-                    text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: <TextSpan>[
-                    const TextSpan(text: 'Position:\n'),
-                    TextSpan(text: employee.position ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
-                  ],
-                )),
-                Divider(),
-                //List of children
-                ..._showChildrenList(context, employee.children),
-                Divider(),
-                //Buttons for edit and delete the employee
-                ActionButtons(employee: employee),
-              ],
-            );
+      body: StreamBuilder(
+          stream: gStore<GlobalStore>().streamTheEmployee$, //For editing the employee
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting || snapshot.connectionState == ConnectionState.none)
+              return Text('Loading');
+            else
+              return ListView(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                children: <Widget>[
+                  //Name
+                  RichText(
+                      text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      const TextSpan(text: 'Name:\n'),
+                      TextSpan(text: employee.name ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
+                    ],
+                  )),
+                  Divider(),
+                  //Surname
+                  RichText(
+                      text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      const TextSpan(text: 'Surname:\n'),
+                      TextSpan(text: employee.surName ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
+                    ],
+                  )),
+                  Divider(),
+                  //Birthday
+                  RichText(
+                      text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      const TextSpan(text: 'Birthday:\n'),
+                      TextSpan(
+                        text: employee.birthday == null ? 'Not specified' : monthFromNumber(employee.birthday),
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ],
+                  )),
+                  Divider(),
+                  //Position
+                  RichText(
+                      text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      const TextSpan(text: 'Position:\n'),
+                      TextSpan(text: employee.position ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
+                    ],
+                  )),
+                  Divider(),
+                  //List of children
+                  ..._showChildrenList(context, employee.children),
+                  Divider(),
+                  //Buttons for edit and delete the employee
+                ],
+              );
           }),
+      bottomNavigationBar: ActionButtons(employee: employee),
     );
   }
 }

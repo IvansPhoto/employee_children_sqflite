@@ -99,9 +99,9 @@ abstract class GeneratePersons {
 
 class ButtonAddChildrenEmployee extends StatelessWidget {
   final String snackBarText;
-  final bool genChild;
+  final bool forChild;
 
-  ButtonAddChildrenEmployee({this.snackBarText, this.genChild});
+  ButtonAddChildrenEmployee({this.snackBarText = '', this.forChild});
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +111,7 @@ class ButtonAddChildrenEmployee extends StatelessWidget {
     return IconButton(
         icon: Icon(Icons.get_app),
         onPressed: () async {
-          if (genChild) {
+          if (forChild) {
             child = await GeneratePersons.generateChildren(db);
             gStore<GlobalStore>().setChildrenToStream();
           } else {
@@ -120,7 +120,7 @@ class ButtonAddChildrenEmployee extends StatelessWidget {
           }
           Scaffold.of(context)
             ..removeCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: genChild ? Text('${child.name} ${child.surName}') : Text('${employee.name} ${employee.surName}')));
+            ..showSnackBar(SnackBar(content: forChild ? Text('${child.name} ${child.surName}') : Text('${employee.name} ${employee.surName} $snackBarText')));
         });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:employee_children_sqflite/classes.dart';
+import 'package:employee_children_sqflite/GlobalStore.dart';
 
 class DeleteConfirmation extends StatelessWidget {
   final Employees employee;
@@ -7,12 +8,9 @@ class DeleteConfirmation extends StatelessWidget {
 
   DeleteConfirmation({this.employee, this.child});
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
         appBar: AppBar(
           elevation: 0,
           centerTitle: true,
@@ -35,17 +33,10 @@ class DeleteConfirmation extends StatelessWidget {
                 icon: Icon(Icons.delete_forever),
                 label: const Text('Remove from the list!'),
                 onPressed: () async {
-                  if (employee != null) await employee.delete();
-                  if (child != null) await child.delete();
+                  if (employee != null) gStore<GlobalStore>().deleteEmployee(employee);
+//                  if (child != null) await child.delete(); //TODO: Deleting of the records for childrenList
                   Navigator.pop(context);
-                  Navigator.pop(context);
-                  _scaffoldKey.currentState
-                    ..removeCurrentSnackBar()
-                    ..showSnackBar(SnackBar(
-                      content: const Text('The record has been deleted.'),
-                      duration: Duration(seconds: 5),
-                      elevation: 0,
-                    ));
+                  Navigator.pop(context, 'deleted');
                 },
               )
             ],

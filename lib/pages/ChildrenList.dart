@@ -12,7 +12,7 @@ class ChildrenList extends StatelessWidget {
         elevation: 0,
         title: const Text('The list of children'),
         actions: [
-          ButtonAddChildrenEmployee(snackBarText: 'A child has been added.', genChild: true)
+          ButtonAddChildrenEmployee(snackBarText: 'A child has been added.', forChild: true)
         ],
       ),
       body: Column(

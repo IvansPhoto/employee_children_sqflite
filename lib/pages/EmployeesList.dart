@@ -13,7 +13,7 @@ class EmployeesList extends StatelessWidget {
         elevation: 0,
         title: const Text('The list of employees'),
         actions: [
-          ButtonAddChildrenEmployee(snackBarText: 'An employee has been added.', genChild: false)
+          ButtonAddChildrenEmployee(snackBarText: 'An employee has been added.', forChild: false)
         ],
       ),
       body: Column(
@@ -26,15 +26,18 @@ class EmployeesList extends StatelessWidget {
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
-                      Employees theEmployee = snapshot.data.elementAt(index);
+                      Employees employee = snapshot.data.elementAt(index);
                       return Card(
                         elevation: 0,
                         child: ListTile(
-                          title: Text('${theEmployee.surName} ${theEmployee.name}'),
-                          subtitle: Text(theEmployee.children == null || theEmployee.children.length == 0 ? 'No children' : '${theEmployee.children.length} children'),
-                          onTap: () {
-                            gStore<GlobalStore>().theEmployee = theEmployee; //Put the employee to the Global store
-                            Navigator.of(context).pushNamed(RouteNames.showEmployee); //Go to the page for showing of the employee
+                          title: Text('${employee.surName} ${employee.name}'),
+                          subtitle: Text(employee.children == null || employee.children.length == 0 ? 'No children' : '${employee.children.length} children'),
+                          onTap: () async {
+                            gStore<GlobalStore>().setTheEmployee(employee); //Put the employee to the Global store
+                            final message = await Navigator.of(context).pushNamed(RouteNames.showEmployee); //Go to the page for showing of the employee
+                            Scaffold.of(context)
+                              ..removeCurrentSnackBar()
+                              ..showSnackBar(SnackBar(content: Text('${employee.name} ${employee.surName} $message')));
                           },
                         ),
                       );
