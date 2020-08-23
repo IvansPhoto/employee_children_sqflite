@@ -17,6 +17,10 @@ abstract class DBColumns {
 }
 
 class DBProvider {
+  DBProvider() {
+    initDataBase();
+  }
+
   Database db;
 
   Future<void> _onConfigure(Database db) async {
@@ -28,6 +32,7 @@ class DBProvider {
   }
 
   Future<void> initDataBase() async {
+    print('opening...');
     try {
       var databasesPath = await getDatabasesPath();
       await Directory(databasesPath).create(recursive: true);
@@ -50,7 +55,7 @@ class DBProvider {
       onConfigure: _onConfigure,
       onOpen: _onOpen,
       version: 1,
-    );
+    ).whenComplete(() => print('open'));
   }
 
   Future<Employees> insertEmployees(Employees employee) async {
@@ -141,8 +146,8 @@ class DBProvider {
     List<Map<String, dynamic>> childrenMapList = await db.query(
       DBColumns.childrenTable,
       columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.birthday, DBColumns.parentId],
-	    where: '${DBColumns.id} = ? OR ${DBColumns.name} = ? OR ${DBColumns.surname} = ? OR ${DBColumns.patronymic} = ?',
-	    whereArgs: [searchString],
+      where: '${DBColumns.id} = ? OR ${DBColumns.name} = ? OR ${DBColumns.surname} = ? OR ${DBColumns.patronymic} = ?',
+      whereArgs: [searchString],
     );
     if (childrenMapList.length > 0) {
       childrenMapList.forEach((employeeMap) {
@@ -152,18 +157,4 @@ class DBProvider {
     } else
       return null;
   }
-
-	//Setting up streams
-  final _employeeList = BehaviorSubject<List<Employees>>();
-
-  Stream get streamEmployeeList$ => _employeeList.stream;
-
-  List<Employees> get currentEmployeeList => _employeeList.value;
-
-  void allEmployees() async {
-  	_employeeList.add(await getAllEmployees());
-  }
-
-  set setEmployeeList(List<Employees> newEmployeeList) => _employeeList.add(newEmployeeList);
-
 }

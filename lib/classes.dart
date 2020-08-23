@@ -42,7 +42,7 @@ class Employees {
     name = employeeMap[DBColumns.name];
     surName = employeeMap[DBColumns.surname];
     patronymic = employeeMap[DBColumns.patronymic];
-    birthday = DateTime(employeeMap[DBColumns.birthday]);
+    birthday = DateTime.parse(employeeMap[DBColumns.birthday]);
     position = employeeMap[DBColumns.position];
   }
 
@@ -51,7 +51,7 @@ class Employees {
       DBColumns.name: name,
       DBColumns.surname: surName,
       DBColumns.patronymic: patronymic,
-      DBColumns.birthday: birthday.toString(),
+      DBColumns.birthday: birthday.toIso8601String(),
       DBColumns.position: position,
     };
     if (id != null) map[DBColumns.id] = id;

@@ -1,8 +1,9 @@
 import 'dart:math';
-import 'package:employee_children_sqflite/database.dart';
-import 'package:flutter/material.dart';
-import 'package:employee_children_sqflite/classes.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter/material.dart';
+import 'package:employee_children_sqflite/database.dart';
+import 'package:employee_children_sqflite/classes.dart';
+import 'package:employee_children_sqflite/GlobalStore.dart';
 
 String monthFromNumber(DateTime dateTime) {
   String month;
@@ -52,7 +53,7 @@ abstract class GeneratePersons {
   static final surnames = <String>['Muller', 'Schmidt', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Schulz', 'Hoffman'];
   static final position = <String>['Engineer', 'Chemist', 'Marketing', 'Developer', 'Sales', 'Logistic'];
 
-  static void generateEmployees(Database db) async {
+  static Future<Employees> generateEmployees(Database db) async {
     int _randomName = Random().nextInt(names.length);
     int _randomSurname = Random().nextInt(surnames.length);
     int _randomPosition = Random().nextInt(position.length);
@@ -67,14 +68,15 @@ abstract class GeneratePersons {
       patronymic: 'SQFlite',
       birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
     );
-    await db.insert(
+    employee.id = await db.insert(
       DBColumns.employeeTable,
       employee.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    return employee;
   }
 
-  static void generateChildren(Database db) async {
+  static Future<Children> generateChildren(Database db) async {
     int _randomName = Random().nextInt(names.length);
     int _randomSurname = Random().nextInt(surnames.length);
     int _randomBirthdayYear = Random().nextInt(45) + 1985;
@@ -91,6 +93,7 @@ abstract class GeneratePersons {
       child.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    return child;
   }
 }
 
@@ -102,13 +105,22 @@ class ButtonAddChildrenEmployee extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Database db = gStore<GlobalStore>().dbProvider.db;
+    Employees employee;
+    Children child;
     return IconButton(
         icon: Icon(Icons.get_app),
-        onPressed: () {
-          genChild ? GeneratePersons.generateChildren() : GeneratePersons.generateEmployees();
+        onPressed: () async {
+          if (genChild) {
+            child = await GeneratePersons.generateChildren(db);
+            gStore<GlobalStore>().setChildrenToStream();
+          } else {
+            employee = await GeneratePersons.generateEmployees(db);
+            gStore<GlobalStore>().setEmployeesToStream();
+          }
           Scaffold.of(context)
             ..removeCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(snackBarText)));
+            ..showSnackBar(SnackBar(content: genChild ? Text('${child.name} ${child.surName}') : Text('${employee.name} ${employee.surName}')));
         });
   }
 }

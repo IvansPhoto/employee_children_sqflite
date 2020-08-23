@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:employee_children_sqflite/database.dart';
 import 'package:employee_children_sqflite/classes.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
@@ -14,18 +15,7 @@ import 'package:employee_children_sqflite/pages/index.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //Check the database columns.
-  print(
-    "CREATE TABLE ${DBColumns.employeeTable}(${DBColumns.id} INTEGER PRIMARY KEY AUTOINCREMENT, "
-    "${DBColumns.name} TEXT, ${DBColumns.surname} TEXT, ${DBColumns.patronymic} TEXT, ${DBColumns.birthday} TEXT, ${DBColumns.position} TEXT);"
-    "CREATE TABLE ${DBColumns.childrenTable}(${DBColumns.id} INTEGER PRIMARY KEY AUTOINCREMENT, "
-    "${DBColumns.name} TEXT, ${DBColumns.surname} TEXT, ${DBColumns.patronymic} TEXT, ${DBColumns.birthday} TEXT, ${DBColumns.parentId} INTEGER,"
-    "FOREIGN KEY(${DBColumns.parentId}) REFERENCES ${DBColumns.employeeTable}(${DBColumns.id}) ON UPDATE CASCADE ON DELETE CASCADE);"
-    "CREATE INDEX childrenindex ON ${DBColumns.childrenTable}(${DBColumns.parentId});",
-  );
-
-  gStore.registerLazySingleton<GlobalStore>(() => GlobalStore());
-  gStore.registerLazySingleton<DBProvider>(() => DBProvider());
+  gStore.registerSingleton<GlobalStore>(GlobalStore(dbProvider: new DBProvider()));
 
   runApp(MaterialApp(
     title: 'Employees and their children.',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/classes.dart';
 import 'package:employee_children_sqflite/Support.dart';
+import 'package:employee_children_sqflite/database.dart';
 
 class ChildrenList extends StatelessWidget {
   @override
@@ -42,7 +43,7 @@ class ChildrenList extends StatelessWidget {
             child: TextFormField(
               maxLength: 50,
               decoration: const InputDecoration(hintText: 'Matches in name or surname', labelText: 'Searching', hintStyle: TextStyle(fontSize: 15)),
-              onChanged: (text) => gStore<GlobalStore>().filterChildren(text),
+              onChanged: (text) => gStore<DBProvider>().filterChildren(text),
             ),
           )
         ],

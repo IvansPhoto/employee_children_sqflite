@@ -1,5 +1,7 @@
+import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/classes.dart';
 import 'package:flutter/material.dart';
+import 'package:employee_children_sqflite/database.dart';
 
 class Index extends StatelessWidget {
   @override
@@ -15,12 +17,18 @@ class Index extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             FlatButton(
-              onPressed: () => Navigator.pushNamed(context, RouteNames.employeesList),
+              onPressed: () {
+                gStore<GlobalStore>().setEmployeesToStream();
+                Navigator.pushNamed(context, RouteNames.employeesList);
+              },
               child: const Text('Employees List'),
               color: Colors.red[900],
             ),
             FlatButton(
-              onPressed: () => Navigator.pushNamed(context, RouteNames.childrenList),
+              onPressed: () {
+//                gStore<GlobalStore>().setChildrenToStream();
+                Navigator.pushNamed(context, RouteNames.childrenList);
+              },
               child: const Text('Children List'),
               color: Colors.red[900],
             ),
