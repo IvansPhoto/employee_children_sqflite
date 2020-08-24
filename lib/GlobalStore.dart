@@ -14,7 +14,7 @@ class GlobalStore {
   //Setting up streams for the LIST of employees
   final _employeeList = BehaviorSubject<List<Employees>>();
 
-  Stream get streamEmployeeList$ => _employeeList.stream;
+  Stream get streamEmployeesList$ => _employeeList.stream;
 
   void setEmployeesToStream() async {
     _employeeList.add(await dbProvider.getAllEmployees());
@@ -41,7 +41,7 @@ class GlobalStore {
     }
   }
 
-  //Setting up streams for children
+  //Setting up streams for the LIST of children
   final _childrenList = BehaviorSubject<List<Children>>();
 
   Stream get streamChildrenList$ => _childrenList.stream;
@@ -54,6 +54,20 @@ class GlobalStore {
     _childrenList.add(await dbProvider.filterChildren(searchString));
   }
 
-  Children theChild;
+  //Setting up streams for The employees
+  final _theChild = BehaviorSubject<Children>();
 
+  Stream get streamTheChild$ => _theChild.stream;
+
+  void setTheChild(Children child) => _theChild.add(child);
+
+  get theChild => _theChild.value;
+
+  void deleteChild(Children child) async {
+    int number = await dbProvider.deleteChild(child);
+    _childrenList.add(await dbProvider.getAllChildren());
+    if (number != 1) {
+      print('Error in deleting $number ${child.id}');
+    }
+  }
 }

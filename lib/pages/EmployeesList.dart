@@ -20,7 +20,7 @@ class EmployeesList extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder(
-                stream: gStore<GlobalStore>().streamEmployeeList$,
+                stream: gStore<GlobalStore>().streamEmployeesList$,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState != ConnectionState.active || snapshot.data == null) return Center(child: Text('No employee in the list')); //Return a text if there are no records.
                   return ListView.builder(
@@ -34,10 +34,11 @@ class EmployeesList extends StatelessWidget {
                           subtitle: Text(employee.children == null || employee.children.length == 0 ? 'No children' : '${employee.children.length} children'),
                           onTap: () async {
                             gStore<GlobalStore>().setTheEmployee(employee); //Put the employee to the Global store
-                            final message = await Navigator.of(context).pushNamed(RouteNames.showEmployee); //Go to the page for showing of the employee
+                            //Go to the page for showing of the employee and await the message 'edited' or 'deleted'.
+                            final message = await Navigator.of(context).pushNamed(RouteNames.showEmployee);
                             Scaffold.of(context)
                               ..removeCurrentSnackBar()
-                              ..showSnackBar(SnackBar(content: Text('${employee.name} ${employee.surName} $message')));
+                              ..showSnackBar(SnackBar(content: Text('${employee.name} ${employee.surName} ${message ?? ''}')));
                           },
                         ),
                       );

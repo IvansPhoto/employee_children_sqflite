@@ -89,7 +89,7 @@ abstract class GeneratePersons {
       birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
     );
     child.id = await db.insert(
-      DBColumns.employeeTable,
+      DBColumns.childrenTable,
       child.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );

@@ -1,8 +1,8 @@
-import 'package:employee_children_sqflite/classes.dart';
-import 'package:employee_children_sqflite/pages/ShowEmployee/ActionButtonsEmployee.dart';
 import 'package:flutter/material.dart';
+import 'package:employee_children_sqflite/classes.dart';
 import 'package:employee_children_sqflite/Support.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
+import 'package:employee_children_sqflite/pages/ShowEmployee/ActionButtonsEmployee.dart';
 
 class ShowEmployee extends StatelessWidget {
   final store = gStore.get<GlobalStore>();
@@ -33,7 +33,7 @@ class ShowEmployee extends StatelessWidget {
           stream: gStore<GlobalStore>().streamTheEmployee$, //For editing the employee
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting || snapshot.connectionState == ConnectionState.none)
-              return Text('Loading');
+              return Center(child: Text('Loading'));
             else
               return ListView(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),

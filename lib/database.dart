@@ -32,6 +32,8 @@ class DBProvider {
   }
 
   Future<void> initDataBase() async {
+    //To delete the database
+//    await deleteDatabase(join(await getDatabasesPath(), 'employee_children.db'));
     print('opening...');
     try {
       var databasesPath = await getDatabasesPath();
@@ -43,14 +45,12 @@ class DBProvider {
     db = await openDatabase(
       join(await getDatabasesPath(), 'employee_children.db'),
       onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE ${DBColumns.employeeTable}(${DBColumns.id} INTEGER PRIMARY KEY AUTOINCREMENT, "
-          "${DBColumns.name} TEXT, ${DBColumns.surname} TEXT, ${DBColumns.patronymic} TEXT, ${DBColumns.birthday} TEXT, ${DBColumns.position} TEXT);"
-          "CREATE TABLE ${DBColumns.childrenTable}(${DBColumns.id} INTEGER PRIMARY KEY AUTOINCREMENT, "
-          "${DBColumns.name} TEXT, ${DBColumns.surname} TEXT, ${DBColumns.patronymic} TEXT, ${DBColumns.birthday} TEXT, ${DBColumns.parentId} INTEGER,"
-          "FOREIGN KEY(${DBColumns.parentId}) REFERENCES ${DBColumns.employeeTable}(${DBColumns.id}) ON UPDATE CASCADE ON DELETE CASCADE);"
-          "CREATE INDEX childrenindex ON ${DBColumns.childrenTable}(${DBColumns.parentId});",
-        );
+        db.execute("CREATE TABLE ${DBColumns.employeeTable}(${DBColumns.id} INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "${DBColumns.name} TEXT, ${DBColumns.surname} TEXT, ${DBColumns.patronymic} TEXT, ${DBColumns.birthday} TEXT, ${DBColumns.position} TEXT); ");
+        db.execute("CREATE TABLE ${DBColumns.childrenTable}(${DBColumns.id} INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "${DBColumns.name} TEXT, ${DBColumns.surname} TEXT, ${DBColumns.patronymic} TEXT, ${DBColumns.birthday} TEXT, ${DBColumns.parentId} INTEGER, "
+            "FOREIGN KEY(${DBColumns.parentId}) REFERENCES ${DBColumns.employeeTable}(${DBColumns.id}) ON UPDATE CASCADE ON DELETE CASCADE); ");
+        return db.execute("CREATE INDEX childrenindex ON ${DBColumns.childrenTable}(${DBColumns.parentId});");
       },
       onConfigure: _onConfigure,
       onOpen: _onOpen,
@@ -70,7 +70,7 @@ class DBProvider {
 
   Future<Children> insertChildren(Children child) async {
     try {
-      child.id = await db.insert(DBColumns.employeeTable, child.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+      child.id = await db.insert(DBColumns.childrenTable, child.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return child;
     } catch (e) {
       print(e);
@@ -80,7 +80,7 @@ class DBProvider {
 
   Future<int> deleteEmployee(Employees employee) async => await db.delete(DBColumns.employeeTable, where: "${DBColumns.id} = ?", whereArgs: [employee.id]);
 
-  Future<int> deleteChildren(Children child) async => await db.delete(DBColumns.childrenTable, where: "${DBColumns.id} = ?", whereArgs: [child.id]);
+  Future<int> deleteChild(Children child) async => await db.delete(DBColumns.childrenTable, where: "${DBColumns.id} = ?", whereArgs: [child.id]);
 
   Future<int> updateEmployee(Employees employee) async => await db.update(DBColumns.employeeTable, employee.toMap(), where: "${DBColumns.id} = ?", whereArgs: [employee.id]);
 

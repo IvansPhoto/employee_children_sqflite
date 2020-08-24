@@ -1,7 +1,6 @@
 import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/classes.dart';
 import 'package:flutter/material.dart';
-import 'package:employee_children_sqflite/database.dart';
 
 class Index extends StatelessWidget {
   @override
@@ -13,9 +12,10 @@ class Index extends StatelessWidget {
       ),
       body: Center(
         child: FutureBuilder(
-          future: gStore<GlobalStore>().dbProvider.initDataBase(),
+          future: gStore<GlobalStore>().dbProvider.initDataBase(), //For asynchronous opening the database.
           // ignore: missing_return
           builder: (context, snapshot) {
+	          if (snapshot.hasError) return Center(child: Text('Error ${snapshot.data}'));
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
                 return Center(child: Text('Loading...'));
@@ -35,7 +35,7 @@ class Index extends StatelessWidget {
                     ),
                     FlatButton(
                       onPressed: () {
-//                gStore<GlobalStore>().setChildrenToStream();
+                        gStore<GlobalStore>().setChildrenToStream();
                         Navigator.pushNamed(context, RouteNames.childrenList);
                       },
                       child: const Text('Children List'),
@@ -44,7 +44,7 @@ class Index extends StatelessWidget {
                   ],
                 );
               case ConnectionState.none:
-                return Center(child: Text('Erroe'));
+                return Center(child: Text('Error'));
             }
           },
         ),

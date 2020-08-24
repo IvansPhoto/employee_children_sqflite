@@ -11,31 +11,45 @@ class ChildrenList extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: const Text('The list of children'),
-        actions: [
-          ButtonAddChildrenEmployee(snackBarText: 'A child has been added.', forChild: true)
-        ],
+        actions: [ButtonAddChildrenEmployee(snackBarText: 'A child has been added.', forChild: true)],
       ),
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder(
                 stream: gStore<GlobalStore>().streamChildrenList$,
+                // ignore: missing_return
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState != ConnectionState.active) return Center(child: Text('No children in the list')); //Return a text if there are no records.
-                  return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      Children theChild = snapshot.data.elementAt(index);
-                      return Card(
-                        elevation: 0,
-                        child: ListTile(
-                          title: Text('${theChild.surName} ${theChild.name}'),
-                          subtitle: Text(monthFromNumber(theChild.birthday)),
-                          onTap: () => Navigator.of(context).pushNamed(RouteNames.showChild, arguments: theChild),
-                        ),
+                  if (snapshot.hasError) return Center(child: Text('Error ${snapshot.data}'));
+                  if (!snapshot.hasData) return Center(child: Text('No children in the list'));
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      return ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          Children child = snapshot.data.elementAt(index);
+                          return Card(
+                            elevation: 0,
+                            child: ListTile(
+                              title: Text('${child.surName} ${child.name}'),
+                              subtitle: Text(monthFromNumber(child.birthday)),
+                              onTap: () async {
+                                gStore<GlobalStore>().setTheChild(child);
+                                final message = await  Navigator.of(context).pushNamed(RouteNames.showChild, arguments: child);
+                                Scaffold.of(context)
+                                  ..removeCurrentSnackBar()
+                                  ..showSnackBar(SnackBar(content: Text('${child.name} ${child.surName} ${message ?? ''}')));
+                              },
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
+                    case ConnectionState.none:
+                      return Center(child: Text('Error'));
+                    case ConnectionState.waiting:
+                      return Center(child: Text('Loading'));
+                  } //Return a text if there are no records.
                 }),
           ),
           Padding(
@@ -51,7 +65,7 @@ class ChildrenList extends StatelessWidget {
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add_circle),
         onPressed: () => Navigator.pushNamed(context, RouteNames.newChildren),
-	      iconSize: 35,
+        iconSize: 35,
       ),
     );
   }

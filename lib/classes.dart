@@ -79,7 +79,7 @@ class Children {
     name = childrenMap[DBColumns.name];
     surName = childrenMap[DBColumns.surname];
     patronymic = childrenMap[DBColumns.patronymic];
-    birthday = DateTime(childrenMap[DBColumns.birthday]);
+    birthday = DateTime.parse(childrenMap[DBColumns.birthday]);
     parentId = childrenMap[DBColumns.parentId];
   }
 
@@ -88,7 +88,7 @@ class Children {
       DBColumns.name: name,
       DBColumns.surname: surName,
       DBColumns.patronymic: patronymic,
-      DBColumns.birthday: birthday.toString(),
+      DBColumns.birthday: birthday.toIso8601String(),
       DBColumns.parentId: parentId
     };
     if (id != null) map[DBColumns.id] = id;

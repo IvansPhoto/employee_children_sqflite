@@ -1,9 +1,8 @@
-import 'package:employee_children_sqflite/classes.dart';
-import 'package:employee_children_sqflite/pages/ShowChild/ActionButtonsChild.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:employee_children_sqflite/classes.dart';
 import 'package:employee_children_sqflite/Support.dart';
+import 'package:employee_children_sqflite/GlobalStore.dart';
+import 'package:employee_children_sqflite/pages/ShowChild/ActionButtonsChild.dart';
 
 class ShowChild extends StatelessWidget {
   @override
@@ -14,10 +13,13 @@ class ShowChild extends StatelessWidget {
         elevation: 0,
         title: Text('${child.name} ${child.surName}'),
       ),
-      body: ValueListenableBuilder(
-        valueListenable: Hive.box<Children>(Boxes.childrenBox).listenable(),
-        builder: (context, box, _) {
-          return ListView(
+      body: StreamBuilder(
+        stream: gStore<GlobalStore>().streamTheChild$,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting || snapshot.connectionState == ConnectionState.none)
+            return Center(child: Text('Loading'));
+          else
+            return ListView(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
             children: <Widget>[
               Text('Name:'),
@@ -36,6 +38,7 @@ class ShowChild extends StatelessWidget {
           );
         },
       ),
+
     );
   }
 }
