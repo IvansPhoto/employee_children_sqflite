@@ -34,11 +34,10 @@ class GlobalStore {
   get theEmployee => _theEmployee.value;
 
   void deleteEmployee(Employees employee) async {
-    int id = await dbProvider.deleteEmployee(employee);
+    int number = await dbProvider.deleteEmployee(employee);
     _employeeList.add(await dbProvider.getAllEmployees());
-    if (id != employee.id) {
-      print('Error in deleting');
-      ButtonAddChildrenEmployee(forChild: false, snackBarText: 'has been deleted',);
+    if (number != 1) {
+      print('Error in deleting $number ${employee.id}');
     }
   }
 

@@ -17,9 +17,9 @@ abstract class DBColumns {
 }
 
 class DBProvider {
-  DBProvider() {
-    initDataBase();
-  }
+//  DBProvider() {
+//    initDataBase();
+//  }
 
   Database db;
 

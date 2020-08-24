@@ -15,7 +15,8 @@ import 'package:employee_children_sqflite/pages/index.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  gStore.registerSingleton<GlobalStore>(GlobalStore(dbProvider: new DBProvider()));
+  gStore.registerSingleton<GlobalStore>(GlobalStore(dbProvider: DBProvider()));
+
 
   runApp(MaterialApp(
     title: 'Employees and their children.',
