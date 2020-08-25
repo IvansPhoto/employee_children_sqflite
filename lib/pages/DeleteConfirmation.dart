@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:employee_children_sqflite/classes.dart';
+import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 
 class DeleteConfirmation extends StatelessWidget {
@@ -34,7 +34,7 @@ class DeleteConfirmation extends StatelessWidget {
                 label: const Text('Remove from the list!'),
                 onPressed: () async {
                   if (employee != null) gStore<GlobalStore>().deleteEmployee(employee);
-//                  if (child != null) await child.delete(); //TODO: Deleting of the records for childrenList
+                  if (child != null) gStore<GlobalStore>().deleteChild(child);
                   Navigator.pop(context);
                   Navigator.pop(context, 'deleted');
                 },

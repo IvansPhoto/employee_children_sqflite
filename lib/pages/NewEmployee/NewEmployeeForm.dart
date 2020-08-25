@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:employee_children_sqflite/classes.dart';
+import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/Support.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 
@@ -19,16 +17,15 @@ class EmployeeForm extends StatefulWidget {
 }
 
 class _EmployeeFormState extends State<EmployeeForm> {
+  Employees employee = gStore<GlobalStore>().theEmployee;
+
   TextEditingController _nameTEC;
   TextEditingController _surnameTEC;
   TextEditingController _positionTEC;
 
   DateTime _birthday;
   String _birthdayText;
-  HiveList<Children> _childrenList;
-
-  Box<Employees> employeesBox = Hive.box<Employees>(Boxes.employeesBox);
-  Box<Children> childrenBox = Hive.box<Children>(Boxes.childrenBox);
+//  List<Children> _childrenList;
 
   @override
   void initState() {
@@ -38,14 +35,14 @@ class _EmployeeFormState extends State<EmployeeForm> {
       _positionTEC = TextEditingController();
       _birthday = DateTime.now();
       _birthdayText = monthFromNumber(DateTime.now());
-      _childrenList = HiveList(childrenBox);
+//      _childrenList = [];
     } else {
       _nameTEC = TextEditingController(text: widget.employee.name);
       _surnameTEC = TextEditingController(text: widget.employee.surName);
       _positionTEC = TextEditingController(text: widget.employee.position);
       _birthday = widget.employee.birthday;
       _birthdayText = monthFromNumber(widget.employee.birthday);
-      _childrenList = widget.employee.children;
+//      _childrenList = widget.employee.children;
     }
     super.initState();
   }
@@ -59,14 +56,15 @@ class _EmployeeFormState extends State<EmployeeForm> {
   }
 
   void _addEmployee() {
-    employeesBox.add(Employees(
+    gStore<GlobalStore>().insertEmployee(Employees(
       name: _nameTEC.text,
       surName: _surnameTEC.text,
       birthday: _birthday,
       position: _positionTEC.text,
-      children: HiveList(childrenBox), //Check output from ChildrenList
     ));
     Navigator.of(context).pop();
+
+    //Check for SnackBar in the List page.
     Scaffold.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
@@ -81,16 +79,8 @@ class _EmployeeFormState extends State<EmployeeForm> {
     widget.employee.surName = _surnameTEC.text;
     widget.employee.position = _positionTEC.text;
     widget.employee.birthday = _birthday;
-//    widget.employee.children = HiveList(childrenBox);
-    await widget.employee.save();
-    Navigator.of(context).pop();
-    Scaffold.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text('The employee has been updated.'),
-        elevation: 0,
-        duration: Duration(seconds: 5),
-      ));
+    gStore<GlobalStore>().updateEmployee(employee);
+    Navigator.of(context).pop('updated');
   }
 
   void _selectChildren(context) async {
@@ -165,45 +155,45 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   label: Text('Add a child'),
                 ),
 
-              _EmployeeChildrenList(childrenList: _childrenList, employee: widget.employee),
+//              _EmployeeChildrenList(childrenList: _childrenList, employee: widget.employee),
             ],
           )),
     );
   }
 }
 
-class _EmployeeChildrenList extends StatelessWidget {
-  final HiveList<Children> childrenList;
-  final Employees employee;
-
-  _EmployeeChildrenList({this.childrenList, this.employee});
-
-  final Box<Employees> employeesBox = Hive.box<Employees>(Boxes.employeesBox);
-
-  List<InlineSpan> _childrenListTextSpan(List<Children> _childrenList) {
-    List<InlineSpan> _childrenWidgets = [];
-    for (int i = 0; i < _childrenList.length; i++) {
-      _childrenWidgets.add(TextSpan(text: '${i + 1}: ${_childrenList[i].surName} ${_childrenList[i].name} ${_childrenList[i].patronymic} \n'));
-    }
-    return _childrenWidgets;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (employee == null) return Text('Children can be added after saving the employee');
-    return ValueListenableBuilder(
-      valueListenable: employeesBox.listenable(),
-      builder: (context, employeesBox, _) {
-        if (childrenList == null || childrenList.length == 0)
-          return Text('Without children');
-        else
-          return RichText(
-            text: TextSpan(
-              text: 'Children:\n',
-              children: [..._childrenListTextSpan(childrenList)],
-            ),
-          );
-      },
-    );
-  }
-}
+//class _EmployeeChildrenList extends StatelessWidget {
+//  final List<Children> childrenList;
+//  final Employees employee;
+//
+//  _EmployeeChildrenList({this.childrenList, this.employee});
+//
+//  final Box<Employees> employeesBox = Hive.box<Employees>(Boxes.employeesBox);
+//
+//  List<InlineSpan> _childrenListTextSpan(List<Children> _childrenList) {
+//    List<InlineSpan> _childrenWidgets = [];
+//    for (int i = 0; i < _childrenList.length; i++) {
+//      _childrenWidgets.add(TextSpan(text: '${i + 1}: ${_childrenList[i].surName} ${_childrenList[i].name} ${_childrenList[i].patronymic} \n'));
+//    }
+//    return _childrenWidgets;
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    if (employee == null) return Text('Children can be added after saving the employee');
+//    return ValueListenableBuilder(
+//      valueListenable: employeesBox.listenable(),
+//      builder: (context, employeesBox, _) {
+//        if (childrenList == null || childrenList.length == 0)
+//          return Text('Without children');
+//        else
+//          return RichText(
+//            text: TextSpan(
+//              text: 'Children:\n',
+//              children: [..._childrenListTextSpan(childrenList)],
+//            ),
+//          );
+//      },
+//    );
+//  }
+//}

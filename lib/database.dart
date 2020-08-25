@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:employee_children_sqflite/classes.dart';
+import 'package:employee_children_sqflite/Classes.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:rxdart/rxdart.dart';
@@ -14,6 +14,7 @@ abstract class DBColumns {
   static final String birthday = 'birthday';
   static final String position = 'position';
   static final String parentId = 'parentId';
+  static final String childrenId = 'childrenId';
 }
 
 class DBProvider {
@@ -58,7 +59,7 @@ class DBProvider {
     ).whenComplete(() => print('open'));
   }
 
-  Future<Employees> insertEmployees(Employees employee) async {
+  Future<Employees> insertEmployee(Employees employee) async {
     try {
       employee.id = await db.insert(DBColumns.employeeTable, employee.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return employee;
@@ -68,7 +69,7 @@ class DBProvider {
     }
   }
 
-  Future<Children> insertChildren(Children child) async {
+  Future<Children> insertChild(Children child) async {
     try {
       child.id = await db.insert(DBColumns.childrenTable, child.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return child;

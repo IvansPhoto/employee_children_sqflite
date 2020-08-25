@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:employee_children_sqflite/database.dart';
-import 'package:employee_children_sqflite/classes.dart';
+import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
-import 'package:employee_children_sqflite/pages/index.dart';
+import 'package:employee_children_sqflite/pages/Index.dart';
 import 'package:employee_children_sqflite/pages/EmployeesList.dart';
 import 'package:employee_children_sqflite/pages/ChildrenList.dart';
 import 'package:employee_children_sqflite/pages/ShowEmployee/ShowEmployee.dart';
 import 'package:employee_children_sqflite/pages/ShowChild/ShowChild.dart';
-//import 'package:employee_children_sqflite/pages/SelectChildren/SelectChildren.dart';
+import 'package:employee_children_sqflite/pages/NewEmployee/NewEmployee.dart';
 //import 'package:employee_children_sqflite/pages/NewChild/NewChild.dart';
-//import 'package:employee_children_sqflite/pages/NewEmployee/NewEmployee.dart';
+//import 'package:employee_children_sqflite/pages/SelectChildren/SelectChildren.dart';
 
 void main() async {
   //For database.
@@ -29,7 +29,7 @@ void main() async {
       RouteNames.childrenList: (BuildContext context) => ChildrenList(),
       RouteNames.showEmployee: (BuildContext context) => ShowEmployee(),
       RouteNames.showChild: (BuildContext context) => ShowChild(),
-//      RouteNames.newEmployee: (BuildContext context) => NewEmployee(),
+      RouteNames.newEmployee: (BuildContext context) => NewEmployee(),
 //      RouteNames.newChildren: (BuildContext context) => NewChild(),
 //      RouteNames.selectChildren: (BuildContext context) => SelectChildren(),
     },

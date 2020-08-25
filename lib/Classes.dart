@@ -35,6 +35,8 @@ class Employees {
 
   List<Children> children;
 
+  List<int> childrenId;
+
   Employees({this.id, this.name, this.surName, this.patronymic, this.birthday, this.position, this.children});
 
   Employees.fromMap(Map<String, dynamic> employeeMap) {
@@ -44,6 +46,7 @@ class Employees {
     patronymic = employeeMap[DBColumns.patronymic];
     birthday = DateTime.parse(employeeMap[DBColumns.birthday]);
     position = employeeMap[DBColumns.position];
+    childrenId = employeeMap[DBColumns.childrenId];
   }
 
   Map<String, dynamic> toMap() {
@@ -72,6 +75,8 @@ class Children {
 
   int parentId;
 
+  Employees employee;
+
   Children({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId});
 
   Children.fromMap(Map<String, dynamic> childrenMap) {
@@ -89,7 +94,7 @@ class Children {
       DBColumns.surname: surName,
       DBColumns.patronymic: patronymic,
       DBColumns.birthday: birthday.toIso8601String(),
-      DBColumns.parentId: parentId
+      DBColumns.parentId: parentId  ?? (employee == null ? null : employee.id),
     };
     if (id != null) map[DBColumns.id] = id;
     return map;
