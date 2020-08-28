@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/Support.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
-import 'package:employee_children_sqflite/pages/ShowChild/ActionButtonsChild.dart';
+import 'package:employee_children_sqflite/SupportWidgets/ActionButtons.dart';
 
 class ShowChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Children child = ModalRoute.of(context).settings.arguments;
+    final Children child = gStore<GlobalStore>().theChild;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -33,7 +33,7 @@ class ShowChild extends StatelessWidget {
                 Divider(),
                 Text('Birthday:'),
                 Text('${child.birthday == null ? 'Not specified' : monthFromNumber(child.birthday)}', style: Theme.of(context).textTheme.bodyText1),
-                ActionButtonsChild(child: child)
+                ActionButtons(child: child)
               ],
             );
         },

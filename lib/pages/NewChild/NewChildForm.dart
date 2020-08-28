@@ -1,12 +1,13 @@
-import 'package:employee_children_sqflite/Classes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/Support.dart';
+import 'package:employee_children_sqflite/GlobalStore.dart';
 
 class NewChildForm extends StatefulWidget {
-  final Box<Children> childrenBox = Hive.box<Children>(Boxes.childrenBox);
-  final Children child;
-
-  NewChildForm({this.child});
+  //Init the state of this form to add a new employee
+  final bool isNew;
+  NewChildForm(this.isNew);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -15,6 +16,8 @@ class NewChildForm extends StatefulWidget {
 }
 
 class _NewChildFormState extends State<NewChildForm> {
+  Employees child = gStore<GlobalStore>().theChild;
+
   TextEditingController _nameTEC;
   TextEditingController _surnameTEC;
   TextEditingController _patronymicTEC;
@@ -23,18 +26,18 @@ class _NewChildFormState extends State<NewChildForm> {
 
   @override
   void initState() {
-    if (widget.child == null) {
+    if (child == null) {
       _nameTEC = TextEditingController();
       _surnameTEC = TextEditingController();
       _patronymicTEC = TextEditingController();
       _birthday = DateTime.now();
       _birthdayText = monthFromNumber(DateTime.now());
     } else {
-      _nameTEC = TextEditingController(text: widget.child.name);
-      _surnameTEC = TextEditingController(text: widget.child.surName);
-      _patronymicTEC = TextEditingController(text: widget.child.patronymic);
-      _birthday = widget.child.birthday;
-      _birthdayText = monthFromNumber(widget.child.birthday);
+      _nameTEC = TextEditingController(text: child.name);
+      _surnameTEC = TextEditingController(text: child.surName);
+      _patronymicTEC = TextEditingController(text: child.patronymic);
+      _birthday = child.birthday;
+      _birthdayText = monthFromNumber(child.birthday);
     }
     super.initState();
   }
@@ -48,7 +51,7 @@ class _NewChildFormState extends State<NewChildForm> {
   }
 
   void _addChild() {
-    widget.childrenBox.add(Children(
+    childrenBox.add(Children(
       name: _nameTEC.text,
       surName: _surnameTEC.text,
       patronymic: _patronymicTEC.text,
@@ -63,11 +66,10 @@ class _NewChildFormState extends State<NewChildForm> {
   }
 
   void _updateChild() async {
-    widget.child.name = _nameTEC.text;
-    widget.child.surName = _surnameTEC.text;
-    widget.child.patronymic = _patronymicTEC.text;
-    widget.child.birthday = _birthday;
-    await widget.child.save();
+    child.name = _nameTEC.text;
+    child.surName = _surnameTEC.text;
+    child.patronymic = _patronymicTEC.text;
+    child.birthday = _birthday;
     Navigator.of(context).pop();
     Scaffold.of(context).showSnackBar(SnackBar(
       content: Text('The employee has been updated.'),
@@ -112,7 +114,7 @@ class _NewChildFormState extends State<NewChildForm> {
               controller: TextEditingController(text: _birthdayText),
               onTap: () => showDatePicker(
                 context: context,
-                initialDate: widget.child == null ? DateTime.now() : widget.child.birthday,
+                initialDate: child == null ? DateTime.now() : child.birthday,
                 firstDate: DateTime(1960),
                 lastDate: DateTime(2021),
               ).then((dateTime) => setState(() {
@@ -123,8 +125,8 @@ class _NewChildFormState extends State<NewChildForm> {
             ),
             RaisedButton(
               elevation: 0,
-              onPressed: () => {if (widget._formKey.currentState.validate()) widget.child == null ? _addChild() : _updateChild()},
-              child: widget.child == null ? const Text('Save the child') : const Text('Update'),
+              onPressed: () => {if (widget._formKey.currentState.validate()) child == null ? _addChild() : _updateChild()},
+              child: child == null ? const Text('Save the child') : const Text('Update'),
             ),
           ],
         ));

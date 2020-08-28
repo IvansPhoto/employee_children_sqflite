@@ -150,4 +150,21 @@ class DBProvider {
     } else
       return null;
   }
+
+  Future<List<Children>> getEmployeeChildren(int employeeId) async {
+    List<Children> childrenList = [];
+    List<Map<String, dynamic>> childrenMapList = await db.query(
+      DBColumns.childrenTable,
+      columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.birthday, DBColumns.parentId],
+      where: '${DBColumns.parentId} = ?',
+      whereArgs: [employeeId],
+    );
+    if (childrenMapList.length > 0) {
+      childrenMapList.forEach((employeeMap) {
+        childrenList.add(Children.fromMap(employeeMap));
+      });
+      return childrenList;
+    } else
+      return null;
+  }
 }
