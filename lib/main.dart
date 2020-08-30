@@ -9,6 +9,7 @@ import 'package:employee_children_sqflite/pages/ChildrenList.dart';
 import 'package:employee_children_sqflite/pages/ShowEmployee/ShowEmployee.dart';
 import 'package:employee_children_sqflite/pages/ShowChild/ShowChild.dart';
 import 'package:employee_children_sqflite/pages/NewEmployee/NewEmployee.dart';
+
 //import 'package:employee_children_sqflite/pages/NewChild/NewChild.dart';
 //import 'package:employee_children_sqflite/pages/SelectChildren/SelectChildren.dart';
 
@@ -18,7 +19,6 @@ void main() async {
 
   //Init a global store with database.
   gStore.registerSingleton<GlobalStore>(GlobalStore(dbProvider: DBProvider()));
-
 
   runApp(MaterialApp(
     title: 'Employees and their children.',
@@ -40,22 +40,29 @@ void main() async {
       primaryColorLight: Colors.red[500],
     ),
     darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.red[900],
-        primaryColorDark: Colors.red[700],
-        primaryColorLight: Colors.red[500],
-        buttonTheme: ButtonThemeData(
-          textTheme: ButtonTextTheme.normal,
-          height: 15,
-          buttonColor: Colors.red[900],
-        ),
-        textTheme: TextTheme(
-            bodyText1: TextStyle(fontSize: 25, color: Colors.red),
-            bodyText2: TextStyle(fontSize: 25),
-            caption: TextStyle(fontSize: 10, color: Colors.amber),
-            button: TextStyle(fontSize: 30, color: Colors.blue),
-            subtitle1: TextStyle(fontSize: 25, color: Colors.red),
-            headline3: TextStyle(fontSize: 35, decoration: TextDecoration.overline))),
+      iconTheme: IconThemeData(size: 35, color: Colors.amber),
+      brightness: Brightness.dark,
+      primaryColor: Colors.red[900],
+      primaryColorDark: Colors.red[700],
+      primaryColorLight: Colors.red[500],
+      buttonTheme: ButtonThemeData(
+        textTheme: ButtonTextTheme.normal,
+        height: 15,
+        buttonColor: Colors.red[900],
+      ),
+      textTheme: TextTheme(
+          bodyText1: TextStyle(color: Colors.red, fontSize: 20),
+          bodyText2: TextStyle(color: Colors.amber, fontSize: 20),
+          caption: TextStyle(color: Color.fromRGBO(15, 205, 205, 1), fontSize: 20),
+          button: TextStyle(color: Colors.blue, fontSize: 20),
+          subtitle1: TextStyle(color: Colors.deepOrange, fontSize: 20),
+          headline3: TextStyle(decoration: TextDecoration.overline, fontSize: 20)),
+      dialogTheme: DialogTheme(
+        elevation: 0,
+        titleTextStyle: TextStyle(color: Colors.purple, fontSize: 20),
+        contentTextStyle: TextStyle(color: Colors.blueAccent, fontSize: 20),
+      ),
+    ),
   ));
 }
 

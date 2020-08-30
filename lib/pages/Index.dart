@@ -1,5 +1,6 @@
 import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/Classes.dart';
+import 'package:employee_children_sqflite/Support.dart';
 import 'package:flutter/material.dart';
 
 class Index extends StatelessWidget {
@@ -15,7 +16,7 @@ class Index extends StatelessWidget {
           future: gStore<GlobalStore>().dbProvider.initDataBase(), //For asynchronous opening the database.
           // ignore: missing_return
           builder: (context, snapshot) {
-	          if (snapshot.hasError) return Center(child: Text('Error ${snapshot.data}'));
+            if (snapshot.hasError) return Center(child: Text('Error ${snapshot.data}'));
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
                 return Center(child: Text('Loading...'));
@@ -48,6 +49,14 @@ class Index extends StatelessWidget {
             }
           },
         ),
+      ),
+      floatingActionButton: IconButton(
+        icon: Icon(Icons.info),
+        onPressed: () => showAboutDialog(
+          context: context,
+          applicationName: 'Employees and their children',
+        ),
+        iconSize: iconSize,
       ),
     );
   }

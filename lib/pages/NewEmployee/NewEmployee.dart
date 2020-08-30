@@ -5,12 +5,6 @@ class NewEmployee extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isNew = ModalRoute.of(context).settings.arguments;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: const Text('The list of employees'),
-      ),
-      body: EmployeeForm(isNew),
-    );
+    return EmployeeForm(isNew);
   }
 }

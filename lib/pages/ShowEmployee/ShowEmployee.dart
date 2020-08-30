@@ -6,16 +6,21 @@ import 'package:employee_children_sqflite/SupportWidgets/ActionButtons.dart';
 
 class ShowEmployee extends StatelessWidget {
   final store = gStore.get<GlobalStore>();
+  //To increase font size.
 
   List<Widget> _showChildrenList(BuildContext context, List<Children> _childrenList) {
     List<Widget> _childrenWidgets = [];
-    _childrenWidgets.add(Text('Children:'));
+    _childrenWidgets.add(Text('Children:', textScaleFactor: textScaleFactor));
     if (_childrenList == null || _childrenList.length == 0) {
-      _childrenWidgets.add(Text('Without children'));
+      _childrenWidgets.add(Text('Without children', textScaleFactor: textScaleFactor,));
       return _childrenWidgets;
     } else {
       for (int i = 0; i < _childrenList.length; i++) {
-        _childrenWidgets.add(Text('${i + 1}:  ${_childrenList[i].surName} ${_childrenList[i].name} ${_childrenList[i].patronymic}', style: Theme.of(context).textTheme.bodyText1));
+        _childrenWidgets.add(Text(
+          '${i + 1}:  ${_childrenList[i].surName} ${_childrenList[i].name} ${_childrenList[i].patronymic}',
+          style: Theme.of(context).textTheme.bodyText1,
+          textScaleFactor: textScaleFactor,
+        ));
       }
     }
     return _childrenWidgets;
@@ -40,55 +45,59 @@ class ShowEmployee extends StatelessWidget {
                 children: <Widget>[
                   //Name
                   RichText(
+                      textScaleFactor: textScaleFactor,
                       text: TextSpan(
-                    style: DefaultTextStyle.of(context).style,
-                    children: <TextSpan>[
-                      const TextSpan(text: 'Name:\n'),
-                      TextSpan(text: employee.name ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
-                    ],
-                  )),
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
+                          const TextSpan(text: 'Name:\n'),
+                          TextSpan(text: employee.name ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
+                        ],
+                      )),
                   Divider(),
                   //Surname
                   RichText(
+                      textScaleFactor: textScaleFactor,
                       text: TextSpan(
-                    style: DefaultTextStyle.of(context).style,
-                    children: <TextSpan>[
-                      const TextSpan(text: 'Surname:\n'),
-                      TextSpan(text: employee.surName ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
-                    ],
-                  )),
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
+                          const TextSpan(text: 'Surname:\n'),
+                          TextSpan(text: employee.surName ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
+                        ],
+                      )),
                   Divider(),
                   //Birthday
                   RichText(
+                      textScaleFactor: textScaleFactor,
                       text: TextSpan(
-                    style: DefaultTextStyle.of(context).style,
-                    children: <TextSpan>[
-                      const TextSpan(text: 'Birthday:\n'),
-                      TextSpan(
-                        text: employee.birthday == null ? 'Not specified' : monthFromNumber(employee.birthday),
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                    ],
-                  )),
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
+                          const TextSpan(text: 'Birthday:\n'),
+                          TextSpan(
+                            text: employee.birthday == null ? 'Not specified' : monthFromNumber(employee.birthday),
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                        ],
+                      )),
                   Divider(),
                   //Position
                   RichText(
+                      textScaleFactor: textScaleFactor,
                       text: TextSpan(
-                    style: DefaultTextStyle.of(context).style,
-                    children: <TextSpan>[
-                      const TextSpan(text: 'Position:\n'),
-                      TextSpan(text: employee.position ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
-                    ],
-                  )),
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
+                          const TextSpan(text: 'Position:\n'),
+                          TextSpan(text: employee.position ?? 'Not specified', style: Theme.of(context).textTheme.bodyText1),
+                        ],
+                      )),
                   Divider(),
                   //List of children
                   ..._showChildrenList(context, employee.children),
                   Divider(),
                   //Buttons for edit and delete the employee
+                  ActionButtons(employee: employee),
                 ],
               );
           }),
-      bottomNavigationBar: ActionButtons(employee: employee),
     );
   }
 }

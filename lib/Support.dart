@@ -5,6 +5,9 @@ import 'package:employee_children_sqflite/database.dart';
 import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 
+final double iconSize = 35.0;
+final double textScaleFactor = 1.25;
+
 String monthFromNumber(DateTime dateTime) {
   String month;
   switch (dateTime.month) {

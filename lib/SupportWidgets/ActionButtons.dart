@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:employee_children_sqflite/Classes.dart';
+import 'package:employee_children_sqflite/Support.dart';
+import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/SupportWidgets/DeleteConfirmation.dart';
 
 class ActionButtons extends StatelessWidget {
@@ -12,7 +14,7 @@ class ActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         //Button for editing the employee in the Form
         FlatButton.icon(
@@ -43,11 +45,12 @@ class ActionButtons extends StatelessWidget {
           icon: Icon(Icons.edit),
           label: Text('Edit'),
         ),
-        //Button for show dialog to delete the employee
+        //Button for show dialog to delete a record.
         FlatButton.icon(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => DeleteConfirmation(employee: employee, child: child,), fullscreenDialog: true),
+          onPressed: () => showDialog(
+            context: context,
+            child: DeleteConfirmation(employee: employee, child: child),
+            useSafeArea: true,
           ),
           icon: Icon(Icons.delete_forever),
           label: Text('Delete'),
