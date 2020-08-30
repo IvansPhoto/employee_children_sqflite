@@ -3,6 +3,7 @@ import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/Support.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/SupportWidgets/ActionButtons.dart';
+import 'package:employee_children_sqflite/pages/NewEmployee/EmployeeChildrenList.dart';
 
 class ShowEmployee extends StatelessWidget {
   final store = gStore.get<GlobalStore>();
@@ -91,8 +92,8 @@ class ShowEmployee extends StatelessWidget {
                       )),
                   Divider(),
                   //List of children
-                  ..._showChildrenList(context, employee.children),
-                  Divider(),
+	                EmployeeChildrenList(employee),
+	                Divider(),
                   //Buttons for edit and delete the employee
                   ActionButtons(employee: employee),
                 ],

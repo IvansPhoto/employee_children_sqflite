@@ -9,9 +9,8 @@ import 'package:employee_children_sqflite/pages/ChildrenList.dart';
 import 'package:employee_children_sqflite/pages/ShowEmployee/ShowEmployee.dart';
 import 'package:employee_children_sqflite/pages/ShowChild/ShowChild.dart';
 import 'package:employee_children_sqflite/pages/NewEmployee/NewEmployee.dart';
-
 //import 'package:employee_children_sqflite/pages/NewChild/NewChild.dart';
-//import 'package:employee_children_sqflite/pages/SelectChildren/SelectChildren.dart';
+import 'package:employee_children_sqflite/pages/SelectChildren/SelectChildren.dart';
 
 void main() async {
   //For database.
@@ -31,7 +30,7 @@ void main() async {
       RouteNames.showChild: (BuildContext context) => ShowChild(),
       RouteNames.newEmployee: (BuildContext context) => NewEmployee(),
 //      RouteNames.newChildren: (BuildContext context) => NewChild(),
-//      RouteNames.selectChildren: (BuildContext context) => SelectChildren(),
+      RouteNames.selectChildren: (BuildContext context) => SelectChildren(),
     },
     theme: ThemeData(
       brightness: Brightness.light,

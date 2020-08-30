@@ -36,7 +36,7 @@ class ChildrenList extends StatelessWidget {
                               subtitle: Text(monthFromNumber(child.birthday)),
                               onTap: () async {
                                 //Set the child to the Global store.
-                                gStore<GlobalStore>().setTheChild(child);
+                                gStore<GlobalStore>().setTheChild = child;
                                 //Go to the page for showing of the child and await the message 'edited' or 'deleted'.
                                 final message = await Navigator.of(context).pushNamed(RouteNames.showChild, arguments: child);
                                 Scaffold.of(context)

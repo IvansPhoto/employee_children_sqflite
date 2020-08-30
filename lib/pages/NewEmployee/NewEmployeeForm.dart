@@ -85,15 +85,8 @@ class _EmployeeFormState extends State<EmployeeForm> {
     Navigator.of(context).pop('updated');
   }
 
-  void _selectChildren(context) async {
-    final isUpdated = await Navigator.pushNamed(context, RouteNames.selectChildren);
-    Scaffold.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: isUpdated == true ? Text('${employee.name} has been updated!') : Text('Children of ${employee.name} did not changed'),
-        elevation: 0,
-        duration: Duration(seconds: 5),
-      ));
+  void _selectChildren(context) {
+    Navigator.pushNamed(context, RouteNames.selectChildren);
   }
 
   @override
@@ -156,10 +149,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                     IconButton(
                       icon: employee == null ? Icon(Icons.update) : Icon(Icons.update),
                       onPressed: () => {
-                        if (widget._formKey.currentState.validate())
-                          {
-                            employee == null ? _addEmployee() : _updateEmployee(),
-                          },
+                        if (widget._formKey.currentState.validate()) employee == null ? _addEmployee() : _updateEmployee(),
                       },
                       iconSize: iconSize,
                     ),

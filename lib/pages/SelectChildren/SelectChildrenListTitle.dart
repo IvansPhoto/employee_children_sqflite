@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:employee_children_sqflite/Classes.dart';
 
 class SelectChildrenListTitle extends StatefulWidget {
@@ -30,25 +28,8 @@ class _SelectChildrenListTitleState extends State<SelectChildrenListTitle> {
       _selected = !_selected;
       if (!widget.theEmployee.children.contains(widget.theChild) && _selected) widget.theEmployee.children.add(widget.theChild);
       if (widget.theEmployee.children.contains(widget.theChild) && !_selected) widget.theEmployee.children.remove(widget.theChild);
-      widget.theEmployee.save();
-//      _selected ? widget.childrenList.addChild(widget.theChild) : widget.childrenList.removeChild(widget.theChild);
     });
-//      if (widget.theEmployee == null) {
-//        setState(() {
-//          if (_selected) widget.childrenSelectedList.addChild(widget.theChild);
-//        });
-//
-//        if (!_selected && widget.childrenSelectedList.childrenList.contains(widget.theChild)) widget.childrenSelectedList.childrenList.remove(widget.theChild);
-//      } else {
-//        if (!widget.theEmployee.children.contains(widget.theChild) && _selected) {
-//          widget.theEmployee.children.add(widget.theChild);
-//          widget.theEmployee.save();
-//        }
-//        if (widget.theEmployee.children.contains(widget.theChild) && !_selected) {
-//          widget.theEmployee.children.remove(widget.theChild);
-//          widget.theEmployee.save();
-//        }
-//      }
+
   }
 
   @override

@@ -29,9 +29,9 @@ class GlobalStore {
 
   Stream get streamTheEmployee$ => _theEmployee.stream;
 
-  void setTheEmployee(Employees employee) => _theEmployee.add(employee);
+  set setTheEmployee(Employees employee) => _theEmployee.add(employee);
 
-  get theEmployee => _theEmployee.value;
+  Employees get theEmployee => _theEmployee.value;
 
   void insertEmployee(Employees employee) async {
     //Put the a new record to DB and set the completed record to the stream.
@@ -75,9 +75,9 @@ class GlobalStore {
 
   Stream get streamTheChild$ => _theChild.stream;
 
-  void setTheChild(Children child) => _theChild.add(child);
+  set setTheChild(Children child) => _theChild.add(child);
 
-  get theChild => _theChild.value;
+  Children get theChild => _theChild.value;
 
   void insertChild(Children child) async {
     //Put the a new record to DB and set the completed record to the stream.

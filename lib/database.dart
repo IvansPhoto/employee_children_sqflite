@@ -50,7 +50,7 @@ class DBProvider {
             "${DBColumns.name} TEXT, ${DBColumns.surname} TEXT, ${DBColumns.patronymic} TEXT, ${DBColumns.birthday} TEXT, ${DBColumns.position} TEXT); ");
         db.execute("CREATE TABLE ${DBColumns.childrenTable}(${DBColumns.id} INTEGER PRIMARY KEY AUTOINCREMENT, "
             "${DBColumns.name} TEXT, ${DBColumns.surname} TEXT, ${DBColumns.patronymic} TEXT, ${DBColumns.birthday} TEXT, ${DBColumns.parentId} INTEGER, "
-            "FOREIGN KEY(${DBColumns.parentId}) REFERENCES ${DBColumns.employeeTable}(${DBColumns.id}) ON UPDATE CASCADE ON DELETE CASCADE); ");
+            "FOREIGN KEY(${DBColumns.parentId}) REFERENCES ${DBColumns.employeeTable}(${DBColumns.id}) ON UPDATE NO ACTION ON DELETE NO ACTION); ");
         return db.execute("CREATE INDEX childrenindex ON ${DBColumns.childrenTable}(${DBColumns.parentId});");
       },
       onConfigure: _onConfigure,
