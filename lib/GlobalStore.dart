@@ -93,6 +93,8 @@ class GlobalStore {
     _theChild.add(child);
     //Update the stream of LIST of children.
     _childrenList.add(await dbProvider.getAllChildren());
+    //Update the stream of LIST of employees..
+    _employeeList.add(await dbProvider.getAllEmployees());
   }
 
   void deleteChild(Children child) async {
