@@ -151,7 +151,7 @@ class DBProvider {
       return null;
   }
 
-  Future<List<Children>> getEmployeeChildren(int employeeId) async {
+  Future<List<Children>> getChildrenOfEmployee(int employeeId) async {
     List<Children> childrenList = [];
     List<Map<String, dynamic>> childrenMapList = await db.query(
       DBColumns.childrenTable,
@@ -165,6 +165,19 @@ class DBProvider {
       });
       return childrenList;
     } else
+      return null;
+  }
+
+  Future<Employees> getEmployeeOfChild(int employeeId) async {
+    List<Map<String, dynamic>> employeeMapList = await db.query(
+      DBColumns.employeeTable,
+      columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.position, DBColumns.birthday],
+      where: '${DBColumns.id} = ?',
+      whereArgs: [employeeId],
+    );
+    if (employeeMapList.length > 0)
+      return Employees.fromMap(employeeMapList.first);
+    else
       return null;
   }
 }

@@ -27,7 +27,7 @@ class EmployeeChildrenList extends StatelessWidget {
           builder: (context, snapshot) {
             if (!snapshot.hasData) Text('No children in the list');
             return FutureBuilder(
-              future: gStore<GlobalStore>().dbProvider.getEmployeeChildren(employee.id),
+              future: gStore<GlobalStore>().dbProvider.getChildrenOfEmployee(employee.id),
               builder: (context, AsyncSnapshot<List<Children>> snapshot) {
                 if (!snapshot.hasData)
                   return Text('${employee.name} ${employee.surName} has no children');

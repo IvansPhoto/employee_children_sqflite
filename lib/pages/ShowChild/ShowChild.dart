@@ -37,21 +37,41 @@ class ShowChild extends StatelessWidget {
                 Text('${child.birthday == null ? 'Not specified' : monthFromNumber(child.birthday)}', style: Theme.of(context).textTheme.bodyText1),
                 Divider(),
                 Text('Parent:'),
-                Text('${child.parentId ?? 'Not specified'}', style: Theme.of(context).textTheme.bodyText1),
+	              EmployeeOfChild(employeeId: child.parentId),
                 Divider(),
                 ActionButtons(child: child),
-                IconButton(
-                  icon: child.parentId == null ? Icon(Icons.person_add, color: Colors.red, size: iconSize) : Icon(Icons.delete_forever, color: Colors.red, size: iconSize),
-                  onPressed: () {
-                    child.parentId = null;
-                    gStore<GlobalStore>().updateChild(child);
-                    gStore<GlobalStore>().setTheChild = child;
-                  },
-                )
+//                IconButton(
+//                  icon: child.parentId == null ? Icon(Icons.person_add, size: iconSize) : Icon(Icons.delete_forever, color: Colors.red, size: iconSize),
+//                  onPressed: child.parentId == null
+//                      ? null
+//                      : () {
+//                          child.parentId = null;
+//                          gStore<GlobalStore>().updateChild(child);
+//                          gStore<GlobalStore>().setTheChild = child;
+//                        },
+//                )
               ],
             );
         },
       ),
+    );
+  }
+}
+
+class EmployeeOfChild extends StatelessWidget {
+  final int employeeId;
+
+  EmployeeOfChild({this.employeeId});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Employees>(
+      future: gStore<GlobalStore>().dbProvider.getEmployeeOfChild(employeeId),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+      	Employees employee = snapshot.data;
+      	if(!snapshot.hasData) return Text('Free child!', style: Theme.of(context).textTheme.bodyText1);
+      	return Text('${employee.name} ${employee.surName}', style: Theme.of(context).textTheme.bodyText1);
+      },
     );
   }
 }

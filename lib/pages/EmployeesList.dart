@@ -72,7 +72,7 @@ class NumberChildren extends StatelessWidget {
   Widget build(BuildContext context) {
     //TODO: make stream to update the list.
     return FutureBuilder<List<Children>>(
-      future: gStore<GlobalStore>().dbProvider.getEmployeeChildren(employee.id),
+      future: gStore<GlobalStore>().dbProvider.getChildrenOfEmployee(employee.id),
       builder: (context, AsyncSnapshot<List<Children>> snapshot) {
         if (!snapshot.hasData || snapshot.data.length == 0) return Text('No children');
         return Text('Children: ${snapshot.data.length}');

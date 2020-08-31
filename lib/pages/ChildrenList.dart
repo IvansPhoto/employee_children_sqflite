@@ -34,6 +34,7 @@ class ChildrenList extends StatelessWidget {
                             child: ListTile(
                               title: Text('${child.surName} ${child.name}'),
                               subtitle: Text(monthFromNumber(child.birthday)),
+                              trailing: child.parentId == null ? Icon(Icons.announcement) : null,
                               onTap: () async {
                                 //Set the child to the Global store.
                                 gStore<GlobalStore>().setTheChild = child;
