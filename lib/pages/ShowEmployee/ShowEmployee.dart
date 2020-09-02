@@ -33,7 +33,14 @@ class ShowEmployee extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text('${employee.name} ${employee.surName}'),
+        title: StreamBuilder<Employees>(
+            stream: gStore<GlobalStore>().streamTheEmployee$,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData)
+                return Text('Employee profile.');
+              else
+                return Text('${employee.name} ${employee.surName}');
+            }),
       ),
       body: StreamBuilder(
           stream: gStore<GlobalStore>().streamTheEmployee$, //For editing the employee

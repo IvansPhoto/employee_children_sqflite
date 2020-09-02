@@ -67,7 +67,7 @@ class ChildrenList extends StatelessWidget {
       ),
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add_circle),
-        onPressed: () => Navigator.pushNamed(context, RouteNames.newChildren),
+        onPressed: () => Navigator.pushNamed(context, RouteNames.newChildren, arguments: true),
         iconSize: 35,
       ),
     );

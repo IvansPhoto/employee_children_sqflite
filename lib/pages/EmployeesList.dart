@@ -55,11 +55,11 @@ class EmployeesList extends StatelessWidget {
           )
         ],
       ),
-//      floatingActionButton: IconButton(
-//        icon: const Icon(Icons.add_circle),
-//        onPressed: () => Navigator.pushNamed(context, RouteNames.newEmployee, arguments: true),
-//        iconSize: 35,
-//      ),
+     floatingActionButton: IconButton(
+       icon: const Icon(Icons.add_circle),
+       onPressed: () => Navigator.pushNamed(context, RouteNames.newEmployee, arguments: true),
+       iconSize: 35,
+     ),
     );
   }
 }

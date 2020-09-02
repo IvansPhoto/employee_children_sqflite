@@ -12,7 +12,14 @@ class ShowChild extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text('${child.name} ${child.surName}'),
+        title: StreamBuilder<Children>(
+            stream: gStore<GlobalStore>().streamTheChild$,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData)
+                return Text('Child profile.');
+              else
+                return Text('${child.name} ${child.surName}');
+            }),
       ),
       body: StreamBuilder(
         stream: gStore<GlobalStore>().streamTheChild$,
@@ -37,19 +44,9 @@ class ShowChild extends StatelessWidget {
                 Text('${child.birthday == null ? 'Not specified' : monthFromNumber(child.birthday)}', style: Theme.of(context).textTheme.bodyText1),
                 Divider(),
                 Text('Parent:'),
-	              EmployeeOfChild(employeeId: child.parentId),
+                EmployeeOfChild(employeeId: child.parentId),
                 Divider(),
                 ActionButtons(child: child),
-//                IconButton(
-//                  icon: child.parentId == null ? Icon(Icons.person_add, size: iconSize) : Icon(Icons.delete_forever, color: Colors.red, size: iconSize),
-//                  onPressed: child.parentId == null
-//                      ? null
-//                      : () {
-//                          child.parentId = null;
-//                          gStore<GlobalStore>().updateChild(child);
-//                          gStore<GlobalStore>().setTheChild = child;
-//                        },
-//                )
               ],
             );
         },
@@ -68,9 +65,9 @@ class EmployeeOfChild extends StatelessWidget {
     return FutureBuilder<Employees>(
       future: gStore<GlobalStore>().dbProvider.getEmployeeOfChild(employeeId),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-      	Employees employee = snapshot.data;
-      	if(!snapshot.hasData) return Text('Free child!', style: Theme.of(context).textTheme.bodyText1);
-      	return Text('${employee.name} ${employee.surName}', style: Theme.of(context).textTheme.bodyText1);
+        Employees employee = snapshot.data;
+        if (!snapshot.hasData) return Text('Free child!', style: Theme.of(context).textTheme.bodyText1);
+        return Text('${employee.name} ${employee.surName}', style: Theme.of(context).textTheme.bodyText1);
       },
     );
   }

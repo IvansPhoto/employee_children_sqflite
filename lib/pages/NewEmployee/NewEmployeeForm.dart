@@ -8,7 +8,6 @@ import 'package:employee_children_sqflite/pages/NewEmployee/EmployeeChildrenList
 class EmployeeForm extends StatefulWidget {
   //Init the state of this form to add a new employee
   final bool isNew;
-
   EmployeeForm(this.isNew);
 
   final _formKey = GlobalKey<FormState>();
@@ -23,11 +22,8 @@ class _EmployeeFormState extends State<EmployeeForm> {
   TextEditingController _nameTEC;
   TextEditingController _surnameTEC;
   TextEditingController _positionTEC;
-
   DateTime _birthday;
   String _birthdayText;
-
-//  List<Children> _childrenList;
 
   @override
   void initState() {
@@ -37,14 +33,12 @@ class _EmployeeFormState extends State<EmployeeForm> {
       _positionTEC = TextEditingController();
       _birthday = DateTime.now();
       _birthdayText = monthFromNumber(DateTime.now());
-//      _childrenList = [];
     } else {
       _nameTEC = TextEditingController(text: employee.name);
       _surnameTEC = TextEditingController(text: employee.surName);
       _positionTEC = TextEditingController(text: employee.position);
       _birthday = employee.birthday;
       _birthdayText = monthFromNumber(employee.birthday);
-//      _childrenList = employee.children;
     }
     super.initState();
   }
@@ -147,13 +141,13 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
-                      icon: employee == null ? Icon(Icons.update) : Icon(Icons.update),
+                      icon: widget.isNew ? Icon(Icons.add_circle) : Icon(Icons.system_update_alt),
                       onPressed: () => {
                         if (widget._formKey.currentState.validate()) employee == null ? _addEmployee() : _updateEmployee(),
                       },
                       iconSize: iconSize,
                     ),
-                    if (employee != null)
+                    if (!widget.isNew)
                       IconButton(
                         onPressed: () => _selectChildren(context),
                         icon: Icon(Icons.person_add),
