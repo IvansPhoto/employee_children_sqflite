@@ -32,12 +32,14 @@ void main() async {
       RouteNames.selectChildren: (BuildContext context) => SelectChildren(),
     },
     theme: ThemeData(
+      fontFamily: 'RobotoMono',
       brightness: Brightness.light,
       primaryColor: Colors.red[900],
       primaryColorDark: Colors.red[700],
       primaryColorLight: Colors.red[500],
     ),
     darkTheme: ThemeData(
+      fontFamily: 'RobotoMono',
       iconTheme: IconThemeData(size: 35, color: Colors.amber),
       brightness: Brightness.dark,
       primaryColor: Colors.red[900],

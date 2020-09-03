@@ -7,6 +7,7 @@ import 'package:employee_children_sqflite/GlobalStore.dart';
 class NewChildForm extends StatefulWidget {
   //Init the state of this form to add a new employee
   final bool isNew;
+
   NewChildForm(this.isNew);
 
   final _formKey = GlobalKey<FormState>();
@@ -81,59 +82,72 @@ class _NewChildFormState extends State<NewChildForm> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text('The list of children'),
+        title: widget.isNew ? const Text('Edit the child') : Text('Edit the ${child.name} ${child.surName}'),
       ),
-      body: Form(
-          key: widget._formKey,
-          autovalidate: true,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                autofocus: true,
-                controller: _nameTEC,
-                decoration: const InputDecoration(hintText: 'Name', labelText: "The name"),
-                maxLength: 50,
-                keyboardType: TextInputType.text,
-                validator: (value) => value.isEmpty ? 'Enter the child name' : null,
-              ),
-              TextFormField(
-                autofocus: true,
-                controller: _surnameTEC,
-                decoration: const InputDecoration(hintText: 'Surname', labelText: "The surname"),
-                maxLength: 50,
-                keyboardType: TextInputType.text,
-                validator: (value) => value.isEmpty ? 'Enter the child surname' : null,
-              ),
-              TextFormField(
-                autofocus: true,
-                controller: _patronymicTEC,
-                decoration: const InputDecoration(hintText: 'Patronymic', labelText: "The patronymic"),
-                maxLength: 50,
-                keyboardType: TextInputType.text,
-                validator: (value) => value.isEmpty ? 'Enter the child patronymic' : null,
-              ),
-              TextField(
-                readOnly: true,
-                controller: TextEditingController(text: _birthdayText),
-                onTap: () => showDatePicker(
-                  context: context,
-                  initialDate: child == null ? DateTime.now() : child.birthday,
-                  firstDate: DateTime(1960),
-                  lastDate: DateTime(2021),
-                ).then((dateTime) => setState(() {
-                      _birthday = dateTime;
-                      _birthdayText = monthFromNumber(dateTime);
-                    })),
-                decoration: const InputDecoration(hintText: 'Birthday', labelText: "The birthday! "),
-              ),
-              RaisedButton(
-                elevation: 0,
-                onPressed: () => {if (widget._formKey.currentState.validate()) child == null ? _addChild() : _updateChild()},
-                child: child == null ? const Text('Save the child') : const Text('Update'),
-              ),
-            ],
-          )),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Form(
+            key: widget._formKey,
+            autovalidate: true,
+            child: ListView(
+              children: <Widget>[
+                TextFormField(
+                  autofocus: true,
+                  controller: _nameTEC,
+                  decoration: const InputDecoration(hintText: 'Name', labelText: "The name"),
+                  maxLength: 50,
+                  keyboardType: TextInputType.text,
+                  validator: (value) => value.isEmpty ? 'Enter the child name' : null,
+                ),
+                TextFormField(
+                  autofocus: true,
+                  controller: _surnameTEC,
+                  decoration: const InputDecoration(hintText: 'Surname', labelText: "The surname"),
+                  maxLength: 50,
+                  keyboardType: TextInputType.text,
+                  validator: (value) => value.isEmpty ? 'Enter the child surname' : null,
+                ),
+                TextFormField(
+                  autofocus: true,
+                  controller: _patronymicTEC,
+                  decoration: const InputDecoration(hintText: 'Patronymic', labelText: "The patronymic"),
+                  maxLength: 50,
+                  keyboardType: TextInputType.text,
+                  validator: (value) => value.isEmpty ? 'Enter the child patronymic' : null,
+                ),
+                TextField(
+                  readOnly: true,
+                  controller: TextEditingController(text: _birthdayText),
+                  onTap: () => showDatePicker(
+                    context: context,
+                    initialDate: child == null ? DateTime.now() : child.birthday,
+                    firstDate: DateTime(1960),
+                    lastDate: DateTime(2021),
+                  ).then((dateTime) => setState(() {
+                        _birthday = dateTime;
+                        _birthdayText = monthFromNumber(dateTime);
+                      })),
+                  decoration: const InputDecoration(hintText: 'Birthday', labelText: "The birthday! "),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    RaisedButton(
+                      elevation: 0,
+                      onPressed: () => {if (widget._formKey.currentState.validate()) child == null ? _addChild() : _updateChild()},
+                      child: child == null ? const Text('Save the child') : const Text('Update'),
+                    ),
+                    RaisedButton(
+                      elevation: 0,
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel'),
+                    ),
+                  ],
+                ),
+              ],
+            )),
+      ),
     );
   }
 }
-

@@ -5,8 +5,9 @@ import 'package:employee_children_sqflite/GlobalStore.dart';
 
 class EmployeeChildrenList extends StatelessWidget {
   final Employees employee;
+  final bool isNew;
 
-  EmployeeChildrenList(this.employee);
+  EmployeeChildrenList({this.employee, this.isNew});
 
   List<InlineSpan> _childrenListTextSpan(List<Children> _childrenList) {
     List<InlineSpan> _childrenWidgets = [];
@@ -19,7 +20,7 @@ class EmployeeChildrenList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (employee == null)
+    if (employee == null || isNew)
       return Text('Children can be added after saving the employee');
     else
       return StreamBuilder<Object>(

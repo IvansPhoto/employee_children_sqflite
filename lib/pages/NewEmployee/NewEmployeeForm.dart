@@ -140,16 +140,22 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    IconButton(
-                      icon: widget.isNew ? Icon(Icons.add_circle) : Icon(Icons.system_update_alt),
+                    RaisedButton(
+                      elevation: 0,
+                      child: widget.isNew ? const Text('Add') : const Text('Update'),
                       onPressed: () => {
                         if (widget._formKey.currentState.validate()) employee == null ? _addEmployee() : _updateEmployee(),
                       },
-                      iconSize: iconSize,
                     ),
-                    if (!widget.isNew)
+                    RaisedButton(
+                      elevation: 0,
+                      child: const Text('Cancel'),
+                      onPressed: () => {
+                        if (widget._formKey.currentState.validate()) employee == null ? _addEmployee() : _updateEmployee(),
+                      },
+                    ),
                       IconButton(
-                        onPressed: () => _selectChildren(context),
+                        onPressed: widget.isNew ? null : () => _selectChildren(context),
                         icon: Icon(Icons.person_add),
                         iconSize: iconSize,
                       ),
@@ -159,7 +165,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   color: Colors.blue,
                   thickness: 0.5,
                 ),
-                EmployeeChildrenList(employee),
+                EmployeeChildrenList(employee: employee, isNew: widget.isNew,),
               ],
             )),
       ),

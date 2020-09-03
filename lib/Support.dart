@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:employee_children_sqflite/database.dart';
@@ -56,7 +58,7 @@ abstract class GeneratePersons {
   static final surnames = <String>['Muller', 'Schmidt', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Schulz', 'Hoffman'];
   static final position = <String>['Engineer', 'Chemist', 'Marketing', 'Developer', 'Sales', 'Logistic'];
 
-  static Future<Employees> generateEmployees(Database db) async {
+  static Future<Employees> generateTheEmployee(Database db) async {
     int _randomName = Random().nextInt(names.length);
     int _randomSurname = Random().nextInt(surnames.length);
     int _randomPosition = Random().nextInt(position.length);
@@ -79,51 +81,131 @@ abstract class GeneratePersons {
     return employee;
   }
 
-  static Future<Children> generateChildren(Database db) async {
-    int _randomName = Random().nextInt(names.length);
-    int _randomSurname = Random().nextInt(surnames.length);
-    int _randomBirthdayYear = Random().nextInt(45) + 1985;
-    int _randomBirthdayMonth = Random().nextInt(12);
-    int _randomBirthdayDay = Random().nextInt(_randomBirthdayMonth == 2 ? 28 : 30);
-    Children child = Children(
-      name: names[_randomName],
-      surName: surnames[_randomSurname],
-      patronymic: 'SQFlite',
-      birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
-    );
-    child.id = await db.insert(
-      DBColumns.childrenTable,
-      child.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    return child;
+  static Future<int> generateSeveralEmployees({Database db, int quantity}) async {
+    var batch = db.batch();
+
+    for (int i = 0; i < quantity; i++) {
+      int _randomName = Random().nextInt(names.length);
+      int _randomSurname = Random().nextInt(surnames.length);
+      int _randomPosition = Random().nextInt(position.length);
+      int _randomBirthdayYear = Random().nextInt(45) + 1955;
+      int _randomBirthdayMonth = Random().nextInt(12);
+      int _randomBirthdayDay = Random().nextInt(_randomBirthdayMonth == 2 ? 28 : 30);
+
+      Employees employee = Employees(
+        name: names[_randomName],
+        surName: surnames[_randomSurname],
+        position: position[_randomPosition],
+        patronymic: 'SQFlite',
+        birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
+      );
+      batch.insert(
+        DBColumns.employeeTable,
+        employee.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    List<dynamic> result = await batch.commit().catchError((e) => throw e);
+    return result.length;
+  }
+
+  static Future<int> generateSeveralChildren({Database db, int quantity}) async {
+    var batch = db.batch();
+
+    for (int i = 0; i < quantity; i++) {
+      int _randomName = Random().nextInt(names.length);
+      int _randomSurname = Random().nextInt(surnames.length);
+      int _randomBirthdayYear = Random().nextInt(45) + 1985;
+      int _randomBirthdayMonth = Random().nextInt(12);
+      int _randomBirthdayDay = Random().nextInt(_randomBirthdayMonth == 2 ? 28 : 30);
+      Children child = Children(
+        name: names[_randomName],
+        surName: surnames[_randomSurname],
+        patronymic: 'SQFlite',
+        birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
+      );
+      batch.insert(
+        DBColumns.childrenTable,
+        child.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    List<dynamic> result = await batch.commit().catchError((e) => throw e);
+    return result.length;
   }
 }
 
 class ButtonAddChildrenEmployee extends StatelessWidget {
-  final String snackBarText;
   final bool forChild;
 
-  ButtonAddChildrenEmployee({this.snackBarText = '', this.forChild});
+  ButtonAddChildrenEmployee({this.forChild});
 
   @override
   Widget build(BuildContext context) {
     Database db = gStore<GlobalStore>().dbProvider.db;
-    Employees employee;
-    Children child;
-    return IconButton(
-        icon: Icon(Icons.get_app),
-        onPressed: () async {
-          if (forChild) {
-            child = await GeneratePersons.generateChildren(db);
-            gStore<GlobalStore>().setChildrenToStream();
-          } else {
-            employee = await GeneratePersons.generateEmployees(db);
-            gStore<GlobalStore>().setEmployeesToStream();
-          }
-          Scaffold.of(context)
-            ..removeCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: forChild ? Text('${child.name} ${child.surName}') : Text('${employee.name} ${employee.surName} $snackBarText')));
-        });
+    int number = 1;
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(Icons.get_app),
+          onPressed: () async => await showDialog(
+              context: context,
+              child: Dialog(
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Number of records:'),
+                      TextFormField(
+                        textAlignVertical: TextAlignVertical.center,
+                        textAlign: TextAlign.center,
+                        maxLength: 3,
+                        autovalidate: true,
+                        validator: (text) {
+                          print('validator text - $text');
+                          print('validator number - $number');
+                          if (int.tryParse(text, radix: 10) > 100 || int.tryParse(text, radix: 10) < 1 || text == null)
+                            return 'From 1 to 100';
+                          else
+                            return null;
+                        },
+                        onChanged: (text) => number = int.parse(text, radix: 10),
+                        initialValue: number.toString(),
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly,
+                        ],
+                        enableSuggestions: false,
+                        keyboardType: TextInputType.number,
+                      ),
+                      RaisedButton(
+                        elevation: 0,
+                        child: const Text('Add records.'),
+                        onPressed: () async {
+                          if (forChild) {
+                            number = await GeneratePersons.generateSeveralChildren(db: db, quantity: number);
+                            gStore<GlobalStore>().setChildrenToStream();
+                          } else {
+                            number = await GeneratePersons.generateSeveralEmployees(db: db, quantity: number);
+                            gStore<GlobalStore>().setEmployeesToStream();
+                          }
+                          Navigator.pop(context);
+                          Scaffold.of(context)
+                            ..removeCurrentSnackBar()
+                            ..showSnackBar(SnackBar(content: Text('${number} records added')));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+        ),
+      ],
+    );
   }
 }

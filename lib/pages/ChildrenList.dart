@@ -10,8 +10,8 @@ class ChildrenList extends StatelessWidget {
 		return Scaffold(
 			appBar: AppBar(
 				elevation: 0,
-				title: const Text('The list of children'),
-				actions: [ButtonAddChildrenEmployee(snackBarText: 'A child has been added.', forChild: true)],
+				title: const Text('The children'),
+				actions: [ButtonAddChildrenEmployee(forChild: true)],
 			),
 			body: Column(
 				children: [

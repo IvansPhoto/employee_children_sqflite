@@ -7,13 +7,17 @@ import 'package:employee_children_sqflite/pages/NewEmployee/EmployeeChildrenList
 
 class ShowEmployee extends StatelessWidget {
   final store = gStore.get<GlobalStore>();
+
   //To increase font size.
 
   List<Widget> _showChildrenList(BuildContext context, List<Children> _childrenList) {
     List<Widget> _childrenWidgets = [];
     _childrenWidgets.add(Text('Children:', textScaleFactor: textScaleFactor));
     if (_childrenList == null || _childrenList.length == 0) {
-      _childrenWidgets.add(Text('Without children', textScaleFactor: textScaleFactor,));
+      _childrenWidgets.add(Text(
+        'Without children',
+        textScaleFactor: textScaleFactor,
+      ));
       return _childrenWidgets;
     } else {
       for (int i = 0; i < _childrenList.length; i++) {
@@ -99,8 +103,8 @@ class ShowEmployee extends StatelessWidget {
                       )),
                   Divider(),
                   //List of children
-	                EmployeeChildrenList(employee),
-	                Divider(),
+                  EmployeeChildrenList(employee: employee, isNew: false),
+                  Divider(),
                   //Buttons for edit and delete the employee
                   ActionButtons(employee: employee),
                 ],
