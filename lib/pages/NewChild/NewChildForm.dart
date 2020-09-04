@@ -58,14 +58,7 @@ class _NewChildFormState extends State<NewChildForm> {
       patronymic: _patronymicTEC.text,
       birthday: _birthday,
     ));
-    Navigator.of(context).pop();
-
-    //Check for SnackBar in the List page.
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text('The child has been added.'),
-      elevation: 0,
-      duration: Duration(seconds: 5),
-    ));
+    Navigator.of(context).pop('added');
   }
 
   void _updateChild() async {
@@ -74,7 +67,8 @@ class _NewChildFormState extends State<NewChildForm> {
     child.patronymic = _patronymicTEC.text;
     child.birthday = _birthday;
     gStore<GlobalStore>().updateChild(child);
-    Navigator.of(context).pop();
+
+    Navigator.of(context).pop('updated');
   }
 
   @override

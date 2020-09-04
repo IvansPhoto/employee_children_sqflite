@@ -189,10 +189,10 @@ class ButtonAddChildrenEmployee extends StatelessWidget {
                         onPressed: () async {
                           if (forChild) {
                             number = await GeneratePersons.generateSeveralChildren(db: db, quantity: number);
-                            gStore<GlobalStore>().setChildrenToStream();
+                            gStore<GlobalStore>().getChildrenToStream();
                           } else {
                             number = await GeneratePersons.generateSeveralEmployees(db: db, quantity: number);
-                            gStore<GlobalStore>().setEmployeesToStream();
+                            gStore<GlobalStore>().getEmployeesToStream();
                           }
                           Navigator.pop(context);
                           Scaffold.of(context)

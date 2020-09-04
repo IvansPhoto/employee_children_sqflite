@@ -26,7 +26,7 @@ class ActionButtons extends StatelessWidget {
                 Scaffold.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(SnackBar(
-                    content: Text('${employee.name} ${employee.surName} ${message ?? ''}'),
+                    content: Text('${employee.name} ${employee.surName}'),
                     duration: Duration(seconds: 1),
                   ));
             }

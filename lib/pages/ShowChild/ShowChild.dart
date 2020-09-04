@@ -7,7 +7,7 @@ import 'package:employee_children_sqflite/SupportWidgets/ActionButtons.dart';
 class ShowChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('Build ShowChild - Widget');
+    // print('Build ShowChild - Widget');
     final Children child = gStore<GlobalStore>().theChild;
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +24,7 @@ class ShowChild extends StatelessWidget {
       body: StreamBuilder(
         stream: gStore<GlobalStore>().streamTheChild$,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          print('Build ShowChild - StreamBuilder');
+          // print('Build ShowChild - StreamBuilder');
           if (snapshot.connectionState == ConnectionState.waiting || snapshot.connectionState == ConnectionState.none)
             return Center(child: Text('Loading'));
           else

@@ -10,6 +10,38 @@ class Index extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: const Text('Home page'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.clear),
+            onPressed: () => showDialog(
+                context: context,
+                child: Dialog(
+                  elevation: 0,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Are you sure to clear the database?', textAlign: TextAlign.center,textScaleFactor: textScaleFactor),
+                      ButtonBar(
+                        children: [
+                          FlatButton(
+                            color: Colors.red,
+                            onPressed: () async {
+                              gStore<GlobalStore>().dbProvider.clearDataBase();
+                              Navigator.pop(context);
+                            },
+                            child: Text('Yes'),
+                          ),
+                          FlatButton(onPressed: () => Navigator.pop(context), child: Text("No"), color: Colors.blue,)
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+          )
+        ],
       ),
       body: Center(
         child: FutureBuilder(
@@ -28,7 +60,7 @@ class Index extends StatelessWidget {
                   children: <Widget>[
                     FlatButton(
                       onPressed: () {
-                        gStore<GlobalStore>().setEmployeesToStream();
+                        gStore<GlobalStore>().getEmployeesToStream();
                         Navigator.pushNamed(context, RouteNames.employeesList);
                       },
                       child: const Text('Employees List'),
@@ -36,7 +68,7 @@ class Index extends StatelessWidget {
                     ),
                     FlatButton(
                       onPressed: () {
-                        gStore<GlobalStore>().setChildrenToStream();
+                        gStore<GlobalStore>().getChildrenToStream();
                         Navigator.pushNamed(context, RouteNames.childrenList);
                       },
                       child: const Text('Children List'),

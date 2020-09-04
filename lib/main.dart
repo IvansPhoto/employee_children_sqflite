@@ -62,6 +62,11 @@ void main() async {
         titleTextStyle: TextStyle(color: Colors.purple, fontSize: 20),
         contentTextStyle: TextStyle(color: Colors.blueAccent, fontSize: 20),
       ),
+      buttonBarTheme: ButtonBarThemeData(
+        alignment: MainAxisAlignment.center,
+        buttonHeight: 35,
+        buttonMinWidth: 150,
+      ),
     ),
   ));
 }

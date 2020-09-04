@@ -16,11 +16,12 @@ class GlobalStore {
 
 	Stream get streamEmployeesList$ => _employeeList.stream;
 
-	void setEmployeesToStream() async {
+	void getEmployeesToStream() async {
 		_employeeList.add(await dbProvider.getAllEmployees());
 	}
 
-	void filterEmployees(String searchString) async {
+	void filterEmployeesToStream(String searchString) async {
+		// print(searchString);
 		_employeeList.add(await dbProvider.filterEmployees(searchString));
 	}
 
@@ -62,11 +63,11 @@ class GlobalStore {
 
 	Stream get streamChildrenList$ => _childrenList.stream;
 
-	void setChildrenToStream() async {
+	void getChildrenToStream() async {
 		_childrenList.add(await dbProvider.getAllChildren());
 	}
 
-	void filterChildren(String searchString) async {
+	void filterChildrenToStream(String searchString) async {
 		_childrenList.add(await dbProvider.filterChildren(searchString));
 	}
 

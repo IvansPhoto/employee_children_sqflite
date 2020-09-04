@@ -11,15 +11,6 @@ abstract class RouteNames {
 	static final selectChildren = '/SelectChildren/SelectChildren';
 }
 
-class SelectedChildren {
-	Children child;
-	bool selected;
-
-	SelectedChildren({this.child, this.selected});
-
-	void unSelect() => selected = !selected;
-}
-
 class Employees {
 	int id;
 
@@ -35,9 +26,9 @@ class Employees {
 
 	List<Children> children;
 
-	List<int> childrenId;
+	bool isSelected;
 
-	Employees({this.id, this.name, this.surName, this.patronymic, this.birthday, this.position, this.children});
+	Employees({this.id, this.name, this.surName, this.patronymic, this.birthday, this.position, this.children, this.isSelected});
 
 	Employees.fromMap(Map<String, dynamic> employeeMap) {
 		id = employeeMap[DBColumns.id];
@@ -46,7 +37,6 @@ class Employees {
 		patronymic = employeeMap[DBColumns.patronymic];
 		birthday = DateTime.parse(employeeMap[DBColumns.birthday]);
 		position = employeeMap[DBColumns.position];
-		childrenId = employeeMap[DBColumns.childrenId];
 	}
 
 	Map<String, dynamic> toMap() {
@@ -77,7 +67,9 @@ class Children {
 
 	Employees employee;
 
-	Children({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId});
+	bool isSelected;
+
+	Children({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId, this.isSelected});
 
 	Children.fromMap(Map<String, dynamic> childrenMap) {
 		id = childrenMap[DBColumns.id];

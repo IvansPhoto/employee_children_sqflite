@@ -46,26 +46,27 @@ class EmployeesList extends StatelessWidget {
                 }),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 1, 65, 1),
+            padding: const EdgeInsets.fromLTRB(15, 0, 65, 1),
             child: TextFormField(
               maxLength: 50,
               decoration: const InputDecoration(hintText: 'Matches in name or surname', labelText: 'Searching', hintStyle: TextStyle(fontSize: 15)),
-              onChanged: (text) => gStore<DBProvider>().filterEmployees(text),
+              onChanged: (text) => text == null || text.length == 0 ? gStore<GlobalStore>().getEmployeesToStream() : gStore<GlobalStore>().filterEmployeesToStream(text),
             ),
           )
         ],
       ),
-     floatingActionButton: IconButton(
-       icon: const Icon(Icons.add_circle),
-       onPressed: () => Navigator.pushNamed(context, RouteNames.newEmployee, arguments: true),
-       iconSize: 35,
-     ),
+      floatingActionButton: IconButton(
+        icon: const Icon(Icons.add_circle),
+        onPressed: () => Navigator.pushNamed(context, RouteNames.newEmployee, arguments: true),
+        iconSize: 35,
+      ),
     );
   }
 }
 
 class NumberChildren extends StatelessWidget {
   final Employees employee;
+
   NumberChildren({this.employee});
 
   @override
@@ -73,7 +74,11 @@ class NumberChildren extends StatelessWidget {
     return FutureBuilder<List<Children>>(
       future: gStore<GlobalStore>().dbProvider.getChildrenOfEmployee(employee.id),
       builder: (context, AsyncSnapshot<List<Children>> snapshot) {
-        if (!snapshot.hasData || snapshot.data.length == 0) return Text('No children', style: TextStyle(color: Colors.amber),);
+        if (!snapshot.hasData || snapshot.data.length == 0)
+          return Text(
+            'No children',
+            style: TextStyle(color: Colors.amber),
+          );
         return Text('Children: ${snapshot.data.length}');
       },
     );
