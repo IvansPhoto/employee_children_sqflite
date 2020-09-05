@@ -15,31 +15,36 @@ class Index extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.clear),
             onPressed: () => showDialog(
-                context: context,
-                child: Dialog(
-                  elevation: 0,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Are you sure to clear the database?', textAlign: TextAlign.center,textScaleFactor: textScaleFactor),
-                      ButtonBar(
-                        children: [
-                          FlatButton(
-                            color: Colors.red,
-                            onPressed: () async {
-                              gStore<GlobalStore>().dbProvider.clearDataBase();
-                              Navigator.pop(context);
-                            },
-                            child: Text('Yes'),
-                          ),
-                          FlatButton(onPressed: () => Navigator.pop(context), child: Text("No"), color: Colors.blue,)
-                        ],
-                      )
-                    ],
-                  ),
-                )),
+              context: context,
+              child: Dialog(
+                elevation: 0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Are you sure to clear the database?', textAlign: TextAlign.center, textScaleFactor: textScaleFactor),
+                    ButtonBar(
+                      children: [
+                        FlatButton(
+                          color: Colors.red,
+                          onPressed: () async {
+                            gStore<GlobalStore>().dbProvider.clearDataBase();
+                            Navigator.pop(context);
+                          },
+                          child: Text('Yes'),
+                        ),
+                        FlatButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("No"),
+                          color: Colors.blue,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
           )
         ],
       ),

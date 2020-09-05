@@ -9,6 +9,7 @@ abstract class RouteNames {
 	static final showChild = '/ShowChild';
 	static final newChildren = '/NewChild/NewChild';
 	static final selectChildren = '/SelectChildren/SelectChildren';
+	static final deleteMany = '/DeleteMany/DeleteMany';
 }
 
 class Employees {

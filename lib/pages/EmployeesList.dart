@@ -11,7 +11,10 @@ class EmployeesList extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: const Text('The employees'),
-        actions: [ButtonAddChildrenEmployee(forChild: false)],
+        actions: [
+          ButtonAddChildrenEmployee(forChild: false),
+          IconButton(icon: Icon(Icons.delete_forever), onPressed: () => Navigator.pushNamed(context, RouteNames.deleteMany)),
+        ],
       ),
       body: Column(
         children: [
@@ -46,7 +49,7 @@ class EmployeesList extends StatelessWidget {
                 }),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 0, 65, 1),
+            padding: filterPadding,
             child: TextFormField(
               maxLength: 50,
               decoration: const InputDecoration(hintText: 'Matches in name or surname', labelText: 'Searching', hintStyle: TextStyle(fontSize: 15)),
@@ -58,7 +61,7 @@ class EmployeesList extends StatelessWidget {
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add_circle),
         onPressed: () => Navigator.pushNamed(context, RouteNames.newEmployee, arguments: true),
-        iconSize: 35,
+        iconSize: iconSize,
       ),
     );
   }

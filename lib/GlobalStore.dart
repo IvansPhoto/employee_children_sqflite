@@ -1,5 +1,4 @@
 import 'package:employee_children_sqflite/database.dart';
-import 'package:employee_children_sqflite/Support.dart';
 import 'package:get_it/get_it.dart';
 import 'package:employee_children_sqflite/Classes.dart';
 import 'package:rxdart/rxdart.dart';
@@ -21,7 +20,6 @@ class GlobalStore {
 	}
 
 	void filterEmployeesToStream(String searchString) async {
-		// print(searchString);
 		_employeeList.add(await dbProvider.filterEmployees(searchString));
 	}
 

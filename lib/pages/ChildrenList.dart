@@ -58,7 +58,7 @@ class ChildrenList extends StatelessWidget {
                 }),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 1, 65, 1),
+            padding: filterPadding,
             child: TextFormField(
               maxLength: 50,
               decoration: const InputDecoration(hintText: 'Matches in name or surname', labelText: 'Searching', hintStyle: TextStyle(fontSize: 15)),
