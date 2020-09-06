@@ -1,100 +1,118 @@
 import 'package:employee_children_sqflite/database.dart';
 
 abstract class RouteNames {
-	static final index = '/';
-	static final employeesList = '/EmployeesList';
-	static final showEmployee = '/ShowEmployee';
-	static final newEmployee = '/NewEmployee/NewEmployee';
-	static final childrenList = '/ChildrenList';
-	static final showChild = '/ShowChild';
-	static final newChildren = '/NewChild/NewChild';
-	static final selectChildren = '/SelectChildren/SelectChildren';
-	static final deleteManyEmployees = '/DeleteManyRecords/DeleteManyRecordsEmployees';
-	static final deleteManyChildren = '/DeleteManyEmployees/DeleteManyEmployees';
-	static final employeeSliverList = '/SliverLists/EmployeeListSlivers';
+  static final index = '/';
+  static final employeesList = '/EmployeesList';
+  static final showEmployee = '/ShowEmployee';
+  static final newEmployee = '/NewEmployee/NewEmployee';
+  static final childrenList = '/ChildrenList';
+  static final showChild = '/ShowChild';
+  static final newChildren = '/NewChild/NewChild';
+  static final selectChildren = '/SelectChildren/SelectChildren';
+  static final deleteManyEmployees = '/DeleteManyRecords/DeleteManyRecordsEmployees';
+  static final deleteManyChildren = '/DeleteManyEmployees/DeleteManyEmployees';
+  static final employeeSliverList = '/SliverLists/EmployeeListSlivers';
 }
 
 class Employees {
-	int id;
+  int id;
 
-	String name;
+  String name;
 
-	String surName;
+  String surName;
 
-	String patronymic;
+  String patronymic;
 
-	DateTime birthday;
+  DateTime birthday;
 
-	String position;
+  String position;
 
-	List<Children> children;
+  List<Children> children;
 
-	bool isSelected = false;
+  bool isSelected = false;
 
-	Employees({this.id, this.name, this.surName, this.patronymic, this.birthday, this.position, this.children, this.isSelected});
+  Employees({this.id, this.name, this.surName, this.patronymic, this.birthday, this.position, this.children, this.isSelected});
 
-	Employees.fromMap(Map<String, dynamic> employeeMap) {
-		id = employeeMap[DBColumns.id];
-		name = employeeMap[DBColumns.name];
-		surName = employeeMap[DBColumns.surname];
-		patronymic = employeeMap[DBColumns.patronymic];
-		birthday = DateTime.parse(employeeMap[DBColumns.birthday]);
-		position = employeeMap[DBColumns.position];
-		// children = List.generate(employeeMap['child'], (index) => Children.fromMap(employeeMap['child'][index]));
-	}
+  Employees.fromMap(Map<String, dynamic> employeeMap) {
+    id = employeeMap[DBColumns.employeeId];
+    name = employeeMap[DBColumns.employeeName];
+    surName = employeeMap[DBColumns.employeeSurname];
+    patronymic = employeeMap[DBColumns.employeePatronymic];
+    birthday = DateTime.parse(employeeMap[DBColumns.employeeBirthday]);
+    position = employeeMap[DBColumns.employeePosition];
+  }
 
-	Map<String, dynamic> toMap() {
-		var map = <String, dynamic>{
-			DBColumns.name: name,
-			DBColumns.surname: surName,
-			DBColumns.patronymic: patronymic,
-			DBColumns.birthday: birthday.toIso8601String(),
-			DBColumns.position: position,
-		};
-		if (id != null) map[DBColumns.id] = id;
-		return map;
-	}
+  Employees.fromMapChildren(Map<String, dynamic> employeeMap) {
+    id = employeeMap[DBColumns.employeeId];
+    name = employeeMap[DBColumns.employeeName];
+    surName = employeeMap[DBColumns.employeeSurname];
+    patronymic = employeeMap[DBColumns.employeePatronymic];
+    birthday = DateTime.parse(employeeMap[DBColumns.employeeBirthday]);
+    position = employeeMap[DBColumns.employeePosition];
+
+    /// Get children from map. Work in progress.
+    children = [];
+    if (employeeMap[DBColumns.childId] != null)
+      children.add(Children(
+        id: employeeMap[DBColumns.childId],
+        name: employeeMap[DBColumns.childName],
+        surName: employeeMap[DBColumns.childSurname],
+        patronymic: employeeMap[DBColumns.childPatronymic],
+        birthday: DateTime.parse(employeeMap[DBColumns.childBirthday]),
+        parentId: employeeMap[DBColumns.childParentId],
+      ));
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      DBColumns.employeeName: name,
+      DBColumns.employeeSurname: surName,
+      DBColumns.employeePatronymic: patronymic,
+      DBColumns.employeeBirthday: birthday.toIso8601String(),
+      DBColumns.employeePosition: position,
+    };
+    if (id != null) map[DBColumns.employeeId] = id;
+    return map;
+  }
 }
 
 class Children {
-	int id;
+  int id;
 
-	String name;
+  String name;
 
-	String surName;
+  String surName;
 
-	String patronymic;
+  String patronymic;
 
-	DateTime birthday;
+  DateTime birthday;
 
-	int parentId;
+  int parentId;
 
-	Employees employee;
+  Employees employee;
 
-	bool isSelected = false;
+  bool isSelected = false;
 
-	Children({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId, this.employee, this.isSelected});
+  Children({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId, this.employee, this.isSelected});
 
-	Children.fromMap(Map<String, dynamic> childrenMap) {
-		id = childrenMap[DBColumns.id];
-		name = childrenMap[DBColumns.name];
-		surName = childrenMap[DBColumns.surname];
-		patronymic = childrenMap[DBColumns.patronymic];
-		birthday = DateTime.parse(childrenMap[DBColumns.birthday]);
-		parentId = childrenMap[DBColumns.parentId];
-	}
+  Children.fromMap(Map<String, dynamic> childrenMap) {
+    id = childrenMap[DBColumns.childId];
+    name = childrenMap[DBColumns.childName];
+    surName = childrenMap[DBColumns.childSurname];
+    patronymic = childrenMap[DBColumns.childPatronymic];
+    birthday = DateTime.parse(childrenMap[DBColumns.childBirthday]);
+    parentId = childrenMap[DBColumns.childParentId];
+  }
 
-	Map<String, dynamic> toMap() {
-		var map = <String, dynamic>{
-			DBColumns.name: name,
-			DBColumns.surname: surName,
-			DBColumns.patronymic: patronymic,
-			DBColumns.birthday: birthday.toIso8601String(),
-			DBColumns.parentId: parentId ?? (employee == null ? null : employee.id),
-		};
-		if (id != null) map[DBColumns.id] = id;
-		return map;
-	}
-
-
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      DBColumns.childName: name,
+      DBColumns.childSurname: surName,
+      DBColumns.childPatronymic: patronymic,
+      DBColumns.childBirthday: birthday.toIso8601String(),
+      DBColumns.childParentId: parentId ?? (employee == null ? null : employee.id),
+    };
+    if (id != null) map[DBColumns.childId] = id;
+    return map;
+  }
 }

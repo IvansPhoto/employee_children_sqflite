@@ -122,7 +122,7 @@ abstract class GeneratePersons {
         surName: surnames[_randomSurname],
         patronymic: 'Child',
         birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
-        parentId: null,
+        // parentId: null,
       );
       batch.insert(
         DBColumns.childrenTable,
