@@ -32,7 +32,7 @@ class ChildrenList extends StatelessWidget {
                           return Card(
                             elevation: 0,
                             child: ListTile(
-                              title: Text('${child.surName} ${child.name} ${child.patronymic}'),
+                              title: Text('${child.name} ${child.surName} ${child.patronymic}'),
                               subtitle: Text(monthFromNumber(child.birthday)),
                               trailing: child.parentId == null ? Icon(Icons.announcement) : null,
                               onTap: () async {

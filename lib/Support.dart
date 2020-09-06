@@ -120,7 +120,7 @@ abstract class GeneratePersons {
       Children child = Children(
         name: names[_randomName],
         surName: surnames[_randomSurname],
-        patronymic: 'SQFlite',
+        patronymic: 'Child',
         birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
         parentId: null,
       );

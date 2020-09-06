@@ -40,6 +40,7 @@ class Employees {
 		patronymic = employeeMap[DBColumns.patronymic];
 		birthday = DateTime.parse(employeeMap[DBColumns.birthday]);
 		position = employeeMap[DBColumns.position];
+		// children = List.generate(employeeMap['child'], (index) => Children.fromMap(employeeMap['child'][index]));
 	}
 
 	Map<String, dynamic> toMap() {

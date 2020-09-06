@@ -17,6 +17,28 @@ abstract class DBColumns {
 	static final String childrenId = 'childrenId';
 }
 
+abstract class EmployeeColumns {
+	static final String employeeTable = 'employeeTable';
+	static final String employeeId = 'employeeId';
+	static final String employeeName = 'employeeName';
+	static final String employeeSurname = 'employeeSurname';
+	static final String employeePatronymic = 'employeePatronymic';
+	static final String employeeBirthday = 'employeeBirthday';
+	static final String employeePosition = 'employeePosition';
+}
+
+abstract class ChildColumns {
+	static final String childrenTable = 'childrenTable';
+	static final String childId = 'childId';
+	static final String childName = 'childName';
+	static final String childSurname = 'childSurname';
+	static final String childPatronymic = 'childPatronymic';
+	static final String childBirthday = 'childBirthday';
+	static final String childPosition = 'childPosition';
+	static final String childParentId = 'childParentId';
+}
+
+
 class DBProvider {
 
 	Database db;
@@ -122,22 +144,25 @@ class DBProvider {
 	}
 
 	/// Get all employee records from db with their children. Work in progress!
-	Future<List<Employees>> getAllEmployeesWithChildren() async {
-
+	void getAllEmployeesWithChildren() async {
 		List<Employees> employeeList = [];
-		List<Map<String, dynamic>> employeeMapList = await db.query(
-			DBColumns.employeeTable,
-			columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.position, DBColumns.birthday],
-
-		);
-
-		if (employeeMapList.isNotEmpty) {
-			employeeMapList.forEach((employeeMap) {
-				employeeList.add(Employees.fromMap(employeeMap));
-			});
-			return employeeList;
-		} else
-			return null;
+		List<Map<String, dynamic>> employeeMapList = await db.rawQuery('SELECT * FROM ${DBColumns.employeeTable} '
+				'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.parentId} = ${DBColumns.employeeTable}.${DBColumns.id}');
+		employeeMapList.forEach(print);
+		// List<Employees> employeeList = [];
+		// List<Map<String, dynamic>> employeeMapList = await db.query(
+		// 	DBColumns.employeeTable,
+		// 	columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.position, DBColumns.birthday],
+		//
+		// );
+		//
+		// if (employeeMapList.isNotEmpty) {
+		// 	employeeMapList.forEach((employeeMap) {
+		// 		employeeList.add(Employees.fromMap(employeeMap));
+		// 	});
+		// 	return employeeList;
+		// } else
+		// 	return null;
 	}
 
 	/// Get all child records from db.

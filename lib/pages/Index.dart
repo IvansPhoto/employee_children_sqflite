@@ -103,6 +103,12 @@ class Index extends StatelessWidget {
         ),
         iconSize: iconSize,
       ),
+      persistentFooterButtons: [
+        IconButton(
+          icon: Icon(Icons.description),
+          onPressed: gStore<GlobalStore>().dbProvider.getAllEmployeesWithChildren,
+        )
+      ],
     );
   }
 }
