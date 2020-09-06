@@ -18,9 +18,6 @@ abstract class DBColumns {
 }
 
 class DBProvider {
-//  DBProvider() {
-//    initDataBase();
-//  }
 
 	Database db;
 
@@ -33,9 +30,7 @@ class DBProvider {
 	}
 
 	Future<void> initDataBase() async {
-		//To delete the database
-//    await deleteDatabase(join(await getDatabasesPath(), 'employee_children.db'));
-		print('opening...');
+		print('DB is opening...');
 		try {
 			var databasesPath = await getDatabasesPath();
 			await Directory(databasesPath).create(recursive: true);
@@ -64,6 +59,7 @@ class DBProvider {
 		await initDataBase();
 	}
 
+	/// Insert an employee record in db.
 	Future<Employees> insertEmployee(Employees employee) async {
 		try {
 			employee.id = await db.insert(DBColumns.employeeTable, employee.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
@@ -74,6 +70,7 @@ class DBProvider {
 		}
 	}
 
+	/// Insert a child record in db.
 	Future<Children> insertChild(Children child) async {
 		try {
 			child.id = await db.insert(DBColumns.childrenTable, child.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
@@ -84,21 +81,38 @@ class DBProvider {
 		}
 	}
 
+	/// Delete an employee record from db.
 	Future<int> deleteEmployee(Employees employee) async => await db.delete(DBColumns.employeeTable, where: "${DBColumns.id} = ?", whereArgs: [employee.id]);
 
+	/// Delete several employee records from db.
+	Future<int> deleteSeveralEmployee(List<Employees> employeesList) async {
+		var batch = db.batch();
+
+		employeesList.forEach((employee) async {
+			batch.delete(DBColumns.employeeTable, where: "${DBColumns.id} = ?", whereArgs: [employee.id]);
+		});
+
+		List<dynamic> result = await batch.commit().catchError((e) => throw e);
+		return result.length;
+	}
+
+	/// Delete an child record from db.
 	Future<int> deleteChild(Children child) async => await db.delete(DBColumns.childrenTable, where: "${DBColumns.id} = ?", whereArgs: [child.id]);
 
+	/// Update an employee record in db.
 	Future<int> updateEmployee(Employees employee) async => await db.update(DBColumns.employeeTable, employee.toMap(), where: "${DBColumns.id} = ?", whereArgs: [employee.id]);
 
+	/// Update a child record in db.
 	Future<int> updateChild(Children child) async => await db.update(DBColumns.childrenTable, child.toMap(), where: "${DBColumns.id} = ?", whereArgs: [child.id]);
 
+	/// Get all employee records from db.
 	Future<List<Employees>> getAllEmployees() async {
 		List<Employees> employeeList = [];
 		List<Map<String, dynamic>> employeeMapList = await db.query(
 			DBColumns.employeeTable,
 			columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.position, DBColumns.birthday],
 		);
-		if (employeeMapList.length > 0) {
+		if (employeeMapList.isNotEmpty) {
 			employeeMapList.forEach((employeeMap) {
 				employeeList.add(Employees.fromMap(employeeMap));
 			});
@@ -107,13 +121,33 @@ class DBProvider {
 			return null;
 	}
 
+	/// Get all employee records from db with their children. Work in progress!
+	Future<List<Employees>> getAllEmployeesWithChildren() async {
+
+		List<Employees> employeeList = [];
+		List<Map<String, dynamic>> employeeMapList = await db.query(
+			DBColumns.employeeTable,
+			columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.position, DBColumns.birthday],
+
+		);
+
+		if (employeeMapList.isNotEmpty) {
+			employeeMapList.forEach((employeeMap) {
+				employeeList.add(Employees.fromMap(employeeMap));
+			});
+			return employeeList;
+		} else
+			return null;
+	}
+
+	/// Get all child records from db.
 	Future<List<Children>> getAllChildren() async {
 		List<Children> childrenList = [];
 		List<Map<String, dynamic>> childrenMapList = await db.query(
 			DBColumns.childrenTable,
 			columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.birthday, DBColumns.parentId],
 		);
-		if (childrenMapList.length > 0) {
+		if (childrenMapList.isNotEmpty) {
 			childrenMapList.forEach((employeeMap) {
 				childrenList.add(Children.fromMap(employeeMap));
 			});
@@ -132,15 +166,7 @@ class DBProvider {
 			whereArgs: ['%$searchString%', '%$searchString%', '%$searchString%'],
 		);
 
-		// List<Map<String, dynamic>> employeeMapList = await db.rawQuery(
-		// 		'SELECT * FROM ${DBColumns.employeeTable} WHERE ${DBColumns.name} LIKE ? or ${DBColumns.surname} LIKE ?',
-		// 	['%$searchString%']
-		// );
-
-		print(searchString);
-		print(employeeMapList.length);
-
-		if (employeeMapList.length > 0) {
+		if (employeeMapList.isNotEmpty) {
 			employeeMapList.forEach((employeeMap) {
 				employeeList.add(Employees.fromMap(employeeMap));
 			});
@@ -157,7 +183,7 @@ class DBProvider {
 			where: '${DBColumns.name} LIKE ? OR ${DBColumns.surname} LIKE ? OR ${DBColumns.patronymic} LIKE ?',
 			whereArgs: ['%$searchString%', '%$searchString%', '%$searchString%'],
 		);
-		if (childrenMapList.length > 0) {
+		if (childrenMapList.isNotEmpty) {
 			childrenMapList.forEach((employeeMap) {
 				childrenList.add(Children.fromMap(employeeMap));
 			});
@@ -166,6 +192,7 @@ class DBProvider {
 			return null;
 	}
 
+	/// Get child records of the employee from db.
 	Future<List<Children>> getChildrenOfEmployee(int employeeId) async {
 		List<Children> childrenList = [];
 		List<Map<String, dynamic>> childrenMapList = await db.query(
@@ -174,7 +201,7 @@ class DBProvider {
 			where: '${DBColumns.parentId} = ?',
 			whereArgs: [employeeId],
 		);
-		if (childrenMapList.length > 0) {
+		if (childrenMapList.isNotEmpty) {
 			childrenMapList.forEach((employeeMap) {
 				childrenList.add(Children.fromMap(employeeMap));
 			});
@@ -183,14 +210,16 @@ class DBProvider {
 			return null;
 	}
 
+	/// Get the employee record of the child from db.
 	Future<Employees> getEmployeeOfChild(int employeeId) async {
+		if(employeeId == null) return null;
 		List<Map<String, dynamic>> employeeMapList = await db.query(
 			DBColumns.employeeTable,
 			columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.position, DBColumns.birthday],
 			where: '${DBColumns.id} = ?',
 			whereArgs: [employeeId],
 		);
-		if (employeeMapList.length > 0)
+		if (employeeMapList.isNotEmpty)
 			return Employees.fromMap(employeeMapList.first);
 		else
 			return null;

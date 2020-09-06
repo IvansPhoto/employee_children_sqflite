@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/Classes.dart';
 
 class EmployeeCard extends StatefulWidget {
@@ -18,7 +17,7 @@ class _EmployeeCardState extends State<EmployeeCard> {
       elevation: 0,
       child: ListTile(
         leading: widget.employee.isSelected ? Icon(Icons.check_circle_outline) : Icon(Icons.radio_button_unchecked),
-        title: Text('${widget.employee.surName} ${widget.employee.name}'),
+        title: Text('${widget.employee.surName} ${widget.employee.name} ${widget.employee.patronymic}'),
         onTap: () async {
           setState(() {
             widget.employee.isSelected = !widget.employee.isSelected ;

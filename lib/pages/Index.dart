@@ -79,6 +79,14 @@ class Index extends StatelessWidget {
                       child: const Text('Children List'),
                       color: Colors.red[900],
                     ),
+                    FlatButton(
+                      onPressed: () {
+                        gStore<GlobalStore>().getEmployeesToStream();
+                        Navigator.pushNamed(context, RouteNames.employeeSliverList);
+                      },
+                      child: const Text('Employee SliverList'),
+                      color: Colors.red[900],
+                    ),
                   ],
                 );
               case ConnectionState.none:

@@ -7,7 +7,7 @@ import 'package:employee_children_sqflite/database.dart';
 import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 
-final double iconSize = 55.0;
+final double iconSize = 40.0;
 final double textScaleFactor = 1.25;
 final EdgeInsetsGeometry filterPadding = EdgeInsets.fromLTRB(15, 0, 85, 1);
 
@@ -100,11 +100,8 @@ abstract class GeneratePersons {
         patronymic: 'SQFlite',
         birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
       );
-      batch.insert(
-        DBColumns.employeeTable,
-        employee.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+
+      batch.insert(DBColumns.employeeTable, employee.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
 
     List<dynamic> result = await batch.commit().catchError((e) => throw e);
@@ -125,6 +122,7 @@ abstract class GeneratePersons {
         surName: surnames[_randomSurname],
         patronymic: 'SQFlite',
         birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
+        parentId: null,
       );
       batch.insert(
         DBColumns.childrenTable,
@@ -169,8 +167,6 @@ class ButtonAddChildrenEmployee extends StatelessWidget {
                         maxLength: 3,
                         autovalidate: true,
                         validator: (text) {
-                          print('validator text - $text');
-                          print('validator number - $number');
                           if (int.tryParse(text, radix: 10) > 100 || int.tryParse(text, radix: 10) < 1 || text == null)
                             return 'From 1 to 100';
                           else

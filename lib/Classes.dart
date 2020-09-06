@@ -9,7 +9,9 @@ abstract class RouteNames {
 	static final showChild = '/ShowChild';
 	static final newChildren = '/NewChild/NewChild';
 	static final selectChildren = '/SelectChildren/SelectChildren';
-	static final deleteMany = '/DeleteMany/DeleteMany';
+	static final deleteManyEmployees = '/DeleteManyRecords/DeleteManyRecordsEmployees';
+	static final deleteManyChildren = '/DeleteManyEmployees/DeleteManyEmployees';
+	static final employeeSliverList = '/SliverLists/EmployeeListSlivers';
 }
 
 class Employees {
@@ -27,7 +29,7 @@ class Employees {
 
 	List<Children> children;
 
-	bool isSelected;
+	bool isSelected = false;
 
 	Employees({this.id, this.name, this.surName, this.patronymic, this.birthday, this.position, this.children, this.isSelected});
 
@@ -68,9 +70,9 @@ class Children {
 
 	Employees employee;
 
-	bool isSelected;
+	bool isSelected = false;
 
-	Children({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId, this.isSelected});
+	Children({this.id, this.name, this.surName, this.patronymic, this.birthday, this.parentId, this.employee, this.isSelected});
 
 	Children.fromMap(Map<String, dynamic> childrenMap) {
 		id = childrenMap[DBColumns.id];
@@ -87,7 +89,7 @@ class Children {
 			DBColumns.surname: surName,
 			DBColumns.patronymic: patronymic,
 			DBColumns.birthday: birthday.toIso8601String(),
-			DBColumns.parentId: parentId	?? (employee == null ? null : employee.id),
+			DBColumns.parentId: parentId ?? (employee == null ? null : employee.id),
 		};
 		if (id != null) map[DBColumns.id] = id;
 		return map;

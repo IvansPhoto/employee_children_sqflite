@@ -23,6 +23,17 @@ class GlobalStore {
 		_employeeList.add(await dbProvider.filterEmployees(searchString));
 	}
 
+	Future<int> deleteSeveralEmployee(List<Employees> employeesList) async {
+		print('deleteSeveralEmployee start');
+
+		int number = await dbProvider.deleteSeveralEmployee(employeesList);
+		_employeeList.add(await dbProvider.getAllEmployees());
+
+		print('deleteSeveralEmployee end');
+
+		return number;
+	}
+
 	//Setting up streams for The employees
 	final _theEmployee = BehaviorSubject<Employees>();
 
@@ -94,6 +105,11 @@ class GlobalStore {
 		_childrenList.add(await dbProvider.getAllChildren());
 		//Update the stream of LIST of employees.
 		_employeeList.add(await dbProvider.getAllEmployees());
+	}
+
+	void setEmployeeToChild({Employees employee, Children child}) async {
+		child.parentId = employee.id;
+		updateChild(child);
 	}
 
 	void deleteChild(Children child) async {

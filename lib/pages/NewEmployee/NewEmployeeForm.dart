@@ -8,6 +8,7 @@ import 'package:employee_children_sqflite/pages/NewEmployee/EmployeeChildrenList
 class EmployeeForm extends StatefulWidget {
   //Init the state of this form to add a new employee
   final bool isNew;
+
   EmployeeForm(this.isNew);
 
   final _formKey = GlobalKey<FormState>();
@@ -58,7 +59,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
       birthday: _birthday,
       position: _positionTEC.text,
     ));
-    Navigator.of(context).pop();
+    Navigator.of(context).pop('added');
 
     //Check for SnackBar in the List page.
     Scaffold.of(context)
@@ -150,22 +151,23 @@ class _EmployeeFormState extends State<EmployeeForm> {
                     RaisedButton(
                       elevation: 0,
                       child: const Text('Cancel'),
-                      onPressed: () => {
-                        if (widget._formKey.currentState.validate()) employee == null ? _addEmployee() : _updateEmployee(),
-                      },
+                      onPressed: () => Navigator.of(context).pop(),
                     ),
-                      IconButton(
-                        onPressed: widget.isNew ? null : () => _selectChildren(context),
-                        icon: Icon(Icons.person_add),
-                        iconSize: iconSize,
-                      ),
+                    IconButton(
+                      iconSize: iconSize,
+                      onPressed: widget.isNew ? null : () => _selectChildren(context),
+                      icon: Icon(Icons.person_add),
+                    ),
                   ],
                 ),
                 Divider(
                   color: Colors.blue,
                   thickness: 0.5,
                 ),
-                EmployeeChildrenList(employee: employee, isNew: widget.isNew,),
+                EmployeeChildrenList(
+                  employee: employee,
+                  isNew: widget.isNew,
+                ),
               ],
             )),
       ),

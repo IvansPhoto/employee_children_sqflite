@@ -16,7 +16,7 @@ class ShowChild extends StatelessWidget {
             stream: gStore<GlobalStore>().streamTheChild$,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData)
-                return Text('Child profile.');
+                return Text('Loading child profile...');
               else
                 return Text('${child.name} ${child.surName}');
             }),
@@ -44,7 +44,7 @@ class ShowChild extends StatelessWidget {
                 Text('${child.birthday == null ? 'Not specified' : monthFromNumber(child.birthday)}', style: Theme.of(context).textTheme.bodyText1),
                 Divider(),
                 Text('Parent:'),
-                EmployeeOfChild(employeeId: child.parentId),
+                EmployeeOfChild(child: child),
                 Divider(),
                 ActionButtons(child: child),
               ],
@@ -56,18 +56,21 @@ class ShowChild extends StatelessWidget {
 }
 
 class EmployeeOfChild extends StatelessWidget {
-  final int employeeId;
+  final Children child;
 
-  EmployeeOfChild({this.employeeId});
+  EmployeeOfChild({this.child});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Employees>(
-      future: gStore<GlobalStore>().dbProvider.getEmployeeOfChild(employeeId),
+      future: gStore<GlobalStore>().dbProvider.getEmployeeOfChild(child.parentId),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         Employees employee = snapshot.data;
-        if (!snapshot.hasData) return Text('Free child!', style: Theme.of(context).textTheme.bodyText1);
-        return Text('${employee.name} ${employee.surName}', style: Theme.of(context).textTheme.bodyText1);
+        if (!snapshot.hasData)
+          return Text('Free child!', style: Theme.of(context).textTheme.bodyText1);
+        else
+          child.employee = employee;
+          return Text('${employee.name} ${employee.surName}', style: Theme.of(context).textTheme.bodyText1);
       },
     );
   }

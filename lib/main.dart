@@ -10,7 +10,9 @@ import 'package:employee_children_sqflite/pages/ShowChild/ShowChild.dart';
 import 'package:employee_children_sqflite/pages/NewEmployee/NewEmployee.dart';
 import 'package:employee_children_sqflite/pages/NewChild/NewChild.dart';
 import 'package:employee_children_sqflite/pages/SelectChildren/SelectChildren.dart';
-import 'package:employee_children_sqflite/DeleteMany/DeleteMany.dart';
+import 'package:employee_children_sqflite/DeleteManyRecords/DeleteManyRecordsEmployees.dart';
+import 'package:employee_children_sqflite/DeleteManyRecords/DeleteManyRecordsChildren.dart';
+import 'package:employee_children_sqflite/pages/SliverLists/EmployeeSliverList.dart';
 
 void main() async {
 	//For database.
@@ -31,7 +33,9 @@ void main() async {
 			RouteNames.newEmployee: (BuildContext context) => NewEmployee(),
 			RouteNames.newChildren: (BuildContext context) => NewChild(),
 			RouteNames.selectChildren: (BuildContext context) => SelectChildren(),
-			RouteNames.deleteMany: (BuildContext context) => DeleteMany(),
+			RouteNames.deleteManyEmployees: (BuildContext context) => DeleteManyEmployees(),
+			RouteNames.deleteManyChildren: (BuildContext context) => DeleteManyChildren(),
+			RouteNames.employeeSliverList: (BuildContext context) => EmployeeSliverList(),
 		},
 		theme: ThemeData(
 			fontFamily: 'RobotoMono',
