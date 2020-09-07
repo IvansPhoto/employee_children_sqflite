@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/Support.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
-import 'package:employee_children_sqflite/pages/NewEmployee/EmployeeChildrenList.dart';
 
 class EmployeeForm extends StatefulWidget {
   //Init the state of this form to add a new employee
@@ -160,14 +159,9 @@ class _EmployeeFormState extends State<EmployeeForm> {
                     ),
                   ],
                 ),
-                Divider(
-                  color: Colors.blue,
-                  thickness: 0.5,
-                ),
-                EmployeeChildrenList(
-                  employee: employee,
-                  isNew: widget.isNew,
-                ),
+                Divider(color: Colors.blue, thickness: 0.5),
+                Text('Children:', textScaleFactor: textScaleFactor),
+                ...[for (var child in employee.children) Text('${child.name} ${child.surName}', style: Theme.of(context).textTheme.bodyText1)],
               ],
             )),
       ),

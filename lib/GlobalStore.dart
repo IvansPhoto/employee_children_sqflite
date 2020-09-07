@@ -16,7 +16,8 @@ class GlobalStore {
 	Stream get streamEmployeesList$ => _employeeList.stream;
 
 	void getEmployeesToStream() async {
-		_employeeList.add(await dbProvider.getAllEmployees());
+		_employeeList.add(await dbProvider.getAllEmployeesWithChildren());
+		// _employeeList.addStream(source)
 	}
 
 	void filterEmployeesToStream(String searchString) async {

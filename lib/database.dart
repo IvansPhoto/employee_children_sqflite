@@ -142,13 +142,11 @@ class DBProvider {
   Future<List<Employees>> getAllEmployeesWithChildren() async {
     List<Employees> employeeList = [];
 
-    List<Map<String, dynamic>> ListMap = await db.rawQuery('SELECT * FROM ${DBColumns.employeeTable} '
+    List<Map<String, dynamic>> listMap = await db.rawQuery('SELECT * FROM ${DBColumns.employeeTable} '
         'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId}');
 
-    // ListMap.forEach(print);
-
-    if (ListMap.isNotEmpty) {
-      ListMap.forEach((employeeMap) {
+    if (listMap.isNotEmpty) {
+      listMap.forEach((employeeMap) {
         Employees newEmployee = Employees.fromMapChildren(employeeMap);
 
         int length = employeeList.length;
@@ -156,7 +154,7 @@ class DBProvider {
         for (int i = 0; i < length; i++) {
           Employees existingEmployee = employeeList.elementAt(i);
           if (existingEmployee.id == newEmployee.id) {
-            existingEmployee.children.add(newEmployee.children.elementAt(0));
+            existingEmployee.children.add(newEmployee.children.first);
             isEmployeeInList = true;
           }
         }
@@ -165,26 +163,11 @@ class DBProvider {
       print(employeeList.length);
 
       // employeeList.forEach((Employees existingEmployee) => existingEmployee.toMap().forEach((key, value) => print('$key - $value')));
-      employeeList.forEach((Employees existingEmployee) => existingEmployee.children.forEach((Children child) => print('${child.id} ${child.name}')));
+      // employeeList.forEach((Employees existingEmployee) => existingEmployee.children.forEach((Children child) => print('${child.id} ${child.name}')));
 
       return employeeList;
     } else
       return null;
-
-    // List<Employees> employeeList = [];
-    // List<Map<String, dynamic>> ListMap = await db.query(
-    // 	DBColumns.employeeTable,
-    // 	columns: [DBColumns.id, DBColumns.name, DBColumns.surname, DBColumns.patronymic, DBColumns.position, DBColumns.birthday],
-    //
-    // );
-    //
-    // if (ListMap.isNotEmpty) {
-    // 	ListMap.forEach((employeeMap) {
-    // 		employeeList.add(Employees.fromMap(employeeMap));
-    // 	});
-    // 	return employeeList;
-    // } else
-    // 	return null;
   }
 
   /// Get all child records from db.

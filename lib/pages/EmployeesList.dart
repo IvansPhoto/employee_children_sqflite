@@ -39,7 +39,7 @@ class EmployeesList extends StatelessWidget {
                         elevation: 0,
                         child: ListTile(
                           title: Text('${employee.name} ${employee.surName} ${employee.position}'),
-                          subtitle: NumberChildren(employee: employee),
+                          subtitle: employee.children.isNotEmpty ? Text('Children ${employee.children.length}') : const Text('No children', style: TextStyle(color: Colors.amber)),
                           onTap: () {
                             //Set the employee to the Global store.
                             gStore<GlobalStore>().setTheEmployee = employee;
