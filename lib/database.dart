@@ -125,22 +125,6 @@ class DBProvider {
   /// Get all employee records from db.
   Future<List<Employees>> getAllEmployees() async {
     List<Employees> employeeList = [];
-    List<Map<String, dynamic>> employeeMapList = await db.query(
-      DBColumns.employeeTable,
-      columns: [DBColumns.employeeId, DBColumns.employeeName, DBColumns.employeeSurname, DBColumns.employeePatronymic, DBColumns.employeePosition, DBColumns.employeeBirthday],
-    );
-    if (employeeMapList.isNotEmpty) {
-      employeeMapList.forEach((employeeMap) {
-        employeeList.add(Employees.fromMap(employeeMap));
-      });
-      return employeeList;
-    } else
-      return null;
-  }
-
-  /// Get all employee records from db with their children. Work in progress!
-  Future<List<Employees>> getAllEmployeesWithChildren() async {
-    List<Employees> employeeList = [];
 
     List<Map<String, dynamic>> listMap = await db.rawQuery('SELECT * FROM ${DBColumns.employeeTable} '
         'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId}');
@@ -160,12 +144,48 @@ class DBProvider {
         }
         if (!isEmployeeInList) employeeList.add(newEmployee);
       });
-      print(employeeList.length);
+      // print(employeeList.length);
 
       // employeeList.forEach((Employees existingEmployee) => existingEmployee.toMap().forEach((key, value) => print('$key - $value')));
       // employeeList.forEach((Employees existingEmployee) => existingEmployee.children.forEach((Children child) => print('${child.id} ${child.name}')));
 
       return employeeList;
+    } else
+      return null;
+  }
+
+  /// Get all employee records from db with their children.
+  Future<Employees> getTheEmployee(int employeeId) async {
+    List<Employees> employeeList = [];
+
+    List<Map<String, dynamic>> listMap = await db.rawQuery(
+        'SELECT * FROM ${DBColumns.childrenTable} '
+        'LEFT JOIN ${DBColumns.employeeTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
+    'WHERE ${DBColumns.employeeId} = ?', [employeeId]);
+
+    // listMap.forEach((element) => print(element));
+
+    if (listMap.isNotEmpty) {
+      listMap.forEach((employeeMap) {
+        Employees newEmployee = Employees.fromMapChildren(employeeMap);
+
+        int length = employeeList.length;
+        bool isEmployeeInList = false;
+        for (int i = 0; i < length; i++) {
+          Employees existingEmployee = employeeList.elementAt(i);
+          if (existingEmployee.id == newEmployee.id) {
+            existingEmployee.children.add(newEmployee.children.first);
+            isEmployeeInList = true;
+          }
+        }
+        if (!isEmployeeInList) employeeList.add(newEmployee);
+      });
+      // print(employeeList.length);
+
+      // employeeList.forEach((Employees existingEmployee) => existingEmployee.toMap().forEach((key, value) => print('$key - $value')));
+      // employeeList.forEach((Employees existingEmployee) => existingEmployee.children.forEach((Children child) => print('${child.id} ${child.name}')));
+
+      return employeeList.first;
     } else
       return null;
   }

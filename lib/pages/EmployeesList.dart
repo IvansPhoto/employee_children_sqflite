@@ -31,6 +31,7 @@ class EmployeesList extends StatelessWidget {
                   if (snapshot.connectionState != ConnectionState.active || snapshot.data == null)
                     //Return a text if there are no records.
                     return Center(child: Text('No employee in the list'));
+                  // Create a list of all employees
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {

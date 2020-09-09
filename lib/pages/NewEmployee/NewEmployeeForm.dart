@@ -58,16 +58,10 @@ class _EmployeeFormState extends State<EmployeeForm> {
       birthday: _birthday,
       position: _positionTEC.text,
     ));
+    print('${_nameTEC.text}');
     Navigator.of(context).pop('added');
 
     //Check for SnackBar in the List page.
-    Scaffold.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text('The employee has been added.'),
-        elevation: 0,
-        duration: Duration(seconds: 5),
-      ));
   }
 
   void _updateEmployee() async {
@@ -93,77 +87,95 @@ class _EmployeeFormState extends State<EmployeeForm> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
-            key: widget._formKey,
-            autovalidate: true,
-            child: ListView(
-              children: <Widget>[
-                //Name
-                TextFormField(
-                  controller: _nameTEC,
-                  decoration: const InputDecoration(hintText: 'Name', labelText: "The name"),
-                  maxLength: 50,
-                  keyboardType: TextInputType.text,
-                  validator: (value) => value.isEmpty ? 'Enter the employee name' : null,
-                ),
-                //Surname
-                TextFormField(
-                  controller: _surnameTEC,
-                  decoration: const InputDecoration(hintText: 'Surname', labelText: "The surname"),
-                  maxLength: 50,
-                  keyboardType: TextInputType.text,
-                  validator: (value) => value.isEmpty ? 'Enter the employee surname' : null,
-                ),
-                //Position
-                TextFormField(
-                  controller: _positionTEC,
-                  decoration: const InputDecoration(hintText: 'Position', labelText: "The position"),
-                  maxLength: 50,
-                  keyboardType: TextInputType.text,
-                  validator: (value) => value.isEmpty ? 'Enter the employee position' : null,
-                ),
-                //Birthday
-                TextField(
-                  readOnly: true,
-                  controller: TextEditingController(text: _birthdayText),
-                  onTap: () => showDatePicker(
-                    context: context,
-                    initialDate: employee == null ? DateTime.now() : employee.birthday,
-                    firstDate: DateTime(1950),
-                    lastDate: DateTime(2021),
-                  ).then((dateTime) => setState(() {
-                        _birthday = dateTime;
-                        _birthdayText = monthFromNumber(dateTime);
-                      })),
-                  decoration: const InputDecoration(hintText: 'Birthday', labelText: "The birthday"),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    RaisedButton(
-                      elevation: 0,
-                      child: widget.isNew ? const Text('Add') : const Text('Update'),
-                      onPressed: () => {
-                        if (widget._formKey.currentState.validate()) employee == null ? _addEmployee() : _updateEmployee(),
-                      },
-                    ),
-                    RaisedButton(
-                      elevation: 0,
-                      child: const Text('Cancel'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    IconButton(
-                      iconSize: iconSize,
-                      onPressed: widget.isNew ? null : () => _selectChildren(context),
-                      icon: Icon(Icons.person_add),
-                    ),
-                  ],
-                ),
-                Divider(color: Colors.blue, thickness: 0.5),
-                Text('Children:', textScaleFactor: textScaleFactor),
-                ...[for (var child in employee.children) Text('${child.name} ${child.surName}', style: Theme.of(context).textTheme.bodyText1)],
-              ],
-            )),
+          key: widget._formKey,
+          autovalidate: true,
+          child: ListView(
+            children: <Widget>[
+              //Name
+              TextFormField(
+                controller: _nameTEC,
+                decoration: const InputDecoration(hintText: 'Name', labelText: "The name"),
+                maxLength: 50,
+                keyboardType: TextInputType.text,
+                validator: (value) => value.isEmpty ? 'Enter the employee name' : null,
+              ),
+              //Surname
+              TextFormField(
+                controller: _surnameTEC,
+                decoration: const InputDecoration(hintText: 'Surname', labelText: "The surname"),
+                maxLength: 50,
+                keyboardType: TextInputType.text,
+                validator: (value) => value.isEmpty ? 'Enter the employee surname' : null,
+              ),
+              //Position
+              TextFormField(
+                controller: _positionTEC,
+                decoration: const InputDecoration(hintText: 'Position', labelText: "The position"),
+                maxLength: 50,
+                keyboardType: TextInputType.text,
+                validator: (value) => value.isEmpty ? 'Enter the employee position' : null,
+              ),
+              //Birthday
+              TextField(
+                readOnly: true,
+                controller: TextEditingController(text: _birthdayText),
+                onTap: () => showDatePicker(
+                  context: context,
+                  initialDate: employee == null ? DateTime.now() : employee.birthday,
+                  firstDate: DateTime(1950),
+                  lastDate: DateTime(2021),
+                ).then((dateTime) => setState(() {
+                      _birthday = dateTime;
+                      _birthdayText = monthFromNumber(dateTime);
+                    })),
+                decoration: const InputDecoration(hintText: 'Birthday', labelText: "The birthday"),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  RaisedButton(
+                    elevation: 0,
+                    child: widget.isNew ? const Text('Add') : const Text('Update'),
+                    onPressed: () => {
+                      if (widget._formKey.currentState.validate()) widget.isNew ? _addEmployee() : _updateEmployee(),
+                    },
+                  ),
+                  RaisedButton(
+                    elevation: 0,
+                    child: const Text('Cancel'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  IconButton(
+                    iconSize: iconSize,
+                    onPressed: widget.isNew ? null : () => _selectChildren(context),
+                    icon: Icon(Icons.person_add),
+                  ),
+                ],
+              ),
+              Divider(color: Colors.blue, thickness: 0.5),
+              //Children list
+              StreamBuilder<Employees>(
+                stream: gStore<GlobalStore>().streamTheEmployee$,
+                builder: (BuildContext context, AsyncSnapshot<Employees> snapshot) {
+                  if (!snapshot.hasData) return Text('loading...');
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.isNew) Text('Children can be added after saving the record.'),
+                      if (!widget.isNew && (snapshot.data.children.isNotEmpty ?? false)) Text('Children:'),
+                      if (!widget.isNew && (snapshot.data.children.isEmpty ?? false))
+                        Text('${snapshot.data.name} ${snapshot.data.surName} has not children', style: Theme.of(context).textTheme.bodyText1),
+                      if (!widget.isNew) ...[for (var child in snapshot.data.children) Text('${child.name} ${child.surName}', style: Theme.of(context).textTheme.bodyText1)],
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

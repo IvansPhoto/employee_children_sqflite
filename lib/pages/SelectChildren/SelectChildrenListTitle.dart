@@ -18,8 +18,6 @@ class _ChooseChildrenListTitleState extends State<ChooseChildrenListTitle> {
     showDialog(
         context: context,
         child: Dialog(
-          //TODO: check with DartDevTools.
-//							insetPadding: EdgeInsets.all(10),
           elevation: 0,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -62,9 +60,11 @@ class _ChooseChildrenListTitleState extends State<ChooseChildrenListTitle> {
                         if (widget.child.parentId == widget.employee.id) {
                           widget.child.parentId = null;
                           gStore<GlobalStore>().updateChild(widget.child);
+                          gStore<GlobalStore>().getTheEmployee(widget.employee);
                         } else if (widget.child.parentId != widget.employee.id) {
                           widget.child.parentId = widget.employee.id;
                           gStore<GlobalStore>().updateChild(widget.child);
+                          gStore<GlobalStore>().getTheEmployee(widget.employee);
                         }
                         setState(() {});
                         Navigator.pop(context);

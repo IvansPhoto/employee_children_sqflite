@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:employee_children_sqflite/Classes.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' as Services;
 
 final GetIt gStore = GetIt.instance;
 
@@ -16,8 +17,7 @@ class GlobalStore {
 	Stream get streamEmployeesList$ => _employeeList.stream;
 
 	void getEmployeesToStream() async {
-		_employeeList.add(await dbProvider.getAllEmployeesWithChildren());
-		// _employeeList.addStream(source)
+		_employeeList.add(await dbProvider.getAllEmployees());
 	}
 
 	void filterEmployeesToStream(String searchString) async {
@@ -25,13 +25,9 @@ class GlobalStore {
 	}
 
 	Future<int> deleteSeveralEmployee(List<Employees> employeesList) async {
-		print('deleteSeveralEmployee start');
-
 		int number = await dbProvider.deleteSeveralEmployee(employeesList);
-		_employeeList.add(await dbProvider.getAllEmployees());
-
-		print('deleteSeveralEmployee end');
-
+		/// Update the stream of LIST of employees.
+		getEmployeesToStream();
 		return number;
 	}
 
@@ -44,25 +40,30 @@ class GlobalStore {
 
 	Employees get theEmployee => _theEmployee.value;
 
+	void getTheEmployee(Employees employee) async {
+		_theEmployee.add(await dbProvider.getTheEmployee(employee.id));
+		print('update employee');
+	}
+
 	void insertEmployee(Employees employee) async {
-		//Put the a new record to DB and set the completed record to the stream.
-		_theEmployee.add(await dbProvider.insertEmployee(employee));
-		//Update the stream of LIST of employees.
-		_employeeList.add(await dbProvider.getAllEmployees());
+		/// Put the a new record to DB and set the completed record to the stream.
+		setTheEmployee = await dbProvider.insertEmployee(employee);
+		/// Update the stream of LIST of employees.
+		getEmployeesToStream();
 	}
 
 	void updateEmployee(Employees employee) async {
-		//Update the record.
+		/// Update the record.
 		await dbProvider.updateEmployee(employee);
-		//Update the stream of the employee
-		_theEmployee.add(employee);
-		//Update the stream of LIST of employees.
-		_employeeList.add(await dbProvider.getAllEmployees());
+		/// Update the stream of the employee
+		setTheEmployee = (employee);
+		/// Update the stream of LIST of employees.
+		getEmployeesToStream();
 	}
 
 	void deleteEmployee(Employees employee) async {
 		int number = await dbProvider.deleteEmployee(employee);
-		_employeeList.add(await dbProvider.getAllEmployees());
+		getEmployeesToStream();
 		if (number != 1) {
 			print('Error in deleting $number ${employee.id}');
 		}
@@ -81,7 +82,7 @@ class GlobalStore {
 		_childrenList.add(await dbProvider.filterChildren(searchString));
 	}
 
-	//Setting up streams for The child
+	/// Setting up streams for The child
 	final _theChild = BehaviorSubject<Children>();
 
 	Stream get streamTheChild$ => _theChild.stream;
@@ -91,21 +92,21 @@ class GlobalStore {
 	Children get theChild => _theChild.value;
 
 	void insertChild(Children child) async {
-		//Put the a new record to DB and set the completed record to the stream.
+		/// Put the a new record to DB and set the completed record to the stream.
 		_theChild.add(await dbProvider.insertChild(child));
-		//Update the stream of LIST of children.
-		_childrenList.add(await dbProvider.getAllChildren());
+		/// Update the stream of LIST of children.
+		getChildrenToStream();
 	}
 
 	void updateChild(Children child) async {
-		//Update the record.
+		/// Update the record.
 		await dbProvider.updateChild(child);
-		//Update the stream of the child
+		/// Update the stream of the child
 		_theChild.add(child);
-		//Update the stream of LIST of children.
-		_childrenList.add(await dbProvider.getAllChildren());
-		//Update the stream of LIST of employees.
-		_employeeList.add(await dbProvider.getAllEmployees());
+		/// Update the stream of LIST of children.
+		getChildrenToStream();
+		/// Update the stream of LIST of employees.
+		getEmployeesToStream();
 	}
 
 	void setEmployeeToChild({Employees employee, Children child}) async {
@@ -115,7 +116,8 @@ class GlobalStore {
 
 	void deleteChild(Children child) async {
 		int number = await dbProvider.deleteChild(child);
-		_childrenList.add(await dbProvider.getAllChildren());
+		/// Update the stream of LIST of employees.
+		getChildrenToStream();
 		if (number != 1) {
 			print('Error in deleting $number ${child.id}');
 		}
