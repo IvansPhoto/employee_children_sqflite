@@ -42,7 +42,6 @@ class GlobalStore {
 
 	void getTheEmployee(Employees employee) async {
 		_theEmployee.add(await dbProvider.getTheEmployee(employee));
-		print('update employee');
 	}
 
 	void insertEmployee(Employees employee) async {
