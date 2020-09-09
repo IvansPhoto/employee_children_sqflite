@@ -100,15 +100,22 @@ class Index extends StatelessWidget {
         onPressed: () => showAboutDialog(
           context: context,
           applicationName: 'Employees and their children',
+          children: [
+            Text('This is a training application for storage a list of employees and their children.', style: Theme.of(context).textTheme.bodyText1),
+            Text('For state management it uses Streams (RxDart) with StreamBuilders.', style: Theme.of(context).textTheme.bodyText2),
+            Text('SQLite is used as persist database.', style: Theme.of(context).textTheme.bodyText1),
+            Text('Colors and TextTheme are selected for DarkTheme only.', style: Theme.of(context).textTheme.bodyText2),
+          ],
+
         ),
         iconSize: iconSize,
       ),
-      persistentFooterButtons: [
-        IconButton(
-          icon: Icon(Icons.description),
-          onPressed: () async => await gStore<GlobalStore>().dbProvider.getTheEmployee(1),
-        )
-      ],
+      // persistentFooterButtons: [
+      //   IconButton(
+      //     icon: Icon(Icons.description),
+      //     onPressed: () async => await gStore<GlobalStore>().dbProvider.getTheEmployee(1),
+      //   )
+      // ],
     );
   }
 }

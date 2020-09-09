@@ -57,16 +57,16 @@ void main() async {
 				buttonColor: Colors.red[900],
 			),
 			textTheme: TextTheme(
-					bodyText1: TextStyle(color: Colors.red, fontSize: 20),
-					bodyText2: TextStyle(color: Colors.amber, fontSize: 20),
-					caption: TextStyle(color: Color.fromRGBO(15, 205, 205, 1), fontSize: 20),
+					bodyText1: TextStyle(color: Colors.red, fontSize: 17.5),
+					bodyText2: TextStyle(color: Colors.amber, fontSize: 17.5),
+					caption: TextStyle(color: Color.fromRGBO(15, 205, 205, 1), fontSize: 17.5),
 					button: TextStyle(color: Colors.blue, fontSize: 20),
-					subtitle1: TextStyle(color: Colors.deepOrange, fontSize: 20),
-					headline3: TextStyle(decoration: TextDecoration.overline, fontSize: 20)),
+					subtitle1: TextStyle(color: Colors.deepOrange, fontSize: 17.5),
+					headline3: TextStyle(decoration: TextDecoration.overline, fontSize: 17.5)),
 			dialogTheme: DialogTheme(
 				elevation: 0,
-				titleTextStyle: TextStyle(color: Colors.purple, fontSize: 20),
-				contentTextStyle: TextStyle(color: Colors.blueAccent, fontSize: 20),
+				titleTextStyle: TextStyle(color: Colors.purple, fontSize: 17.5),
+				contentTextStyle: TextStyle(color: Colors.blueAccent, fontSize: 17.5),
 			),
 			buttonBarTheme: ButtonBarThemeData(
 				alignment: MainAxisAlignment.center,

@@ -41,7 +41,7 @@ class GlobalStore {
 	Employees get theEmployee => _theEmployee.value;
 
 	void getTheEmployee(Employees employee) async {
-		_theEmployee.add(await dbProvider.getTheEmployee(employee.id));
+		_theEmployee.add(await dbProvider.getTheEmployee(employee));
 		print('update employee');
 	}
 
@@ -55,8 +55,10 @@ class GlobalStore {
 	void updateEmployee(Employees employee) async {
 		/// Update the record.
 		await dbProvider.updateEmployee(employee);
+
 		/// Update the stream of the employee
-		setTheEmployee = (employee);
+		setTheEmployee = await dbProvider.getTheEmployee(employee);
+
 		/// Update the stream of LIST of employees.
 		getEmployeesToStream();
 	}

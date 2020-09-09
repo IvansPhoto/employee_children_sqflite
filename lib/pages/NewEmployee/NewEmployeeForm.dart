@@ -21,6 +21,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
 
   TextEditingController _nameTEC;
   TextEditingController _surnameTEC;
+  TextEditingController _patronymicTEC;
   TextEditingController _positionTEC;
   DateTime _birthday;
   String _birthdayText;
@@ -31,12 +32,14 @@ class _EmployeeFormState extends State<EmployeeForm> {
       _nameTEC = TextEditingController();
       _surnameTEC = TextEditingController();
       _positionTEC = TextEditingController();
+      _patronymicTEC = TextEditingController(text: 'SQFlite');
       _birthday = DateTime.now();
       _birthdayText = monthFromNumber(DateTime.now());
     } else {
       _nameTEC = TextEditingController(text: employee.name);
       _surnameTEC = TextEditingController(text: employee.surName);
       _positionTEC = TextEditingController(text: employee.position);
+      _patronymicTEC = TextEditingController(text: employee.patronymic);
       _birthday = employee.birthday;
       _birthdayText = monthFromNumber(employee.birthday);
     }
@@ -60,11 +63,9 @@ class _EmployeeFormState extends State<EmployeeForm> {
     ));
     print('${_nameTEC.text}');
     Navigator.of(context).pop('added');
-
-    //Check for SnackBar in the List page.
   }
 
-  void _updateEmployee() async {
+  void _updateEmployee() {
     employee.name = _nameTEC.text;
     employee.surName = _surnameTEC.text;
     employee.position = _positionTEC.text;
@@ -115,6 +116,14 @@ class _EmployeeFormState extends State<EmployeeForm> {
                 keyboardType: TextInputType.text,
                 validator: (value) => value.isEmpty ? 'Enter the employee position' : null,
               ),
+              //patronymic
+              TextFormField(
+                controller: _patronymicTEC,
+                decoration: const InputDecoration(hintText: 'Patronymic', labelText: "The patronymic"),
+                maxLength: 50,
+                keyboardType: TextInputType.text,
+                validator: (value) => value.isEmpty ? 'Enter the employee patronymic' : null,
+              ),
               //Birthday
               TextField(
                 readOnly: true,
@@ -158,7 +167,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
               StreamBuilder<Employees>(
                 stream: gStore<GlobalStore>().streamTheEmployee$,
                 builder: (BuildContext context, AsyncSnapshot<Employees> snapshot) {
-                  if (!snapshot.hasData) return Text('loading...');
+                  if (!snapshot.hasData) return Text('Children can be added after saving the record.');
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

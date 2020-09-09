@@ -155,15 +155,16 @@ class DBProvider {
   }
 
   /// Get all employee records from db with their children.
-  Future<Employees> getTheEmployee(int employeeId) async {
+  Future<Employees> getTheEmployee(Employees employee) async {
     List<Employees> employeeList = [];
 
     List<Map<String, dynamic>> listMap = await db.rawQuery(
-        'SELECT * FROM ${DBColumns.childrenTable} '
-        'LEFT JOIN ${DBColumns.employeeTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
-    'WHERE ${DBColumns.employeeId} = ?', [employeeId]);
+        'SELECT * FROM ${DBColumns.employeeTable} '
+        'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
+    'WHERE ${DBColumns.employeeId} = ?', [employee.id]);
 
-    // listMap.forEach((element) => print(element));
+    // print('listMap.isEmpty - ${listMap.isEmpty}');
+    // listMap.forEach((element) => print('listMap: $element'));
 
     if (listMap.isNotEmpty) {
       listMap.forEach((employeeMap) {
@@ -180,8 +181,8 @@ class DBProvider {
         }
         if (!isEmployeeInList) employeeList.add(newEmployee);
       });
-      // print(employeeList.length);
 
+      // print(employeeList.length);
       // employeeList.forEach((Employees existingEmployee) => existingEmployee.toMap().forEach((key, value) => print('$key - $value')));
       // employeeList.forEach((Employees existingEmployee) => existingEmployee.children.forEach((Children child) => print('${child.id} ${child.name}')));
 
@@ -211,22 +212,56 @@ class DBProvider {
   }
 
   Future<List<Employees>> filterEmployees(String searchString) async {
+
     List<Employees> employeeList = [];
 
-    List<Map<String, dynamic>> employeeMapList = await db.query(
-      DBColumns.employeeTable,
-      columns: [DBColumns.childId, DBColumns.employeeName, DBColumns.employeeSurname, DBColumns.employeePatronymic, DBColumns.employeePatronymic, DBColumns.employeeBirthday],
-      where: '${DBColumns.employeeName} LIKE ? OR ${DBColumns.employeeSurname} LIKE ? OR ${DBColumns.employeePatronymic} LIKE ?',
-      whereArgs: ['%$searchString%', '%$searchString%', '%$searchString%'],
-    );
+    List<Map<String, dynamic>> listMap = await db.rawQuery(
+        'SELECT * FROM ${DBColumns.childrenTable} '
+            'LEFT JOIN ${DBColumns.employeeTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
+            'WHERE ${DBColumns.employeeName} LIKE ? OR ${DBColumns.employeeSurname} LIKE ? OR ${DBColumns.employeePatronymic} LIKE ?', ['%$searchString%', '%$searchString%', '%$searchString%']);
 
-    if (employeeMapList.isNotEmpty) {
-      employeeMapList.forEach((employeeMap) {
-        employeeList.add(Employees.fromMap(employeeMap));
+    listMap.forEach((element) => print(element));
+
+    if (listMap.isNotEmpty) {
+      listMap.forEach((employeeMap) {
+        Employees newEmployee = Employees.fromMapChildren(employeeMap);
+
+        int length = employeeList.length;
+        bool isEmployeeInList = false;
+        for (int i = 0; i < length; i++) {
+          Employees existingEmployee = employeeList.elementAt(i);
+          if (existingEmployee.id == newEmployee.id) {
+            existingEmployee.children.add(newEmployee.children.first);
+            isEmployeeInList = true;
+          }
+        }
+        if (!isEmployeeInList) employeeList.add(newEmployee);
       });
+      // print(employeeList.length);
+
+      // employeeList.forEach((Employees existingEmployee) => existingEmployee.toMap().forEach((key, value) => print('$key - $value')));
+      // employeeList.forEach((Employees existingEmployee) => existingEmployee.children.forEach((Children child) => print('${child.id} ${child.name}')));
+
       return employeeList;
     } else
       return null;
+
+    // List<Employees> employeeList = [];
+    //
+    // List<Map<String, dynamic>> employeeMapList = await db.query(
+    //   DBColumns.employeeTable,
+    //   columns: [DBColumns.childId, DBColumns.employeeName, DBColumns.employeeSurname, DBColumns.employeePatronymic, DBColumns.employeePatronymic, DBColumns.employeeBirthday],
+    //   where: '${DBColumns.employeeName} LIKE ? OR ${DBColumns.employeeSurname} LIKE ? OR ${DBColumns.employeePatronymic} LIKE ?',
+    //   whereArgs: ['%$searchString%', '%$searchString%', '%$searchString%'],
+    // );
+    //
+    // if (employeeMapList.isNotEmpty) {
+    //   employeeMapList.forEach((employeeMap) {
+    //     employeeList.add(Employees.fromMap(employeeMap));
+    //   });
+    //   return employeeList;
+    // } else
+    //   return null;
   }
 
   Future<List<Children>> filterChildren(String searchString) async {
