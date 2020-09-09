@@ -212,12 +212,11 @@ class DBProvider {
   }
 
   Future<List<Employees>> filterEmployees(String searchString) async {
-
     List<Employees> employeeList = [];
 
     List<Map<String, dynamic>> listMap = await db.rawQuery(
-        'SELECT * FROM ${DBColumns.childrenTable} '
-            'LEFT JOIN ${DBColumns.employeeTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
+        'SELECT * FROM ${DBColumns.employeeTable} '
+            'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
             'WHERE ${DBColumns.employeeName} LIKE ? OR ${DBColumns.employeeSurname} LIKE ? OR ${DBColumns.employeePatronymic} LIKE ?', ['%$searchString%', '%$searchString%', '%$searchString%']);
 
     listMap.forEach((element) => print(element));
