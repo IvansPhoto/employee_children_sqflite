@@ -108,12 +108,6 @@ class Index extends StatelessWidget {
         ),
         iconSize: iconSize,
       ),
-      // persistentFooterButtons: [
-      //   IconButton(
-      //     icon: Icon(Icons.description),
-      //     onPressed: () async => await gStore<GlobalStore>().dbProvider.getTheEmployee(1),
-      //   )
-      // ],
     );
   }
 }
