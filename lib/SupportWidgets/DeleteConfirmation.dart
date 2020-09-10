@@ -14,7 +14,6 @@ class DeleteConfirmation extends StatelessWidget {
     return Dialog(
       //TODO: check with DartDevTools.
       insetPadding: EdgeInsets.all(25),
-      elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(5.0),
         child: Column(
@@ -62,8 +61,18 @@ class DeleteConfirmation extends StatelessWidget {
                   label: Text('Delete'),
                   icon: Icon(Icons.delete_forever, color: Colors.red, size: iconSize),
                   onPressed: () {
-                    if (employee != null) gStore<GlobalStore>().deleteEmployee(employee);
-                    if (child != null) gStore<GlobalStore>().deleteChild(child);
+                    if (employee != null) {
+                      gStore<GlobalStore>()
+                        ..deleteEmployee(employee)
+                        ..getChildrenToStream()
+                        ..getEmployeesToStream();
+                    }
+                    if (child != null) {
+                      gStore<GlobalStore>()
+                        ..deleteChild(child)
+                        ..getChildrenToStream()
+                        ..getEmployeesToStream();
+                    }
                     Navigator.of(context)..pop()..pop('deleted');
                   },
                 ),

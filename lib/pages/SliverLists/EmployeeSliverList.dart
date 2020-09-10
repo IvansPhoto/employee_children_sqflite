@@ -8,7 +8,7 @@ class EmployeeSliverList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Employees>>(
-        stream: gStore<GlobalStore>().streamEmployeesList$,
+        stream: gStore<GlobalStore>().streamAllEmployees$,
         builder: (BuildContext context, AsyncSnapshot<List<Employees>> snapshot) {
           if (!snapshot.hasData)
             return Text('Loading');

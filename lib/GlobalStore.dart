@@ -14,7 +14,7 @@ class GlobalStore {
 	//Setting up streams for the LIST of employees
 	final _employeeList = BehaviorSubject<List<Employees>>();
 
-	Stream get streamEmployeesList$ => _employeeList.stream;
+	Stream get streamAllEmployees$ => _employeeList.stream;
 
 	void getEmployeesToStream() async {
 		_employeeList.add(await dbProvider.getAllEmployees());
@@ -27,7 +27,7 @@ class GlobalStore {
 	Future<int> deleteSeveralEmployee(List<Employees> employeesList) async {
 		int number = await dbProvider.deleteSeveralEmployee(employeesList);
 		/// Update the stream of LIST of employees.
-		getEmployeesToStream();
+		// getEmployeesToStream();
 		return number;
 	}
 
@@ -41,14 +41,14 @@ class GlobalStore {
 	Employees get theEmployee => _theEmployee.value;
 
 	void getTheEmployee(Employees employee) async {
-		_theEmployee.add(await dbProvider.getTheEmployee(employee));
+		setTheEmployee = await dbProvider.getTheEmployee(employee);
 	}
 
 	void insertEmployee(Employees employee) async {
 		/// Put the a new record to DB and set the completed record to the stream.
 		setTheEmployee = await dbProvider.insertEmployee(employee);
 		/// Update the stream of LIST of employees.
-		getEmployeesToStream();
+		// getEmployeesToStream();
 	}
 
 	void updateEmployee(Employees employee) async {
@@ -56,18 +56,15 @@ class GlobalStore {
 		await dbProvider.updateEmployee(employee);
 
 		/// Update the stream of the employee
-		setTheEmployee = await dbProvider.getTheEmployee(employee);
+		// setTheEmployee = await dbProvider.getTheEmployee(employee);
 
 		/// Update the stream of LIST of employees.
-		getEmployeesToStream();
+		// getEmployeesToStream();
 	}
 
 	void deleteEmployee(Employees employee) async {
-		int number = await dbProvider.deleteEmployee(employee);
-		getEmployeesToStream();
-		if (number != 1) {
-			print('Error in deleting $number ${employee.id}');
-		}
+		await dbProvider.deleteEmployee(employee);
+		// getEmployeesToStream();
 	}
 
 	//Setting up streams for the LIST of children
@@ -94,33 +91,35 @@ class GlobalStore {
 
 	void insertChild(Children child) async {
 		/// Put the a new record to DB and set the completed record to the stream.
-		_theChild.add(await dbProvider.insertChild(child));
+		setTheChild = await dbProvider.insertChild(child);
 		/// Update the stream of LIST of children.
-		getChildrenToStream();
+		// getChildrenToStream();
 	}
 
 	void updateChild(Children child) async {
 		/// Update the record.
 		await dbProvider.updateChild(child);
 		/// Update the stream of the child
-		_theChild.add(child);
+		// _theChild.add(child);
 		/// Update the stream of LIST of children.
-		getChildrenToStream();
+		// getChildrenToStream();
 		/// Update the stream of LIST of employees.
-		getEmployeesToStream();
+		// getEmployeesToStream();
 	}
 
 	void setEmployeeToChild({Employees employee, Children child}) async {
 		child.parentId = employee.id;
 		updateChild(child);
+		/// Update the stream of LIST of children.
+		// getChildrenToStream();
+		/// Update the stream of LIST of employees.
+		// getEmployeesToStream();
+		// getTheEmployee(employee);
 	}
 
 	void deleteChild(Children child) async {
-		int number = await dbProvider.deleteChild(child);
+		await dbProvider.deleteChild(child);
 		/// Update the stream of LIST of employees.
-		getChildrenToStream();
-		if (number != 1) {
-			print('Error in deleting $number ${child.id}');
-		}
+		// getChildrenToStream();
 	}
 }

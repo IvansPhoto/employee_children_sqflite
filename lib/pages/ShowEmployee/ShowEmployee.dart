@@ -11,16 +11,14 @@ class ShowEmployee extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        title: StreamBuilder<Employees>(
-            stream: gStore<GlobalStore>().streamTheEmployee$,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (!snapshot.hasData)
-                return Text('Employee profile.');
-              else
-                return Text('${snapshot.data.name} ${snapshot.data.surName}');
-            }),
-      ),
+          title: StreamBuilder<Employees>(
+              stream: gStore<GlobalStore>().streamTheEmployee$,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData)
+                  return Text('Employee profile.');
+                else
+                  return Text('${snapshot.data.name} ${snapshot.data.surName}');
+              })),
       body: StreamBuilder<Employees>(
           stream: gStore<GlobalStore>().streamTheEmployee$,
           builder: (BuildContext context, AsyncSnapshot<Employees> snapshot) {

@@ -8,7 +8,6 @@ class Index extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
         title: const Text('Home page'),
         centerTitle: true,
         actions: [
@@ -17,7 +16,6 @@ class Index extends StatelessWidget {
             onPressed: () => showDialog(
               context: context,
               child: Dialog(
-                elevation: 0,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,

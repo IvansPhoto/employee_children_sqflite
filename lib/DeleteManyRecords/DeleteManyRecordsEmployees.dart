@@ -8,9 +8,9 @@ class DeleteManyEmployees extends StatelessWidget {
   Widget build(BuildContext context) {
     print('Build DeleteManyEmployees');
     return Scaffold(
-      appBar: AppBar(elevation: 0, title: const Text('Select employees')),
+      appBar: AppBar(title: const Text('Select employees')),
       body: StreamBuilder<List<Employees>>(
-          stream: gStore<GlobalStore>().streamEmployeesList$,
+          stream: gStore<GlobalStore>().streamAllEmployees$,
           builder: (BuildContext context, AsyncSnapshot<List<Employees>> snapshot) {
             print('Build DeleteMany StreamBuilder');
             if (!snapshot.hasData) return Center(child: Text('No employee in the list'));

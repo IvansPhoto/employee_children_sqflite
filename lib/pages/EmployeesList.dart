@@ -9,7 +9,6 @@ class EmployeesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
         title: const Text('The employees'),
         actions: [
           ButtonAddChildrenEmployee(forChild: false),
@@ -26,7 +25,7 @@ class EmployeesList extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder<List<Employees>>(
-                stream: gStore<GlobalStore>().streamEmployeesList$,
+                stream: gStore<GlobalStore>().streamAllEmployees$,
                 builder: (BuildContext context, AsyncSnapshot<List<Employees>> snapshot) {
                   if (snapshot.connectionState != ConnectionState.active || snapshot.data == null)
                     //Return a text if there are no records.
@@ -65,7 +64,18 @@ class EmployeesList extends StatelessWidget {
       ),
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add_circle),
-        onPressed: () => Navigator.pushNamed(context, RouteNames.newEmployee, arguments: true),
+        onPressed: () async {
+          final message = await Navigator.pushNamed(context, RouteNames.newEmployee, arguments: true);
+          if (message != null) {
+            final Employees newEmployee = gStore<GlobalStore>().theEmployee;
+            Scaffold.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                content: Text('${newEmployee.name} ${newEmployee.surName} $message'),
+                duration: Duration(seconds: 1),
+              ));
+          }
+        },
         iconSize: iconSize,
       ),
     );

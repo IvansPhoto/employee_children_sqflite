@@ -11,16 +11,14 @@ class ShowChild extends StatelessWidget {
     final Children child = gStore<GlobalStore>().theChild;
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        title: StreamBuilder<Children>(
-            stream: gStore<GlobalStore>().streamTheChild$,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (!snapshot.hasData)
-                return Text('Loading child profile...');
-              else
-                return Text('${child.name} ${child.surName}');
-            }),
-      ),
+          title: StreamBuilder<Children>(
+              stream: gStore<GlobalStore>().streamTheChild$,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData)
+                  return Text('Loading child profile...');
+                else
+                  return Text('${child.name} ${child.surName}');
+              })),
       body: StreamBuilder(
         stream: gStore<GlobalStore>().streamTheChild$,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -69,8 +67,9 @@ class EmployeeOfChild extends StatelessWidget {
         if (!snapshot.hasData)
           return Text('Free child!', style: Theme.of(context).textTheme.bodyText1);
         else
+          //Set the employee record in the child object.
           child.employee = employee;
-          return Text('${employee.name} ${employee.surName}', style: Theme.of(context).textTheme.bodyText1);
+        return Text('${employee.name} ${employee.surName}', style: Theme.of(context).textTheme.bodyText1);
       },
     );
   }

@@ -68,6 +68,7 @@ void main() async {
 				titleTextStyle: TextStyle(color: Colors.purple, fontSize: 17.5),
 				contentTextStyle: TextStyle(color: Colors.blueAccent, fontSize: 17.5),
 			),
+			appBarTheme: AppBarTheme(elevation: 0),
 			buttonBarTheme: ButtonBarThemeData(
 				alignment: MainAxisAlignment.center,
 				buttonHeight: 35,

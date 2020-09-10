@@ -24,7 +24,7 @@ class ActionButtons extends StatelessWidget {
                 Scaffold.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(SnackBar(
-                    content: Text('${employee.name} ${employee.surName}'),
+                    content: Text('${employee.name} ${employee.surName} $message'),
                     duration: Duration(seconds: 1),
                   ));
             }
@@ -35,7 +35,7 @@ class ActionButtons extends StatelessWidget {
                 Scaffold.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(SnackBar(
-                    content: Text('${child.name} ${child.surName} ${message ?? ''}'),
+                    content: Text('${child.name} ${child.surName} $message'),
                     duration: Duration(seconds: 1),
                   ));
             }

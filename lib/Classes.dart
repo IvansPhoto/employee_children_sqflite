@@ -14,7 +14,7 @@ abstract class RouteNames {
   static final employeeSliverList = '/SliverLists/EmployeeListSlivers';
 }
 
-class Employees {
+abstract class People {
   int id;
 
   String name;
@@ -23,6 +23,23 @@ class Employees {
 
   String patronymic;
 
+  DateTime birthday;
+}
+
+class Employees extends People {
+  @override
+  int id;
+
+  @override
+  String name;
+
+  @override
+  String surName;
+
+  @override
+  String patronymic;
+
+  @override
   DateTime birthday;
 
   String position;
@@ -76,15 +93,20 @@ class Employees {
   }
 }
 
-class Children {
+class Children extends People {
+  @override
   int id;
 
+  @override
   String name;
 
+  @override
   String surName;
 
+  @override
   String patronymic;
 
+  @override
   DateTime birthday;
 
   int parentId;

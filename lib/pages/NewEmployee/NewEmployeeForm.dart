@@ -55,36 +55,43 @@ class _EmployeeFormState extends State<EmployeeForm> {
   }
 
   void _addEmployee() {
-    gStore<GlobalStore>().insertEmployee(Employees(
+    Employees newEmployee = Employees(
       name: _nameTEC.text,
       surName: _surnameTEC.text,
+      patronymic: _patronymicTEC.text,
       birthday: _birthday,
       position: _positionTEC.text,
-    ));
-    print('${_nameTEC.text}');
+    );
+    gStore<GlobalStore>()
+      ..insertEmployee(newEmployee)
+      ..getEmployeesToStream();
+
     Navigator.of(context).pop('added');
   }
 
   void _updateEmployee() {
     employee.name = _nameTEC.text;
     employee.surName = _surnameTEC.text;
+    employee.patronymic = _patronymicTEC.text;
     employee.position = _positionTEC.text;
     employee.birthday = _birthday;
-    gStore<GlobalStore>().updateEmployee(employee);
+    gStore<GlobalStore>()
+      ..updateEmployee(employee)
+      ..getTheEmployee(employee)
+      // ..setTheEmployee = employee
+      ..getEmployeesToStream();
     Navigator.of(context).pop('updated');
   }
 
   void _selectChildren(context) {
+    gStore<GlobalStore>().setTheEmployee = employee;
     Navigator.pushNamed(context, RouteNames.selectChildren);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: widget.isNew ? const Text('Enter data of new employees') : Text('Edit: ${employee.name} ${employee.surName}'),
-      ),
+      appBar: AppBar(title: widget.isNew ? const Text('Enter data of new employees') : Text('Edit: ${employee.name} ${employee.surName}')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(

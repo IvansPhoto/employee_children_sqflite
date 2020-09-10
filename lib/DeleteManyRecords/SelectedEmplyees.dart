@@ -67,7 +67,6 @@ class _SelectedEmployeesState extends State<SelectedEmployees> {
               onPressed: () => showDialog(
                 context: context,
                 child: Dialog(
-                  elevation: 0,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,19 +80,13 @@ class _SelectedEmployeesState extends State<SelectedEmployees> {
                             onPressed: () async {
                               List<Employees> selectedEmployees = employeesList.where((employee) => employee.isSelected).toList();
 
-                              print('employeesList before - ${employeesList.length} widget.employeeList - ${widget.employeeList.length}');
+                              final int number = await gStore<GlobalStore>().deleteSeveralEmployee(selectedEmployees);
+                              gStore<GlobalStore>().getEmployeesToStream();
 
-                              await gStore<GlobalStore>().deleteSeveralEmployee(selectedEmployees);
-
-                              setState(() {
-                                employeesList = List.from(widget.employeeList);
-                                print('setState SelectedEmployees');
-                              });
-
-                              print('employeesList after - ${employeesList.length} widget.employeeList - ${widget.employeeList.length}');
+                              setState(() => employeesList = List.from(widget.employeeList));
 
                               Navigator.pop(context);
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop('$number deleted');
                               // Navigator.pop(context, number);
                             },
                             child: Text('Yes'),

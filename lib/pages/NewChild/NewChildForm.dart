@@ -33,7 +33,7 @@ class _NewChildFormState extends State<NewChildForm> {
       _nameTEC = TextEditingController();
       _surnameTEC = TextEditingController();
       _patronymicTEC = TextEditingController();
-      _parentNameTEC = TextEditingController(text: 'Free child!');
+      _parentNameTEC = TextEditingController(text: 'Employee can be added after saving the record.');
       _birthday = DateTime.now();
       _birthdayText = monthFromNumber(DateTime.now());
     } else {
@@ -63,12 +63,15 @@ class _NewChildFormState extends State<NewChildForm> {
   }
 
   void _addChild() {
-    gStore<GlobalStore>().insertChild(Children(
+    Children newChild = Children(
       name: _nameTEC.text,
       surName: _surnameTEC.text,
       patronymic: _patronymicTEC.text,
       birthday: _birthday,
-    ));
+    );
+    gStore<GlobalStore>()
+      ..insertChild(newChild)
+      ..getChildrenToStream();
     Navigator.of(context).pop('added');
   }
 
@@ -77,18 +80,18 @@ class _NewChildFormState extends State<NewChildForm> {
     child.surName = _surnameTEC.text;
     child.patronymic = _patronymicTEC.text;
     child.birthday = _birthday;
-    gStore<GlobalStore>().updateChild(child);
-
+    gStore<GlobalStore>()
+      ..updateChild(child)
+      ..setTheChild = child
+      ..getChildrenToStream()
+      ..getEmployeesToStream();
     Navigator.of(context).pop('updated');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: widget.isNew ? const Text('Edit the child') : Text('Edit the ${child.name} ${child.surName}'),
-      ),
+      appBar: AppBar(title: widget.isNew ? const Text('Add the child') : Text('Edit the ${child.name} ${child.surName}')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
@@ -122,7 +125,7 @@ class _NewChildFormState extends State<NewChildForm> {
                   controller: TextEditingController(text: _birthdayText),
                   onTap: () => showDatePicker(
                     context: context,
-                    initialDate: child == null ? DateTime.now() : child.birthday,
+                    initialDate: widget.isNew ? DateTime.now() : child.birthday,
                     firstDate: DateTime(1960),
                     lastDate: DateTime(2021),
                   ).then((dateTime) => setState(() {
@@ -136,7 +139,21 @@ class _NewChildFormState extends State<NewChildForm> {
                 TextFormField(
                   readOnly: true,
                   controller: _parentNameTEC,
-                  onTap: widget.isNew ? null : () => showDialog(context: context, child: SelectEmployeeForChild(child: child)),
+                  onTap: widget.isNew
+                      ? null
+                      : () async {
+                          // final message = await showDialog(context: context, child: SelectEmployeeForChild(child: child));
+                          gStore<GlobalStore>().getEmployeesToStream();
+                          final message =
+                              await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SelectEmployeeForChild(child: child), fullscreenDialog: true));
+                          if (message != null)
+                            setState(() {
+                              print('message: $message');
+                              final Employees employee = gStore<GlobalStore>().theEmployee;
+                              _parentNameTEC.text = '${employee.name} ${employee.surName}';
+                              print(_parentNameTEC.text);
+                            });
+                        },
                   decoration: const InputDecoration(hintText: 'Employee', labelText: "The employee"),
                 ),
                 Row(
@@ -145,19 +162,19 @@ class _NewChildFormState extends State<NewChildForm> {
                   children: [
                     RaisedButton(
                       elevation: 0,
-                      onPressed: () => {if (widget._formKey.currentState.validate()) child == null ? _addChild() : _updateChild()},
-                      child: child == null ? const Text('Save') : const Text('Update'),
+                      onPressed: () => {if (widget._formKey.currentState.validate()) widget.isNew ? _addChild() : _updateChild()},
+                      child: widget.isNew ? const Text('Save') : const Text('Update'),
                     ),
                     RaisedButton(
                       elevation: 0,
                       onPressed: () => Navigator.pop(context),
                       child: const Text('Cancel'),
                     ),
-                    IconButton(
-                      iconSize: iconSize,
-                      icon: Icon(Icons.person_add),
-                      onPressed: widget.isNew ? null : () => showDialog(context: context, child: SelectEmployeeForChild(child: child)),
-                    ),
+                    // IconButton(
+                    //   iconSize: iconSize,
+                    //   icon: Icon(Icons.person_add),
+                    //   onPressed: widget.isNew ? null : () => showDialog(context: context, child: SelectEmployeeForChild(child: child)),
+                    // ),
                   ],
                 ),
               ],

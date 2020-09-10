@@ -14,11 +14,11 @@ class ChooseChildrenListTitle extends StatefulWidget {
 }
 
 class _ChooseChildrenListTitleState extends State<ChooseChildrenListTitle> {
+
   void _select() {
     showDialog(
         context: context,
         child: Dialog(
-          elevation: 0,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
@@ -59,12 +59,16 @@ class _ChooseChildrenListTitleState extends State<ChooseChildrenListTitle> {
                       onPressed: () {
                         if (widget.child.parentId == widget.employee.id) {
                           widget.child.parentId = null;
-                          gStore<GlobalStore>().updateChild(widget.child);
-                          gStore<GlobalStore>().getTheEmployee(widget.employee);
+                          gStore<GlobalStore>()
+                            ..updateChild(widget.child)
+                            ..getTheEmployee(widget.employee)
+                            ..getEmployeesToStream();
                         } else if (widget.child.parentId != widget.employee.id) {
                           widget.child.parentId = widget.employee.id;
-                          gStore<GlobalStore>().updateChild(widget.child);
-                          gStore<GlobalStore>().getTheEmployee(widget.employee);
+                          gStore<GlobalStore>()
+                            ..updateChild(widget.child)
+                            ..getTheEmployee(widget.employee)
+                            ..getEmployeesToStream();
                         }
                         setState(() {});
                         Navigator.pop(context);
@@ -83,7 +87,7 @@ class _ChooseChildrenListTitleState extends State<ChooseChildrenListTitle> {
     return Card(
       elevation: 0,
       child: ListTile(
-        title: Text('${widget.child.name}'),
+        title: Text('${widget.child.name} ${widget.child.surName}'),
         trailing: widget.child.parentId == null ? Icon(Icons.radio_button_unchecked) : widget.child.parentId == widget.employee.id ? Icon(Icons.check_circle) : Icon(Icons.block),
         onTap: _select,
         enabled: widget.child.parentId == null || widget.child.parentId == widget.employee.id,

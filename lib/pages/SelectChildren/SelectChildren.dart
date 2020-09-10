@@ -16,8 +16,7 @@ class _SelectChildrenState extends State<SelectChildren> {
 	Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: AppBar(
-				elevation: 0,
-				title: Text('Select children for ${employee.name ??= 'New employee'}'),
+				title: Text('Select children for ${employee.name ??= 'New employee'}')
 			),
 			body: FutureBuilder<List<Children>>(
 				future: store.dbProvider.getAllChildren(),

@@ -69,7 +69,19 @@ class ChildrenList extends StatelessWidget {
       ),
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add_circle),
-        onPressed: () => Navigator.pushNamed(context, RouteNames.newChildren, arguments: true),
+        onPressed: () async {
+          final message = await Navigator.pushNamed(context, RouteNames.newChildren, arguments: true);
+          if (message != null) {
+            final Children newChild = gStore<GlobalStore>().theChild;
+            print('${newChild.id} ${newChild.name}');
+            Scaffold.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                content: Text('${newChild.name} ${newChild.surName} $message'),
+                duration: Duration(seconds: 1),
+              ));
+          }
+        },
         iconSize: iconSize,
       ),
     );

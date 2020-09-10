@@ -152,7 +152,6 @@ class ButtonAddChildrenEmployee extends StatelessWidget {
           onPressed: () async => await showDialog(
               context: context,
               child: Dialog(
-                elevation: 0,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 5),
                   child: Column(
@@ -194,7 +193,7 @@ class ButtonAddChildrenEmployee extends StatelessWidget {
                           Navigator.pop(context);
                           Scaffold.of(context)
                             ..removeCurrentSnackBar()
-                            ..showSnackBar(SnackBar(content: Text('${number} records added')));
+                            ..showSnackBar(SnackBar(content: Text('$number records added')));
                         },
                       ),
                     ],
