@@ -27,7 +27,6 @@ abstract class People {
 }
 
 class Employees extends People {
-  @override
   int id;
 
   @override
@@ -137,4 +136,10 @@ class Children extends People {
     if (id != null) map[DBColumns.childId] = id;
     return map;
   }
+
+  // final factoriesFromSql = <Type, Function>{
+  //   String: (sql) => BaseWord.fromSql(sql: sql),
+  //   int: (sql) => WordType1.fromSql(sql: sql),
+  //   Children: (sql) => Children(name: 'Tom'),
+  // };
 }
