@@ -8,118 +8,68 @@ import 'package:flutter/services.dart' as Services;
 final GetIt gStore = GetIt.instance;
 
 class GlobalStore {
-	DBProvider dbProvider;
-	GlobalStore({this.dbProvider});
+  DBProvider dbProvider;
 
-	//Setting up streams for the LIST of employees
-	final _employeeList = BehaviorSubject<List<Employees>>();
+  GlobalStore({this.dbProvider});
 
-	Stream get streamAllEmployees$ => _employeeList.stream;
+  /// Setting up streams for the LIST of employees
+  final _employeeList = BehaviorSubject<List<Employees>>();
 
-	void getEmployeesToStream() async {
-		_employeeList.add(await dbProvider.getAllEmployees());
-	}
+  Stream get streamAllEmployees$ => _employeeList.stream;
 
-	void filterEmployeesToStream(String searchString) async {
-		_employeeList.add(await dbProvider.filterEmployees(searchString));
-	}
+  void getEmployeesToStream() async => _employeeList.add(await dbProvider.getAllEmployees());
 
-	Future<int> deleteSeveralEmployee(List<Employees> employeesList) async {
-		int number = await dbProvider.deleteSeveralEmployee(employeesList);
-		/// Update the stream of LIST of employees.
-		// getEmployeesToStream();
-		return number;
-	}
+  void filterEmployeesToStream(String searchString) async => _employeeList.add(await dbProvider.filterEmployees(searchString));
 
-	//Setting up streams for The employees
-	final _theEmployee = BehaviorSubject<Employees>();
+  Future<int> deleteSeveralEmployee(List<Employees> employeesList) async => await dbProvider.deleteSeveralEmployee(employeesList);
 
-	Stream get streamTheEmployee$ => _theEmployee.stream;
+  /// Setting up streams for The employees
+  final _theEmployee = BehaviorSubject<Employees>();
 
-	set setTheEmployee(Employees employee) => _theEmployee.add(employee);
+  Stream get streamTheEmployee$ => _theEmployee.stream;
 
-	Employees get theEmployee => _theEmployee.value;
+  set setTheEmployee(Employees employee) => _theEmployee.add(employee);
 
-	void getTheEmployee(Employees employee) async {
-		setTheEmployee = await dbProvider.getTheEmployee(employee);
-	}
+  Employees get theEmployee => _theEmployee.value;
 
-	void insertEmployee(Employees employee) async {
-		/// Put the a new record to DB and set the completed record to the stream.
-		setTheEmployee = await dbProvider.insertEmployee(employee);
-		/// Update the stream of LIST of employees.
-		// getEmployeesToStream();
-	}
+  void getTheEmployee(Employees employee) async => _theEmployee.add(await dbProvider.getTheEmployee(employee));
 
-	void updateEmployee(Employees employee) async {
-		/// Update the record.
-		await dbProvider.updateEmployee(employee);
+  /// Put the a new record to DB and set the completed record to the stream.
+  void insertEmployee(Employees employee) async => _theEmployee.add(await dbProvider.insertEmployee(employee));
 
-		/// Update the stream of the employee
-		// setTheEmployee = await dbProvider.getTheEmployee(employee);
+  /// Update the record.
+  void updateEmployee(Employees employee) async => await dbProvider.updateEmployee(employee);
 
-		/// Update the stream of LIST of employees.
-		// getEmployeesToStream();
-	}
+  void deleteEmployee(Employees employee) async => await dbProvider.deleteEmployee(employee);
 
-	void deleteEmployee(Employees employee) async {
-		await dbProvider.deleteEmployee(employee);
-		// getEmployeesToStream();
-	}
+  //Setting up streams for the LIST of children
+  final _childrenList = BehaviorSubject<List<Children>>();
 
-	//Setting up streams for the LIST of children
-	final _childrenList = BehaviorSubject<List<Children>>();
+  Stream get streamChildrenList$ => _childrenList.stream;
 
-	Stream get streamChildrenList$ => _childrenList.stream;
+  void getChildrenToStream() async => _childrenList.add(await dbProvider.getAllChildren());
 
-	void getChildrenToStream() async {
-		_childrenList.add(await dbProvider.getAllChildren());
-	}
+  void filterChildrenToStream(String searchString) async => _childrenList.add(await dbProvider.filterChildren(searchString));
 
-	void filterChildrenToStream(String searchString) async {
-		_childrenList.add(await dbProvider.filterChildren(searchString));
-	}
+  /// Setting up streams for The child
+  final _theChild = BehaviorSubject<Children>();
 
-	/// Setting up streams for The child
-	final _theChild = BehaviorSubject<Children>();
+  Stream get streamTheChild$ => _theChild.stream;
 
-	Stream get streamTheChild$ => _theChild.stream;
+  set setTheChild(Children child) => _theChild.add(child);
 
-	set setTheChild(Children child) => _theChild.add(child);
+  Children get theChild => _theChild.value;
 
-	Children get theChild => _theChild.value;
+  /// Put the a new record to DB and set the completed record to the stream.
+  void insertChild(Children child) async => _theChild.add(await dbProvider.insertChild(child));
 
-	void insertChild(Children child) async {
-		/// Put the a new record to DB and set the completed record to the stream.
-		setTheChild = await dbProvider.insertChild(child);
-		/// Update the stream of LIST of children.
-		// getChildrenToStream();
-	}
+  /// Update the record.
+  void updateChild(Children child) async => await dbProvider.updateChild(child);
 
-	void updateChild(Children child) async {
-		/// Update the record.
-		await dbProvider.updateChild(child);
-		/// Update the stream of the child
-		// _theChild.add(child);
-		/// Update the stream of LIST of children.
-		// getChildrenToStream();
-		/// Update the stream of LIST of employees.
-		// getEmployeesToStream();
-	}
+  void deleteChild(Children child) async => await dbProvider.deleteChild(child);
 
-	void setEmployeeToChild({Employees employee, Children child}) async {
-		child.parentId = employee.id;
-		updateChild(child);
-		/// Update the stream of LIST of children.
-		// getChildrenToStream();
-		/// Update the stream of LIST of employees.
-		// getEmployeesToStream();
-		// getTheEmployee(employee);
-	}
-
-	void deleteChild(Children child) async {
-		await dbProvider.deleteChild(child);
-		/// Update the stream of LIST of employees.
-		// getChildrenToStream();
-	}
+  void setEmployeeToChild({Employees employee, Children child}) async {
+    child.parentId = employee.id;
+    updateChild(child);
+  }
 }

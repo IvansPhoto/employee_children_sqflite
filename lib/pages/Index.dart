@@ -104,7 +104,6 @@ class Index extends StatelessWidget {
             Text('SQLite is used as persist database.', style: Theme.of(context).textTheme.bodyText1),
             Text('Colors and TextTheme are selected for DarkTheme only.', style: Theme.of(context).textTheme.bodyText2),
           ],
-
         ),
         iconSize: iconSize,
       ),

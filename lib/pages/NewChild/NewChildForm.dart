@@ -148,7 +148,6 @@ class _NewChildFormState extends State<NewChildForm> {
                               await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SelectEmployeeForChild(child: child), fullscreenDialog: true));
                           if (message != null)
                             setState(() {
-                              print('message: $message');
                               final Employees employee = gStore<GlobalStore>().theEmployee;
                               _parentNameTEC.text = '${employee.name} ${employee.surName}';
                               print(_parentNameTEC.text);

@@ -26,19 +26,15 @@ abstract class People {
   DateTime birthday;
 }
 
-class Employees extends People {
+class Employees implements People {
   int id;
 
-  @override
   String name;
 
-  @override
   String surName;
 
-  @override
   String patronymic;
 
-  @override
   DateTime birthday;
 
   String position;
@@ -92,20 +88,15 @@ class Employees extends People {
   }
 }
 
-class Children extends People {
-  @override
+class Children implements People {
   int id;
 
-  @override
   String name;
 
-  @override
   String surName;
 
-  @override
   String patronymic;
 
-  @override
   DateTime birthday;
 
   int parentId;

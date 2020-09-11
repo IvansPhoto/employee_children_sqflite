@@ -37,6 +37,8 @@ void main() async {
 			RouteNames.deleteManyChildren: (BuildContext context) => DeleteManyChildren(),
 			RouteNames.employeeSliverList: (BuildContext context) => EmployeeSliverList(),
 		},
+		// showPerformanceOverlay: true,
+		debugShowCheckedModeBanner: false,
 		theme: ThemeData(
 			fontFamily: 'RobotoMono',
 			brightness: Brightness.light,

@@ -32,6 +32,7 @@ class EmployeesList extends StatelessWidget {
                     return Center(child: Text('No employee in the list'));
                   // Create a list of all employees
                   return ListView.builder(
+                    itemExtent: 50,
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       Employees employee = snapshot.data.elementAt(index);
