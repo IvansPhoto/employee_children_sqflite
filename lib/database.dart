@@ -36,8 +36,8 @@ class DBProvider {
   }
 
   Future<void> initDataBase() async {
-    print('DB is opening...');
     try {
+      print('DB is opening...');
       var databasesPath = await getDatabasesPath();
       await Directory(databasesPath).create(recursive: true);
     } catch (_) {
@@ -124,9 +124,9 @@ class DBProvider {
 
   /// Get all employee records from db.
   Future<List<Employees>> getAllEmployees() async {
-    List<Employees> employeeList = [];
+    final List<Employees> employeeList = [];
 
-    List<Map<String, dynamic>> listMap = await db.rawQuery('SELECT * FROM ${DBColumns.employeeTable} '
+    final List<Map<String, dynamic>> listMap = await db.rawQuery('SELECT * FROM ${DBColumns.employeeTable} '
         'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId}');
 
     if (listMap.isNotEmpty) {
@@ -156,12 +156,19 @@ class DBProvider {
 
   /// Get all employee records from db with their children.
   Future<Employees> getTheEmployee(Employees employee) async {
-    List<Employees> employeeList = [];
+    final employeeList = List<Employees>();
+    // final List employeeList = <Employees>[];
+    // final List<Employees> employeeList = [];
+
+    // final List<Children> mewList1 = [];
+    // final List mewList2 = <Children>[];
+    // final mewList3 = List<Children>();
 
     List<Map<String, dynamic>> listMap = await db.rawQuery(
         'SELECT * FROM ${DBColumns.employeeTable} '
         'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
-    'WHERE ${DBColumns.employeeId} = ?', [employee.id]);
+        'WHERE ${DBColumns.employeeId} = ?',
+        [employee.id]);
 
     // print('listMap.isEmpty - ${listMap.isEmpty}');
     // listMap.forEach((element) => print('listMap: $element'));
@@ -193,8 +200,8 @@ class DBProvider {
 
   /// Get all child records from db.
   Future<List<Children>> getAllChildren() async {
-    List<Children> childrenList = [];
-    List<Map<String, dynamic>> childrenMapList = await db.query(
+    final List<Children> childrenList = [];
+    final List<Map<String, dynamic>> childrenMapList = await db.query(
       DBColumns.childrenTable,
       columns: [DBColumns.childId, DBColumns.childName, DBColumns.childSurname, DBColumns.childPatronymic, DBColumns.childBirthday, DBColumns.childParentId],
     );
@@ -212,12 +219,13 @@ class DBProvider {
   }
 
   Future<List<Employees>> filterEmployees(String searchString) async {
-    List<Employees> employeeList = [];
+    final List<Employees> employeeList = [];
 
-    List<Map<String, dynamic>> listMap = await db.rawQuery(
+    final List<Map<String, dynamic>> listMap = await db.rawQuery(
         'SELECT * FROM ${DBColumns.employeeTable} '
-            'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
-            'WHERE ${DBColumns.employeeName} LIKE ? OR ${DBColumns.employeeSurname} LIKE ? OR ${DBColumns.employeePatronymic} LIKE ?', ['%$searchString%', '%$searchString%', '%$searchString%']);
+        'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
+        'WHERE ${DBColumns.employeeName} LIKE ? OR ${DBColumns.employeeSurname} LIKE ? OR ${DBColumns.employeePatronymic} LIKE ?',
+        ['%$searchString%', '%$searchString%', '%$searchString%']);
 
     listMap.forEach((element) => print(element));
 
@@ -264,8 +272,8 @@ class DBProvider {
   }
 
   Future<List<Children>> filterChildren(String searchString) async {
-    List<Children> childrenList = [];
-    List<Map<String, dynamic>> childrenMapList = await db.query(
+    final List<Children> childrenList = [];
+    final List<Map<String, dynamic>> childrenMapList = await db.query(
       DBColumns.childrenTable,
       columns: [DBColumns.childId, DBColumns.childName, DBColumns.childSurname, DBColumns.childPatronymic, DBColumns.childBirthday, DBColumns.childParentId],
       where: '${DBColumns.childName} LIKE ? OR ${DBColumns.childSurname} LIKE ? OR ${DBColumns.childPatronymic} LIKE ?',
@@ -282,8 +290,8 @@ class DBProvider {
 
   /// Get child records of the employee from db.
   Future<List<Children>> getChildrenOfEmployee(int employeeId) async {
-    List<Children> childrenList = [];
-    List<Map<String, dynamic>> childrenMapList = await db.query(
+    final List<Children> childrenList = [];
+    final List<Map<String, dynamic>> childrenMapList = await db.query(
       DBColumns.childrenTable,
       columns: [DBColumns.childId, DBColumns.childName, DBColumns.childSurname, DBColumns.childPatronymic, DBColumns.childBirthday, DBColumns.childParentId],
       where: '${DBColumns.childParentId} = ?',
