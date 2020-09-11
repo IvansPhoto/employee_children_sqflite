@@ -98,6 +98,7 @@ class _NewChildFormState extends State<NewChildForm> {
             key: widget._formKey,
             autovalidate: true,
             child: ListView(
+              itemExtent: 95,
               children: <Widget>[
                 TextFormField(
                   controller: _nameTEC,

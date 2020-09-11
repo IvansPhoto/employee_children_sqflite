@@ -98,6 +98,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
           key: widget._formKey,
           autovalidate: true,
           child: ListView(
+            itemExtent: 95,
             children: <Widget>[
               //Name
               TextFormField(

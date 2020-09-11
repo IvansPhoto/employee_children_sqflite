@@ -32,10 +32,11 @@ class _SelectedEmployeesState extends State<SelectedEmployees> {
       children: [
         Expanded(
           child: ListView.builder(
+            itemExtent: 65,
             itemCount: employeesList.length,
             itemBuilder: (context, index) {
               Employees employee = employeesList.elementAt(index);
-              return EmployeeCard(employee: employee);
+              return Center(child: EmployeeCard(employee: employee));
             },
           ),
         ),

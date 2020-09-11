@@ -26,6 +26,7 @@ class ChildrenList extends StatelessWidget {
                     case ConnectionState.active:
                     case ConnectionState.done:
                       return ListView.builder(
+                        itemExtent: 75,
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
                           Children child = snapshot.data.elementAt(index);

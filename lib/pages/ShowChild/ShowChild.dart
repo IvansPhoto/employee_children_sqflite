@@ -27,6 +27,7 @@ class ShowChild extends StatelessWidget {
             return Center(child: Text('Loading'));
           else
             return ListView(
+              // itemExtent: 25,
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
               children: <Widget>[
                 Text('Name:'),
