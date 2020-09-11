@@ -88,6 +88,24 @@ class _NewChildFormState extends State<NewChildForm> {
     Navigator.of(context).pop('updated');
   }
 
+  void setBirthday(DateTime dateTime) => setState(() {
+        if (dateTime != null) {
+          _birthday = dateTime;
+          _birthdayText = monthFromNumber(dateTime);
+        }
+      });
+
+  void _selectParent() async {
+    gStore<GlobalStore>().getEmployeesToStream();
+    final message = await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SelectEmployeeForChild(child: child), fullscreenDialog: true));
+    if (message != null)
+      setState(() {
+        final Employees employee = gStore<GlobalStore>().theEmployee;
+        _parentNameTEC.text = '${employee.name} ${employee.surName}';
+        print(_parentNameTEC.text);
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,31 +147,13 @@ class _NewChildFormState extends State<NewChildForm> {
                     initialDate: widget.isNew ? DateTime.now() : child.birthday,
                     firstDate: DateTime(1960),
                     lastDate: DateTime(2021),
-                  ).then((dateTime) => setState(() {
-                        if (dateTime != null) {
-                          _birthday = dateTime;
-                          _birthdayText = monthFromNumber(dateTime);
-                        }
-                      })),
+                  ).then(setBirthday),
                   decoration: const InputDecoration(hintText: 'Birthday', labelText: "The birthday"),
                 ),
                 TextFormField(
                   readOnly: true,
                   controller: _parentNameTEC,
-                  onTap: widget.isNew
-                      ? null
-                      : () async {
-                          // final message = await showDialog(context: context, child: SelectEmployeeForChild(child: child));
-                          gStore<GlobalStore>().getEmployeesToStream();
-                          final message =
-                              await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SelectEmployeeForChild(child: child), fullscreenDialog: true));
-                          if (message != null)
-                            setState(() {
-                              final Employees employee = gStore<GlobalStore>().theEmployee;
-                              _parentNameTEC.text = '${employee.name} ${employee.surName}';
-                              print(_parentNameTEC.text);
-                            });
-                        },
+                  onTap: widget.isNew ? null : _selectParent,
                   decoration: const InputDecoration(hintText: 'Employee', labelText: "The employee"),
                 ),
                 Row(
@@ -162,7 +162,7 @@ class _NewChildFormState extends State<NewChildForm> {
                   children: [
                     RaisedButton(
                       elevation: 0,
-                      onPressed: () => {if (widget._formKey.currentState.validate()) widget.isNew ? _addChild() : _updateChild()},
+                      onPressed: () => widget._formKey.currentState.validate() ? (widget.isNew ? _addChild() : _updateChild()) : null,
                       child: widget.isNew ? const Text('Save') : const Text('Update'),
                     ),
                     RaisedButton(
@@ -170,11 +170,6 @@ class _NewChildFormState extends State<NewChildForm> {
                       onPressed: () => Navigator.pop(context),
                       child: const Text('Cancel'),
                     ),
-                    // IconButton(
-                    //   iconSize: iconSize,
-                    //   icon: Icon(Icons.person_add),
-                    //   onPressed: widget.isNew ? null : () => showDialog(context: context, child: SelectEmployeeForChild(child: child)),
-                    // ),
                   ],
                 ),
               ],

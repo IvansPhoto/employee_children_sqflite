@@ -16,10 +16,32 @@ class SelectedEmployees extends StatefulWidget {
 class _SelectedEmployeesState extends State<SelectedEmployees> {
   List<Employees> employeesList;
 
+  void _filtering(String searchString) {
+    setState(() => employeesList = widget.employeeList
+        .where((Employees employee) => employee.name.contains(searchString) || employee.surName.contains(searchString) || employee.patronymic.contains(searchString))
+        .toList());
+  }
+
+  void _deleteConfirmation() async {
+    /// Set selected employees to a new list.
+    List<Employees> selectedEmployees = employeesList.where((employee) => employee.isSelected).toList();
+
+    /// Delete these records.
+    final int number = await gStore<GlobalStore>().deleteSeveralEmployee(selectedEmployees);
+
+    /// Update this widget.
+    setState(() => employeesList = List.from(widget.employeeList));
+
+    /// Update stream of all employees.
+    gStore<GlobalStore>().getEmployeesToStream();
+
+    Navigator.of(context)..pop()..pop('$number deleted');
+  }
+
   @override
   void initState() {
+    /// Copy the list of employees form GlobalStore to a new local list.
     employeesList = widget.employeeList.toList();
-    print('initState - SelectedEmployees');
     super.initState();
   }
 
@@ -50,15 +72,7 @@ class _SelectedEmployeesState extends State<SelectedEmployees> {
                 child: TextFormField(
                   maxLength: 50,
                   decoration: const InputDecoration(hintText: 'Matches in name or surname', labelText: 'Searching', hintStyle: TextStyle(fontSize: 15)),
-                  onChanged: (text) {
-                    print('onChanged: ${employeesList.length}');
-                    setState(() {
-                      print('setState');
-                      employeesList = widget.employeeList
-                          .where((Employees employee) => employee.name.contains(text) || employee.surName.contains(text) || employee.patronymic.contains(text))
-                          .toList();
-                    });
-                  },
+                  onChanged: _filtering,
                 ),
               ),
             ),
@@ -78,18 +92,7 @@ class _SelectedEmployeesState extends State<SelectedEmployees> {
                         children: [
                           FlatButton(
                             color: Colors.red,
-                            onPressed: () async {
-                              List<Employees> selectedEmployees = employeesList.where((employee) => employee.isSelected).toList();
-
-                              final int number = await gStore<GlobalStore>().deleteSeveralEmployee(selectedEmployees);
-                              gStore<GlobalStore>().getEmployeesToStream();
-
-                              setState(() => employeesList = List.from(widget.employeeList));
-
-                              Navigator.pop(context);
-                              Navigator.of(context).pop('$number deleted');
-                              // Navigator.pop(context, number);
-                            },
+                            onPressed: _deleteConfirmation,
                             child: Text('Yes'),
                           ),
                           FlatButton(

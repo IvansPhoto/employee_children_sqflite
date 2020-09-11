@@ -88,6 +88,13 @@ class _EmployeeFormState extends State<EmployeeForm> {
     Navigator.pushNamed(context, RouteNames.selectChildren);
   }
 
+  void setBirthday(DateTime dateTime) => setState(() {
+        if (dateTime != null) {
+          _birthday = dateTime;
+          _birthdayText = monthFromNumber(dateTime);
+        }
+      });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,10 +105,11 @@ class _EmployeeFormState extends State<EmployeeForm> {
           key: widget._formKey,
           autovalidate: true,
           child: ListView(
-            itemExtent: 95,
+            // itemExtent: 95,
             children: <Widget>[
               //Name
               TextFormField(
+                // buildCounter: (BuildContext context, {int currentLength, int maxLength, bool isFocused}) => currentLength >= maxLength ? Text('$currentLength / $maxLength') : null,
                 controller: _nameTEC,
                 decoration: const InputDecoration(hintText: 'Name', labelText: "The name"),
                 maxLength: 50,
@@ -141,10 +149,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   initialDate: employee == null ? DateTime.now() : employee.birthday,
                   firstDate: DateTime(1950),
                   lastDate: DateTime(2021),
-                ).then((dateTime) => setState(() {
-                      _birthday = dateTime;
-                      _birthdayText = monthFromNumber(dateTime);
-                    })),
+                ).then(setBirthday),
                 decoration: const InputDecoration(hintText: 'Birthday', labelText: "The birthday"),
               ),
               Row(

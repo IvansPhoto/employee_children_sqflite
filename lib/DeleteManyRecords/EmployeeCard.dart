@@ -11,6 +11,9 @@ class EmployeeCard extends StatefulWidget {
 }
 
 class _EmployeeCardState extends State<EmployeeCard> {
+
+  void _choose() => setState(() => widget.employee.isSelected = !widget.employee.isSelected);
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -18,11 +21,7 @@ class _EmployeeCardState extends State<EmployeeCard> {
       child: ListTile(
         leading: widget.employee.isSelected ? Icon(Icons.check_circle_outline) : Icon(Icons.radio_button_unchecked),
         title: Text('${widget.employee.surName} ${widget.employee.name} ${widget.employee.patronymic}'),
-        onTap: () async {
-          setState(() {
-            widget.employee.isSelected = !widget.employee.isSelected ;
-          });
-        },
+        onTap: _choose,
       ),
     );
   }

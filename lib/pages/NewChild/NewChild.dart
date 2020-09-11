@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:employee_children_sqflite/pages/NewChild/NewChildForm.dart';
+import 'package:employee_children_sqflite/pages/NewChild/ChildForm.dart';
 
 class NewChild extends StatelessWidget {
 	@override

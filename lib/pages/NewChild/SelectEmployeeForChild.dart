@@ -8,6 +8,16 @@ class SelectEmployeeForChild extends StatelessWidget {
 
   SelectEmployeeForChild({this.child});
 
+  void _confirmation({Employees employee, BuildContext context}) {
+    child.parentId = employee.id;
+    gStore<GlobalStore>()
+      ..setEmployeeToChild(child: child, employee: employee)
+      ..setTheChild = child
+      ..setTheEmployee = employee
+      ..getChildrenToStream();
+    Navigator.of(context)..pop('added')..pop('added');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,11 +49,7 @@ class SelectEmployeeForChild extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                'Are you sure to',
-                                textAlign: TextAlign.center,
-                                textScaleFactor: textScaleFactor,
-                              ),
+                              Text('Are you sure to', textAlign: TextAlign.center, textScaleFactor: textScaleFactor),
                               if (child.parentId != null)
                                 Text(
                                   'remove ${child.employee.name} ${child.employee.surName} and add ${employee.name} ${employee.surName} to ${child.name} ${child.surName}?',
@@ -60,16 +66,7 @@ class SelectEmployeeForChild extends StatelessWidget {
                                 children: [
                                   FlatButton(
                                     color: Colors.red,
-                                    onPressed: () {
-                                      child.parentId = employee.id;
-                                      gStore<GlobalStore>()
-                                        ..setEmployeeToChild(child: child, employee: employee)
-                                        ..setTheChild = child
-                                        ..setTheEmployee = employee
-                                        ..getChildrenToStream();
-                                      Navigator.pop(context, 'added');
-                                      Navigator.pop(context, 'added');
-                                    },
+                                    onPressed: () => _confirmation(employee: employee, context: context),
                                     child: Text('Yes'),
                                   ),
                                   FlatButton(
