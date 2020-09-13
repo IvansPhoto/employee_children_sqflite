@@ -125,14 +125,21 @@ class DBProvider {
   /// Get all employee records from db.
   Future<List<Employees>> getAllEmployees() async {
     final List<Employees> employeeList = [];
+    List<Map<String, dynamic>> listMap;
+    try {
+      listMap = await db.rawQuery('SELECT * FROM ${DBColumns.employeeTable} '
+          'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId}');
+    } catch (e) {
+      print('This id exception $e');
+      return e;
+    }
 
-    final List<Map<String, dynamic>> listMap = await db.rawQuery('SELECT * FROM ${DBColumns.employeeTable} '
-        'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId}');
+    // throw("some arbitrary error");
+    // throw Exception('Some exception');
 
     if (listMap.isNotEmpty) {
       listMap.forEach((employeeMap) {
         Employees newEmployee = Employees.fromMapChildren(employeeMap);
-
         int length = employeeList.length;
         bool isEmployeeInList = false;
         for (int i = 0; i < length; i++) {
@@ -144,11 +151,6 @@ class DBProvider {
         }
         if (!isEmployeeInList) employeeList.add(newEmployee);
       });
-      // print(employeeList.length);
-
-      // employeeList.forEach((Employees existingEmployee) => existingEmployee.toMap().forEach((key, value) => print('$key - $value')));
-      // employeeList.forEach((Employees existingEmployee) => existingEmployee.children.forEach((Children child) => print('${child.id} ${child.name}')));
-
       return employeeList;
     } else
       return null;
@@ -157,12 +159,6 @@ class DBProvider {
   /// Get all employee records from db with their children.
   Future<Employees> getTheEmployee(Employees employee) async {
     final employeeList = List<Employees>();
-    // final List employeeList = <Employees>[];
-    // final List<Employees> employeeList = [];
-
-    // final List<Children> mewList1 = [];
-    // final List mewList2 = <Children>[];
-    // final mewList3 = List<Children>();
 
     List<Map<String, dynamic>> listMap = await db.rawQuery(
         'SELECT * FROM ${DBColumns.employeeTable} '
@@ -201,21 +197,26 @@ class DBProvider {
   /// Get all child records from db.
   Future<List<Children>> getAllChildren() async {
     final List<Children> childrenList = [];
-    final List<Map<String, dynamic>> childrenMapList = await db.query(
-      DBColumns.childrenTable,
-      columns: [DBColumns.childId, DBColumns.childName, DBColumns.childSurname, DBColumns.childPatronymic, DBColumns.childBirthday, DBColumns.childParentId],
-    );
-    if (childrenMapList.isNotEmpty) {
-      childrenMapList.forEach((employeeMap) {
-        childrenList.add(Children.fromMap(employeeMap));
-      });
+    try {
+      final List<Map<String, dynamic>> childrenMapList = await db.query(
+        DBColumns.childrenTable,
+        columns: [DBColumns.childId, DBColumns.childName, DBColumns.childSurname, DBColumns.childPatronymic, DBColumns.childBirthday, DBColumns.childParentId],
+      );
 
-      /// For debugging
-      // childrenList.forEach((Children child) => child.toMap().forEach((key, value) => print('$key - $value')));
+      // await Future.delayed(Duration(milliseconds: 2000));
+      // throw("some arbitrary error");
+      // throw Exception('Some exception');
 
-      return childrenList;
-    } else
-      return null;
+      if (childrenMapList.isNotEmpty) {
+        childrenMapList.forEach((employeeMap) {
+          childrenList.add(Children.fromMap(employeeMap));
+        });
+        return childrenList;
+      } else
+        return null;
+    } catch (e) {
+      throw 'An error in getAllChildren $e';
+    }
   }
 
   Future<List<Employees>> filterEmployees(String searchString) async {

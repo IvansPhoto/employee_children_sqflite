@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +72,7 @@ abstract class GeneratePersons {
       position: position[_randomPosition],
       patronymic: 'SQFlite',
       birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
+      children: <Children>[],
     );
     employee.id = await db.insert(
       DBColumns.employeeTable,
@@ -124,15 +124,27 @@ abstract class GeneratePersons {
         birthday: DateTime(_randomBirthdayYear, _randomBirthdayMonth, _randomBirthdayDay),
         // parentId: null,
       );
-      batch.insert(
-        DBColumns.childrenTable,
-        child.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+      batch.insert(DBColumns.childrenTable, child.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
-
     List<dynamic> result = await batch.commit().catchError((e) => throw e);
     return result.length;
+  }
+
+  Stream<List<Employees>> getEmployeesWithException() async* {
+    final List<Employees> employeeList = [];
+    for (var i = 0; i < 10; i++) {
+      await Future.delayed(Duration(milliseconds: 2500));
+      employeeList.add(Employees(
+          name: employeeList.length.toString(),
+          surName: employeeList.length.toString(),
+          patronymic: employeeList.length.toString(),
+          children: [],
+          id: employeeList.length,
+          position: employeeList.length.toString(),
+          birthday: DateTime.now()));
+      yield employeeList;
+      if (i == 3) throw Exception('Some exception');
+    }
   }
 }
 

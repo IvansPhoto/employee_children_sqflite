@@ -63,8 +63,8 @@ class Index extends StatelessWidget {
                   children: <Widget>[
                     FlatButton(
                       onPressed: () {
-                        gStore<GlobalStore>().getEmployeesToStream();
                         Navigator.pushNamed(context, RouteNames.employeesList);
+                        gStore<GlobalStore>().getEmployeesToStream();
                       },
                       child: const Text('Employees List'),
                       color: Colors.red[900],

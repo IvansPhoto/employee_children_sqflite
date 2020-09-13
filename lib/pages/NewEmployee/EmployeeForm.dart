@@ -152,9 +152,8 @@ class _EmployeeFormState extends State<EmployeeForm> {
                 ).then(setBirthday),
                 decoration: const InputDecoration(hintText: 'Birthday', labelText: "The birthday"),
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              ButtonBar(
+                alignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   RaisedButton(
                     elevation: 0,
@@ -163,16 +162,15 @@ class _EmployeeFormState extends State<EmployeeForm> {
                       if (widget._formKey.currentState.validate()) widget.isNew ? _addEmployee() : _updateEmployee(),
                     },
                   ),
-                  RaisedButton(
-                    elevation: 0,
+                  OutlineButton(
                     child: const Text('Cancel'),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
-                  IconButton(
-                    iconSize: iconSize,
-                    onPressed: widget.isNew ? null : () => _selectChildren(context),
-                    icon: Icon(Icons.person_add),
-                  ),
+                  // IconButton(
+                  //   iconSize: iconSize,
+                  //   onPressed: widget.isNew ? null : () => _selectChildren(context),
+                  //   icon: Icon(Icons.person_add),
+                  // ),
                 ],
               ),
               Divider(color: Colors.blue, thickness: 0.5),
@@ -182,14 +180,36 @@ class _EmployeeFormState extends State<EmployeeForm> {
                 builder: (BuildContext context, AsyncSnapshot<Employees> snapshot) {
                   if (!snapshot.hasData) return Text('Children can be added after saving the record.');
                   return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (widget.isNew) Text('Children can be added after saving the record.'),
-                      if (!widget.isNew && (snapshot.data.children.isNotEmpty ?? false)) Text('Children:'),
-                      if (!widget.isNew && (snapshot.data.children.isEmpty ?? false))
-                        Text('${snapshot.data.name} ${snapshot.data.surName} has not children', style: Theme.of(context).textTheme.bodyText1),
+                      if (!widget.isNew && (snapshot.data.children?.isNotEmpty ?? false))
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Children:', textScaleFactor: textScaleFactor,),
+                            RaisedButton.icon(
+                              onPressed: widget.isNew ? null : () => _selectChildren(context),
+                              icon: Icon(Icons.person_add),
+                              label: Text('Add child.'),
+                            )
+                          ],
+                        ),
+                      if (!widget.isNew && (snapshot.data.children?.isEmpty ?? false))
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('${snapshot.data.name} ${snapshot.data.surName} has not children', style: Theme.of(context).textTheme.bodyText1),
+                            RaisedButton.icon(
+                              onPressed: widget.isNew ? null : () => _selectChildren(context),
+                              icon: Icon(Icons.person_add),
+                              label: Text('Add child.'),
+                            )
+                          ],
+                        ),
                       if (!widget.isNew) ...[for (var child in snapshot.data.children) Text('${child.name} ${child.surName}', style: Theme.of(context).textTheme.bodyText1)],
                     ],
                   );

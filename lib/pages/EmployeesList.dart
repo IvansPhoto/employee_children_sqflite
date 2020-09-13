@@ -27,30 +27,32 @@ class EmployeesList extends StatelessWidget {
             child: StreamBuilder<List<Employees>>(
                 stream: gStore<GlobalStore>().streamAllEmployees$,
                 builder: (BuildContext context, AsyncSnapshot<List<Employees>> snapshot) {
-                  if (snapshot.connectionState != ConnectionState.active || snapshot.data == null)
-                    //Return a text if there are no records.
+                  if (snapshot.hasError)
+                    return Center(child: Text('Some error occurred:\n${snapshot.error}'));
+                  else if (!snapshot.hasData)
                     return Center(child: Text('No employee in the list'));
-                  // Create a list of all employees
-                  return ListView.builder(
-                    itemExtent: 75,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      Employees employee = snapshot.data.elementAt(index);
-                      return Card(
-                        elevation: 0,
-                        child: ListTile(
-                          title: Text('${employee.name} ${employee.surName} ${employee.position}'),
-                          subtitle: employee.children.isNotEmpty ? Text('Children ${employee.children.length}') : const Text('No children', style: TextStyle(color: Colors.amber)),
-                          onTap: () {
-                            //Set the employee to the Global store.
-                            gStore<GlobalStore>().setTheEmployee = employee;
-                            //Go to the page for showing of the employee and await the message 'edited' or 'deleted'.
-                            Navigator.of(context).pushNamed(RouteNames.showEmployee);
-                          },
-                        ),
-                      );
-                    },
-                  );
+                  else
+                    return ListView.builder(
+                      itemExtent: 75,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        Employees employee = snapshot.data.elementAt(index);
+                        return Card(
+                          elevation: 0,
+                          child: ListTile(
+                            title: Text('${employee.name} ${employee.surName} ${employee.position}'),
+                            subtitle:
+                                employee.children.isNotEmpty ? Text('Children ${employee.children.length}') : const Text('No children', style: TextStyle(color: Colors.amber)),
+                            onTap: () {
+                              //Set the employee to the Global store.
+                              gStore<GlobalStore>().setTheEmployee = employee;
+                              //Go to the page for showing of the employee and await the message 'edited' or 'deleted'.
+                              Navigator.of(context).pushNamed(RouteNames.showEmployee);
+                            },
+                          ),
+                        );
+                      },
+                    );
                 }),
           ),
           Padding(
