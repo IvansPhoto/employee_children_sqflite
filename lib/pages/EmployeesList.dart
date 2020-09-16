@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:employee_children_sqflite/Classes.dart';
 import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/Support.dart';
-import 'package:employee_children_sqflite/SupportWidgets/NumberChildren.dart';
 
 class EmployeesList extends StatelessWidget {
   @override
@@ -26,33 +25,45 @@ class EmployeesList extends StatelessWidget {
           Expanded(
             child: StreamBuilder<List<Employees>>(
                 stream: gStore<GlobalStore>().streamAllEmployees$,
+                // ignore: missing_return
                 builder: (BuildContext context, AsyncSnapshot<List<Employees>> snapshot) {
                   if (snapshot.hasError)
                     return Center(child: Text('Some error occurred:\n${snapshot.error}'));
-                  else if (!snapshot.hasData)
-                    return Center(child: Text('No employee in the list'));
                   else
-                    return ListView.builder(
-                      itemExtent: 75,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) {
-                        Employees employee = snapshot.data.elementAt(index);
-                        return Card(
-                          elevation: 0,
-                          child: ListTile(
-                            title: Text('${employee.name} ${employee.surName} ${employee.position}'),
-                            subtitle:
-                                employee.children.isNotEmpty ? Text('Children ${employee.children.length}') : const Text('No children', style: TextStyle(color: Colors.amber)),
-                            onTap: () {
-                              //Set the employee to the Global store.
-                              gStore<GlobalStore>().setTheEmployee = employee;
-                              //Go to the page for showing of the employee and await the message 'edited' or 'deleted'.
-                              Navigator.of(context).pushNamed(RouteNames.showEmployee);
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                      case ConnectionState.waiting:
+                        return Center(child: Text('Waiting database...'));
+                        break;
+                      case ConnectionState.active:
+                      case ConnectionState.done:
+                        if (!snapshot.hasData)
+                          return Center(child: Text('No employee in the list'));
+                        else
+                          return ListView.builder(
+                            itemExtent: 75,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              Employees employee = snapshot.data.elementAt(index);
+                              return Card(
+                                elevation: 0,
+                                child: ListTile(
+                                  title: Text('${employee.name} ${employee.surName} ${employee.position}'),
+                                  subtitle: employee.children.isNotEmpty
+                                      ? Text('Children ${employee.children.length}')
+                                      : const Text('No children', style: TextStyle(color: Colors.amber)),
+                                  onTap: () {
+                                    //Set the employee to the Global store.
+                                    gStore<GlobalStore>().setTheEmployee = employee;
+                                    //Go to the page for showing of the employee and await the message 'edited' or 'deleted'.
+                                    Navigator.of(context).pushNamed(RouteNames.showEmployee);
+                                  },
+                                ),
+                              );
                             },
-                          ),
-                        );
-                      },
-                    );
+                          );
+                    }
+                  ;
                 }),
           ),
           Padding(

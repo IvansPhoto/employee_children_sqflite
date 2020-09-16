@@ -117,3 +117,46 @@ class GlobalStore {
     updateChild(child);
   }
 }
+
+class EmployeeStore {
+  DBProvider dbProvider;
+  /// Setting up streams for the LIST of employees
+  final _employeeList = BehaviorSubject<List<Employees>>();
+
+  Stream get streamAllEmployees$ => _employeeList.stream;
+
+  void getEmployeesToStream() async {
+    try {
+      _employeeList.add(await dbProvider.getAllEmployees());
+    } catch (e) {
+      _employeeList.addError(e);
+    }
+  }
+
+  void filterEmployeesToStream(String searchString) async {
+    try {
+      _employeeList.add(await dbProvider.filterEmployees(searchString));
+    } catch (e) {
+      _employeeList.addError(e);
+    }
+  }
+
+  Future<int> deleteSeveralEmployee(List<Employees> employeesList) async => await dbProvider.deleteSeveralEmployee(employeesList);
+
+  /// Setting up streams for The employees
+  final _theEmployee = BehaviorSubject<Employees>();
+
+  Stream get streamTheEmployee$ => _theEmployee.stream;
+
+  set setTheEmployee(Employees employee) => _theEmployee.add(employee);
+
+  Employees get theEmployee => _theEmployee.value;
+
+  void getTheEmployee(Employees employee) async {
+    try {
+      _theEmployee.add(await dbProvider.getTheEmployee(employee));
+    } catch (e) {
+      _theEmployee.addError(e);
+    }
+  }
+}
