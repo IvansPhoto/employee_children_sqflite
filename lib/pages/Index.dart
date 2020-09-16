@@ -47,50 +47,27 @@ class Index extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: FutureBuilder(
-          future: gStore<GlobalStore>().dbProvider.initDataBase(), //For asynchronous opening the database.
-          // ignore: missing_return
-          builder: (context, snapshot) {
-            if (snapshot.hasError) return Center(child: Text('Error ${snapshot.data}'));
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Center(child: Text('Loading...'));
-              case ConnectionState.active:
-              case ConnectionState.done:
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    FlatButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, RouteNames.employeesList);
-                        gStore<GlobalStore>().getEmployeesToStream();
-                      },
-                      child: const Text('Employees List'),
-                      color: Colors.red[900],
-                    ),
-                    FlatButton(
-                      onPressed: () {
-                        gStore<GlobalStore>().getChildrenToStream();
-                        Navigator.pushNamed(context, RouteNames.childrenList);
-                      },
-                      child: const Text('Children List'),
-                      color: Colors.red[900],
-                    ),
-                    // FlatButton(
-                    //   onPressed: () {
-                    //     gStore<GlobalStore>().getEmployeesToStream();
-                    //     Navigator.pushNamed(context, RouteNames.employeeSliverList);
-                    //   },
-                    //   child: const Text('Employee SliverList'),
-                    //   color: Colors.red[900],
-                    // ),
-                  ],
-                );
-              case ConnectionState.none:
-                return Center(child: Text('Error'));
-            }
-          },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.pushNamed(context, RouteNames.employeesList);
+                gStore<GlobalStore>().getEmployeesToStream();
+              },
+              child: const Text('Employees List'),
+              color: Colors.red[900],
+            ),
+            FlatButton(
+              onPressed: () {
+                gStore<GlobalStore>().getChildrenToStream();
+                Navigator.pushNamed(context, RouteNames.childrenList);
+              },
+              child: const Text('Children List'),
+              color: Colors.red[900],
+            ),
+          ],
         ),
       ),
       floatingActionButton: IconButton(

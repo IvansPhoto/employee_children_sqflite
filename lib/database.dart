@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:employee_children_sqflite/Classes.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:rxdart/rxdart.dart';
 
 abstract class DBColumns {
   /// Employee table columns
@@ -25,7 +24,19 @@ abstract class DBColumns {
 }
 
 class DBProvider {
-  Database db;
+  DBProvider._();
+
+  static final DBProvider dbProvider = DBProvider._();
+
+  Future<Database> _database;
+
+  Future<Database> get database {
+    print('Getting database');
+    _database ??= initDataBase();
+    return _database;
+  }
+
+  // Database db;
 
   Future<void> _onConfigure(Database db) async {
     await db.execute('PRAGMA foreign_keys = ON');
@@ -35,16 +46,18 @@ class DBProvider {
     print('db version ${await db.getVersion()}');
   }
 
-  Future<void> initDataBase() async {
+  Future<Database> initDataBase() async {
     try {
       print('DB is opening...');
+      await Future.delayed(Duration(milliseconds: 1500));
+
       var databasesPath = await getDatabasesPath();
       await Directory(databasesPath).create(recursive: true);
     } catch (_) {
       print(_);
     }
 
-    db = await openDatabase(
+    final db = await openDatabase(
       join(await getDatabasesPath(), 'employee_children.db'),
       onCreate: (db, version) {
         db.execute("CREATE TABLE ${DBColumns.employeeTable}(${DBColumns.employeeId} INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -58,6 +71,7 @@ class DBProvider {
       onOpen: _onOpen,
       version: 1,
     ).whenComplete(() => print('open'));
+    return db;
   }
 
   void clearDataBase() async {
@@ -68,6 +82,7 @@ class DBProvider {
   /// Insert an employee record in db.
   Future<Employees> insertEmployee(Employees employee) async {
     try {
+      final Database db = await database;
       employee.id = await db.insert(DBColumns.employeeTable, employee.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return employee;
     } catch (e) {
@@ -79,6 +94,7 @@ class DBProvider {
   /// Insert a child record in db.
   Future<Children> insertChild(Children child) async {
     try {
+      final Database db = await database;
       child.id = await db.insert(DBColumns.childrenTable, child.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return child;
     } catch (e) {
@@ -88,10 +104,14 @@ class DBProvider {
   }
 
   /// Delete an employee record from db.
-  Future<int> deleteEmployee(Employees employee) async => await db.delete(DBColumns.employeeTable, where: "${DBColumns.employeeId} = ?", whereArgs: [employee.id]);
+  Future<int> deleteEmployee(Employees employee) async {
+    final Database db = await database;
+    return await db.delete(DBColumns.employeeTable, where: "${DBColumns.employeeId} = ?", whereArgs: [employee.id]);
+  }
 
   /// Delete several employee records from db.
   Future<int> deleteSeveralEmployee(List<Employees> employeesList) async {
+    final Database db = await database;
     var batch = db.batch();
 
     employeesList.forEach((employee) async {
@@ -104,29 +124,33 @@ class DBProvider {
 
   /// Delete an child record from db.
   Future<int> deleteChild(Children child) async {
-    int id;
     try {
-      id = await db.delete(DBColumns.childrenTable, where: "${DBColumns.childId} = ?", whereArgs: [child.id]);
+      final Database db = await database;
+      return await db.delete(DBColumns.childrenTable, where: "${DBColumns.childId} = ?", whereArgs: [child.id]);
     } catch (e) {
-      print('error in deleteChild');
-      print(e);
+      print('error in deleteChild $e');
+      throw e;
     }
-    print(id);
-    return id;
   }
 
   /// Update an employee record in db.
-  Future<int> updateEmployee(Employees employee) async =>
-      await db.update(DBColumns.employeeTable, employee.toMap(), where: "${DBColumns.employeeId} = ?", whereArgs: [employee.id]);
+  Future<int> updateEmployee(Employees employee) async {
+    final Database db = await database;
+    return await db.update(DBColumns.employeeTable, employee.toMap(), where: "${DBColumns.employeeId} = ?", whereArgs: [employee.id]);
+  }
 
   /// Update a child record in db.
-  Future<int> updateChild(Children child) async => await db.update(DBColumns.childrenTable, child.toMap(), where: "${DBColumns.childId} = ?", whereArgs: [child.id]);
+  Future<int> updateChild(Children child) async {
+    final Database db = await database;
+    return await db.update(DBColumns.childrenTable, child.toMap(), where: "${DBColumns.childId} = ?", whereArgs: [child.id]);
+  }
 
   /// Get all employee records from db.
   Future<List<Employees>> getAllEmployees() async {
     final List<Employees> employeeList = [];
     List<Map<String, dynamic>> listMap;
     try {
+      final Database db = await database;
       listMap = await db.rawQuery('SELECT * FROM ${DBColumns.employeeTable} '
           'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId}');
     } catch (e) {
@@ -158,6 +182,7 @@ class DBProvider {
 
   /// Get all employee records from db with their children.
   Future<Employees> getTheEmployee(Employees employee) async {
+    final Database db = await database;
     final employeeList = List<Employees>();
 
     List<Map<String, dynamic>> listMap = await db.rawQuery(
@@ -198,6 +223,7 @@ class DBProvider {
   Future<List<Children>> getAllChildren() async {
     final List<Children> childrenList = [];
     try {
+      final Database db = await database;
       final List<Map<String, dynamic>> childrenMapList = await db.query(
         DBColumns.childrenTable,
         columns: [DBColumns.childId, DBColumns.childName, DBColumns.childSurname, DBColumns.childPatronymic, DBColumns.childBirthday, DBColumns.childParentId],
@@ -220,6 +246,7 @@ class DBProvider {
   }
 
   Future<List<Employees>> filterEmployees(String searchString) async {
+    final Database db = await database;
     final List<Employees> employeeList = [];
 
     final List<Map<String, dynamic>> listMap = await db.rawQuery(
@@ -273,6 +300,7 @@ class DBProvider {
   }
 
   Future<List<Children>> filterChildren(String searchString) async {
+    final Database db = await database;
     final List<Children> childrenList = [];
     final List<Map<String, dynamic>> childrenMapList = await db.query(
       DBColumns.childrenTable,
@@ -291,6 +319,7 @@ class DBProvider {
 
   /// Get child records of the employee from db.
   Future<List<Children>> getChildrenOfEmployee(int employeeId) async {
+    final Database db = await database;
     final List<Children> childrenList = [];
     final List<Map<String, dynamic>> childrenMapList = await db.query(
       DBColumns.childrenTable,
@@ -309,6 +338,7 @@ class DBProvider {
 
   /// Get the employee record of the child from db.
   Future<Employees> getEmployeeOfChild(int employeeId) async {
+    final Database db = await database;
     if (employeeId == null) return null;
     List<Map<String, dynamic>> employeeMapList = await db.query(
       DBColumns.employeeTable,

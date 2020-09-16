@@ -19,25 +19,26 @@ class ActionButtons extends StatelessWidget {
           onPressed: () async {
             if (employee != null) {
               //Go to the page for editing of the employee and await the message 'updated' or null. Arguments initializes a state of the form.
-              final message = await Navigator.of(context).pushNamed(RouteNames.newEmployee, arguments: false);
-              if (message != null)
-                Scaffold.of(context)
-                  ..removeCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                    content: Text('${employee.name} ${employee.surName} $message'),
-                    duration: Duration(seconds: 1),
-                  ));
+              Navigator.of(context).pushNamed(RouteNames.newEmployee, arguments: false);
+
+              // final message = await Navigator.of(context).pushNamed(RouteNames.newEmployee, arguments: false);
+              // if (message != null)
+              //   Scaffold.of(context)
+              //     ..removeCurrentSnackBar()
+              //     ..showSnackBar(SnackBar(content: Text('${employee.name} ${employee.surName} $message'), duration: Duration(seconds: 1)));
             }
             if (child != null) {
               //Go to the page for editing of the employee and await the message 'updated' or null. Arguments initializes a state of the form.
-              final message = await Navigator.of(context).pushNamed(RouteNames.newChildren, arguments: false);
-              if (message != null)
-                Scaffold.of(context)
-                  ..removeCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                    content: Text('${child.name} ${child.surName} $message'),
-                    duration: Duration(seconds: 1),
-                  ));
+              Navigator.of(context).pushNamed(RouteNames.newChildren, arguments: false);
+
+              // final message = await Navigator.of(context).pushNamed(RouteNames.newChildren, arguments: false);
+              // if (message != null)
+              //   Scaffold.of(context)
+              //     ..removeCurrentSnackBar()
+              //     ..showSnackBar(SnackBar(
+              //       content: Text('${child.name} ${child.surName} $message'),
+              //       duration: Duration(seconds: 1),
+              //     ));
             }
           },
           icon: Icon(Icons.edit),

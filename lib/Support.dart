@@ -82,7 +82,8 @@ abstract class GeneratePersons {
     return employee;
   }
 
-  static Future<int> generateSeveralEmployees({Database db, int quantity}) async {
+  static Future<int> generateSeveralEmployees({DBProvider dbProvider, int quantity}) async {
+    Database db = await dbProvider.database;
     var batch = db.batch();
 
     for (int i = 0; i < quantity; i++) {
@@ -108,7 +109,8 @@ abstract class GeneratePersons {
     return result.length;
   }
 
-  static Future<int> generateSeveralChildren({Database db, int quantity}) async {
+  static Future<int> generateSeveralChildren({DBProvider dbProvider, int quantity}) async {
+    Database db = await dbProvider.database;
     var batch = db.batch();
 
     for (int i = 0; i < quantity; i++) {
@@ -155,7 +157,6 @@ class ButtonAddChildrenEmployee extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Database db = gStore<GlobalStore>().dbProvider.db;
     int number = 1;
     return Row(
       children: [
@@ -196,10 +197,10 @@ class ButtonAddChildrenEmployee extends StatelessWidget {
                         child: const Text('Add records.'),
                         onPressed: () async {
                           if (forChild) {
-                            number = await GeneratePersons.generateSeveralChildren(db: db, quantity: number);
+                            number = await GeneratePersons.generateSeveralChildren(dbProvider: DBProvider.dbProvider, quantity: number);
                             gStore<GlobalStore>().getChildrenToStream();
                           } else {
-                            number = await GeneratePersons.generateSeveralEmployees(db: db, quantity: number);
+                            number = await GeneratePersons.generateSeveralEmployees(dbProvider: DBProvider.dbProvider, quantity: number);
                             gStore<GlobalStore>().getEmployeesToStream();
                           }
                           Navigator.pop(context);

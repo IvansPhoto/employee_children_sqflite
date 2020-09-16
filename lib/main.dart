@@ -19,7 +19,7 @@ void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
 
 	//Init a global store with database.
-	gStore.registerSingleton<GlobalStore>(GlobalStore(dbProvider: DBProvider()));
+	gStore.registerLazySingleton<GlobalStore>(() => GlobalStore(dbProvider: DBProvider.dbProvider));
 
 	runApp(MaterialApp(
 		title: 'Employees and their children.',

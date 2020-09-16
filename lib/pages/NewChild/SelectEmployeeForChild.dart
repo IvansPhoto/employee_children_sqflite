@@ -32,7 +32,14 @@ class SelectEmployeeForChild extends StatelessWidget {
               itemExtent: 65,
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, index) {
-                snapshot.data.sort((e1, e2) => e1.id == child.parentId ? 0 : 1);
+
+                int employeeId = snapshot.data.indexWhere((employee) => employee.id == child.parentId);
+                Employees selectedEmployee = snapshot.data.removeAt(employeeId);
+                snapshot.data.insert(0, selectedEmployee);
+
+                // snapshot.data.sort((e1, e2) => e1.id == child.parentId ? 0 : 1);
+
+                // snapshot.data.reversed;
                 Employees employee = snapshot.data.elementAt(index);
                 return Center(
                   child: Card(
