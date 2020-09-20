@@ -49,7 +49,7 @@ class DBProvider {
   Future<Database> initDataBase() async {
     try {
       print('DB is opening...');
-      await Future.delayed(Duration(milliseconds: 1500));
+      // await Future.delayed(Duration(milliseconds: 1500));
 
       var databasesPath = await getDatabasesPath();
       await Directory(databasesPath).create(recursive: true);

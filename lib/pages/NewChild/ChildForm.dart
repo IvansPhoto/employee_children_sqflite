@@ -37,9 +37,9 @@ class _NewChildFormState extends State<NewChildForm> {
       _birthday = DateTime.now();
       _birthdayText = monthFromNumber(DateTime.now());
     } else {
-      _nameTEC = TextEditingController(text: child.name);
-      _surnameTEC = TextEditingController(text: child.surName);
-      _patronymicTEC = TextEditingController(text: child.patronymic);
+      _nameTEC = TextEditingController(text: child?.name);
+      _surnameTEC = TextEditingController(text: child?.surName);
+      _patronymicTEC = TextEditingController(text: child?.patronymic);
 
       if (child.parentId == null) {
         _parentNameTEC = TextEditingController(text: 'Free child!');
