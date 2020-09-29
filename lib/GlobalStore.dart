@@ -48,7 +48,7 @@ class GlobalStore {
 
   void getTheEmployee(Employees employee) async {
     try {
-      _theEmployee.add(await dbProvider.getTheEmployee(employee));
+      _theEmployee.add(await dbProvider.getTheEmployee(employee.id));
     } catch (e) {
       _theEmployee.addError(e);
     }
@@ -102,7 +102,7 @@ class GlobalStore {
   void insertChild(Children child) async {
     try {
       _theChild.add(await dbProvider.insertChild(child));
-    } catch(e) {
+    } catch (e) {
       _theChild.addError(e);
     }
   }
@@ -120,43 +120,53 @@ class GlobalStore {
 
 class EmployeeStore {
   DBProvider dbProvider;
+
   /// Setting up streams for the LIST of employees
-  final _employeeList = BehaviorSubject<List<Employees>>();
+  final BehaviorSubject<List<Employees>> _listEmployee = BehaviorSubject<List<Employees>>();
 
-  Stream get streamAllEmployees$ => _employeeList.stream;
+  Stream get ListEmployees$ => _listEmployee.stream;
 
-  void getEmployeesToStream() async {
+  String _searchString = '';
+
+  void getAllEmployees(String searchString) async {
+    _searchString = searchString;
     try {
-      _employeeList.add(await dbProvider.getAllEmployees());
+      _listEmployee.add(await dbProvider.filterEmployees(searchString));
     } catch (e) {
-      _employeeList.addError(e);
+      _listEmployee.addError(e);
     }
   }
 
-  void filterEmployeesToStream(String searchString) async {
-    try {
-      _employeeList.add(await dbProvider.filterEmployees(searchString));
-    } catch (e) {
-      _employeeList.addError(e);
-    }
+  void _deleteSeveralEmployee(List<Employees> employeesList) async {
+    await dbProvider
+      ..deleteSeveralEmployee(employeesList).catchError(_listEmployee.addError)
+      ..filterEmployees(_searchString).then(_listEmployee.add).catchError(_listEmployee.addError);
   }
-
-  Future<int> deleteSeveralEmployee(List<Employees> employeesList) async => await dbProvider.deleteSeveralEmployee(employeesList);
 
   /// Setting up streams for The employees
-  final _theEmployee = BehaviorSubject<Employees>();
+  final BehaviorSubject<Employees> _singleEmployee = BehaviorSubject<Employees>();
 
-  Stream get streamTheEmployee$ => _theEmployee.stream;
+  Stream get SingleEmployee$ => _singleEmployee.stream;
 
-  set setTheEmployee(Employees employee) => _theEmployee.add(employee);
+  void set setEmployee(Employees employee) => _singleEmployee.add(employee);
 
-  Employees get theEmployee => _theEmployee.value;
+  void getSingleEmployee(int employeeId) async => dbProvider.getTheEmployee(employeeId).then(_singleEmployee.add).catchError(_singleEmployee.addError);
 
-  void getTheEmployee(Employees employee) async {
-    try {
-      _theEmployee.add(await dbProvider.getTheEmployee(employee));
-    } catch (e) {
-      _theEmployee.addError(e);
-    }
+  void updateEmployee({int id, String name, String surname, String patronymic, DateTime birthday, String position}) async {
+    Employees newEmployee = Employees(
+      id: id,
+      name: name,
+      surName: surname,
+      patronymic: patronymic,
+      birthday: birthday,
+      position: position,
+    );
+    if (id == null)
+      dbProvider..insertEmployee(newEmployee).catchError(_singleEmployee.addError)..filterEmployees(_searchString).then(_listEmployee.add).catchError(_singleEmployee.addError);
+    else
+      dbProvider
+        ..updateEmployee(newEmployee).catchError(_singleEmployee.addError)
+        ..filterEmployees(_searchString).then(_listEmployee.add).catchError(_listEmployee.addError)
+        ..getTheEmployee(newEmployee.id).then(_singleEmployee.add).catchError(_singleEmployee.addError);
   }
 }

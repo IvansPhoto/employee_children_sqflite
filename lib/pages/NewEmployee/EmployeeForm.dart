@@ -17,7 +17,8 @@ class EmployeeForm extends StatefulWidget {
 }
 
 class _EmployeeFormState extends State<EmployeeForm> {
-  Employees employee = gStore<GlobalStore>().theEmployee;
+  Employees _employee = gStore<GlobalStore>().theEmployee;
+  GlobalStore _store = gStore<GlobalStore>();
 
   TextEditingController _nameTEC;
   TextEditingController _surnameTEC;
@@ -36,12 +37,12 @@ class _EmployeeFormState extends State<EmployeeForm> {
       _birthday = DateTime.now();
       _birthdayText = monthFromNumber(DateTime.now());
     } else {
-      _nameTEC = TextEditingController(text: employee.name);
-      _surnameTEC = TextEditingController(text: employee.surName);
-      _positionTEC = TextEditingController(text: employee.position);
-      _patronymicTEC = TextEditingController(text: employee.patronymic);
-      _birthday = employee.birthday;
-      _birthdayText = monthFromNumber(employee.birthday);
+      _nameTEC = TextEditingController(text: _employee.name);
+      _surnameTEC = TextEditingController(text: _employee.surName);
+      _positionTEC = TextEditingController(text: _employee.position);
+      _patronymicTEC = TextEditingController(text: _employee.patronymic);
+      _birthday = _employee.birthday;
+      _birthdayText = monthFromNumber(_employee.birthday);
     }
     super.initState();
   }
@@ -70,21 +71,21 @@ class _EmployeeFormState extends State<EmployeeForm> {
   }
 
   void _updateEmployee() {
-    employee.name = _nameTEC.text;
-    employee.surName = _surnameTEC.text;
-    employee.patronymic = _patronymicTEC.text;
-    employee.position = _positionTEC.text;
-    employee.birthday = _birthday;
+    _employee.name = _nameTEC.text;
+    _employee.surName = _surnameTEC.text;
+    _employee.patronymic = _patronymicTEC.text;
+    _employee.position = _positionTEC.text;
+    _employee.birthday = _birthday;
     gStore<GlobalStore>()
-      ..updateEmployee(employee)
-      ..getTheEmployee(employee)
+      ..updateEmployee(_employee)
+      ..getTheEmployee(_employee)
       // ..setTheEmployee = employee
       ..getEmployeesToStream();
     Navigator.of(context).pop('updated');
   }
 
   void _selectChildren(context) {
-    gStore<GlobalStore>().setTheEmployee = employee;
+    gStore<GlobalStore>().setTheEmployee = _employee;
     Navigator.pushNamed(context, RouteNames.selectChildren);
   }
 
@@ -98,7 +99,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: widget.isNew ? const Text('Enter data of new employees') : Text('Edit: ${employee.name} ${employee.surName}')),
+      appBar: AppBar(title: widget.isNew ? const Text('Enter data of new employees') : Text('Edit: ${_employee.name} ${_employee.surName}')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
@@ -146,7 +147,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                 controller: TextEditingController(text: _birthdayText),
                 onTap: () => showDatePicker(
                   context: context,
-                  initialDate: employee == null ? DateTime.now() : employee.birthday,
+                  initialDate: _employee == null ? DateTime.now() : _employee.birthday,
                   firstDate: DateTime(1950),
                   lastDate: DateTime(2021),
                 ).then(setBirthday),

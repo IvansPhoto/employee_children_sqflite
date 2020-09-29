@@ -181,7 +181,7 @@ class DBProvider {
   }
 
   /// Get all employee records from db with their children.
-  Future<Employees> getTheEmployee(Employees employee) async {
+  Future<Employees> getTheEmployee(int employeeId) async {
     final Database db = await database;
     final employeeList = List<Employees>();
 
@@ -189,7 +189,7 @@ class DBProvider {
         'SELECT * FROM ${DBColumns.employeeTable} '
         'LEFT JOIN ${DBColumns.childrenTable} ON ${DBColumns.childrenTable}.${DBColumns.childParentId} = ${DBColumns.employeeTable}.${DBColumns.employeeId} '
         'WHERE ${DBColumns.employeeId} = ?',
-        [employee.id]);
+        [employeeId]);
 
     // print('listMap.isEmpty - ${listMap.isEmpty}');
     // listMap.forEach((element) => print('listMap: $element'));
