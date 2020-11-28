@@ -5,6 +5,6 @@ class NewEmployee extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isNew = ModalRoute.of(context).settings.arguments;
-    return EmployeeForm(isNew);
+    return EmployeeForm(isNew: isNew);
   }
 }

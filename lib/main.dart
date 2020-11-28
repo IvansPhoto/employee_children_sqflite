@@ -28,7 +28,7 @@ void main() async {
 			RouteNames.index: (BuildContext context) => Index(),
 			RouteNames.employeesList: (BuildContext context) => EmployeesList(),
 			RouteNames.childrenList: (BuildContext context) => ChildrenList(),
-			RouteNames.showEmployee: (BuildContext context) => ShowEmployee(),
+			RouteNames.showEmployee: (BuildContext context) => ShowEmployee(gStore.get<GlobalStore>()),
 			RouteNames.showChild: (BuildContext context) => ShowChild(),
 			RouteNames.newEmployee: (BuildContext context) => NewEmployee(),
 			RouteNames.newChildren: (BuildContext context) => NewChild(),

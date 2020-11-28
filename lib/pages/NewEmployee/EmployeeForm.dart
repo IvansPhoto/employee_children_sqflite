@@ -8,7 +8,7 @@ class EmployeeForm extends StatefulWidget {
   //Init the state of this form to add a new employee
   final bool isNew;
 
-  EmployeeForm(this.isNew);
+  EmployeeForm({this.isNew});
 
   final _formKey = GlobalKey<FormState>();
 

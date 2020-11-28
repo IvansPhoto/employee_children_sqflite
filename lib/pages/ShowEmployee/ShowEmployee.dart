@@ -5,14 +5,16 @@ import 'package:employee_children_sqflite/GlobalStore.dart';
 import 'package:employee_children_sqflite/SupportWidgets/ActionButtons.dart';
 
 class ShowEmployee extends StatelessWidget {
-  final store = gStore.get<GlobalStore>();
+
+  final GlobalStore _gStore;
+  ShowEmployee(this._gStore);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           title: StreamBuilder<Employees>(
-              stream: gStore<GlobalStore>().streamTheEmployee$,
+              stream: _gStore.streamTheEmployee$,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (!snapshot.hasData)
                   return Text('Employee profile.');
@@ -20,7 +22,7 @@ class ShowEmployee extends StatelessWidget {
                   return Text('${snapshot.data.name} ${snapshot.data.surName}');
               })),
       body: StreamBuilder<Employees>(
-          stream: gStore<GlobalStore>().streamTheEmployee$,
+          stream: _gStore.streamTheEmployee$,
           builder: (BuildContext context, AsyncSnapshot<Employees> snapshot) {
             if (!snapshot.hasData)
               return Center(child: Text('Loading ${snapshot.hasData}'));
